@@ -1,0 +1,186 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:local="clr-namespace:IBGUI">
+
+    <local:Bool_BrushConverter x:Key="Bool_BrushConverter"/>
+
+
+    <Style x:Key="IBWindowStyle" TargetType="Window">
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="ResizeMode" Value="CanMinimize"/>
+        <Setter Property="AllowsTransparency" Value="False"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+
+                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{Binding IsActive, Converter={StaticResource Bool_BrushConverter}, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="28"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <local:IBWorkspaceFrame HorizontalAlignment="Left" Height="Auto" Margin="0,0,0,0" AllowDrop="False" Grid.RowSpan="2"/>
+                            <local:IBWorkspaceFrame VerticalAlignment="Top" Width="Auto" Margin="0,0,0,0" AllowDrop="False"/>
+                            <local:IBWorkspaceFrame HorizontalAlignment="Right" Height="Auto" Margin="0,0,0,0" AllowDrop="False" Grid.RowSpan="2"/>
+                            <local:IBWorkspaceFrame VerticalAlignment="Bottom" Width="Auto" Margin="0,0,0,0" AllowDrop="False" Grid.Row="1"/>
+
+                            <local:IBWorkspaceFrame VerticalAlignment="Top" Margin="0" AllowDrop="False" HorizontalAlignment="Left"/>
+                            <local:IBWorkspaceFrame VerticalAlignment="Top" Margin="0" AllowDrop="False" HorizontalAlignment="Right"/>
+                            <local:IBWorkspaceFrame VerticalAlignment="Bottom" Margin="0" AllowDrop="False" HorizontalAlignment="Left" Grid.Row="1"/>
+                            <local:IBWorkspaceFrame VerticalAlignment="Bottom" Margin="0" AllowDrop="False" HorizontalAlignment="Right" Grid.Row="1"/>
+
+                            <local:IBWindowTop Margin="6,6,6,0" Visibility="Visible" HorizontalContentAlignment="Center"/>
+                            
+                            <ContentPresenter Grid.Row="0" Grid.RowSpan="2"/>
+                            
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IBThumbStyle" TargetType="{x:Type Thumb}" BasedOn="{x:Null}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid Margin="0,0,0,0" x:Name="Grid">
+                        <Rectangle HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
+                                   Fill="{DynamicResource IBBorderBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IBRepeatButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{x:Null}">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="Border"/>
+                        <ContentPresenter HorizontalAlignment="Center" x:Name="ContentPresenter" VerticalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource IBBackGroundBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IBScrollRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid>
+                        <Rectangle Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IBScrollBarStyle" TargetType="{x:Type ScrollBar}">
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="ContextMenu" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid x:Name="GridRoot" Width="15" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="23"/>
+                            <RowDefinition Height="0.00001*"/>
+                            <RowDefinition MaxHeight="23"/>
+                        </Grid.RowDefinitions>
+
+                        <RepeatButton x:Name="DecreaseRepeat" Style="{StaticResource IBRepeatButtonStyle}" Command="ScrollBar.LineUpCommand" BorderBrush="{x:Null}" Background="{TemplateBinding Background}">
+                            <Path x:Name="path" Data="M-6,3 L-3,-4 0,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                        </RepeatButton>
+
+                        <!-- Track は両端をジャンプしてスクロールする Thumb と Repeat Button のサイズを変更する特殊なレイアウト コンテナーです -->
+                        <Track Grid.Row="1" x:Name="PART_Track" Orientation="Vertical" IsDirectionReversed="true">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource IBThumbStyle}" Foreground="{x:Null}"/>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton x:Name="PageUp" Style="{StaticResource IBScrollRepeatButtonStyle}" Command="ScrollBar.PageDownCommand"/>
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton x:Name="PageDown" Style="{StaticResource IBScrollRepeatButtonStyle}" Command="ScrollBar.PageUpCommand"/>
+                            </Track.DecreaseRepeatButton>
+                        </Track>
+
+                        <RepeatButton Grid.Row="2" x:Name="IncreaseRepeat" Style="{StaticResource IBRepeatButtonStyle}" Command="ScrollBar.LineDownCommand" BorderBrush="{x:Null}" Background="{TemplateBinding Background}">
+                            <Path x:Name="path1" Data="M-6,3 L-3,-4 0,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8" RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleY="-1"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+                        </RepeatButton>
+                    </Grid>
+
+                    <!-- これは ScrollBar の単一のテンプレートを使用し、これを水平方向に回転します
+					上下のコマンドの代わりに左右のコマンドを実行するように、コマンドの変更も行います -->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="DecreaseRepeat">
+                            <Setter Property="Fill" TargetName="path" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="IncreaseRepeat">
+                            <Setter Property="Fill" TargetName="path1" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="Orientation" Value="Horizontal">
+
+                            <!-- ScrollBar を垂直から水平に回転します -->
+                            <Setter Property="LayoutTransform" TargetName="GridRoot">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90"/>
+                                </Setter.Value>
+                            </Setter>
+
+                            <!-- Track は内部で Orientation にバインドされているため、回転して垂直に戻す必要があります -->
+                            <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical"/>
+
+                            <!-- 水平のコマンドを実行するようにコマンドを変更します -->
+                            <Setter Property="Command" Value="ScrollBar.LineLeftCommand" TargetName="DecreaseRepeat"/>
+                            <Setter Property="Command" Value="ScrollBar.LineRightCommand" TargetName="IncreaseRepeat"/>
+                            <Setter Property="Command" Value="ScrollBar.PageLeftCommand" TargetName="PageDown"/>
+                            <Setter Property="Command" Value="ScrollBar.PageRightCommand" TargetName="PageUp"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

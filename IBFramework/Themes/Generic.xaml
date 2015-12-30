@@ -1,0 +1,11 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:IBFramework">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IBFramework;component/Timeline/IBCanvas_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/Timeline/TimelineElements/SubTabItem_Design.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

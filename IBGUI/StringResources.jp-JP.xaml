@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:IBGUI">
+
+    <system:String x:Key="Window_CloseToolTip">閉じる</system:String>
+    <system:String x:Key="Window_ChangeStateToolTip">最大化 / 復元</system:String>
+    <system:String x:Key="Window_MinimizeToolTip">最小化</system:String>
+
+    <system:String x:Key="PanelEdit_Close" >このパネルを閉じる</system:String>
+
+    <system:String x:Key="PageEdit_Rename">名前の変更</system:String>
+    <system:String x:Key="PageEdit_Close">このページを閉じる</system:String>
+
+</ResourceDictionary>

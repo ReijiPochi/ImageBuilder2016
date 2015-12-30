@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBGUI">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="StringResources.en-US.xaml"/>
+        <ResourceDictionary Source="StringResources.jp-JP.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <ContextMenu x:Key="IBTabItemCM">
+        <ContextMenu.DataContext>
+            <local:IBTabItemVM/>
+        </ContextMenu.DataContext>
+        <local:IBMenuItem Header="{DynamicResource PanelEdit_Float}" Command="{Binding FloatCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <local:IBMenuItem.Icon>
+                <Image  HorizontalAlignment="Center" VerticalAlignment="Center" Width="18" Height="18"/>
+            </local:IBMenuItem.Icon>
+        </local:IBMenuItem>
+        <local:IBMenuSeparator/>
+        <local:IBMenuItem Header="{DynamicResource PanelEdit_Close}" Command="{Binding CloseCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <local:IBMenuItem.Icon>
+                <Image Source="{DynamicResource CloseIconImage}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="18" Height="18"/>
+            </local:IBMenuItem.Icon>
+        </local:IBMenuItem>
+    </ContextMenu>
+    
+    <ContextMenu x:Key="IBPageTabItemlCM">
+        <ContextMenu.DataContext>
+            <local:IBTabItemVM/>
+        </ContextMenu.DataContext>
+        <local:IBMenuItem Header="{DynamicResource PageEdit_Close}" Command="{Binding CloseCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <local:IBMenuItem.Icon>
+                <Image Source="{DynamicResource CloseIconImage}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="18" Height="18"/>
+            </local:IBMenuItem.Icon>
+        </local:IBMenuItem>
+        <local:IBMenuSeparator/>
+        <local:IBMenuItem Header="{DynamicResource PageEdit_Rename}"/>
+        <local:IBMenuItem Header="{DynamicResource PageEdit_Delete}" Command="{Binding CloseCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <local:IBMenuItem.Icon>
+                <Image Source="{DynamicResource DeleteIconImage}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="18" Height="18"/>
+            </local:IBMenuItem.Icon>
+        </local:IBMenuItem>
+    </ContextMenu>
+    
+</ResourceDictionary>

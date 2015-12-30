@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBApp"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="IB_MainWindowTitle">Image Builder 2016 InDevelopment (English US)</system:String>
+
+    <system:String x:Key="Menu_File">File</system:String>
+    <system:String x:Key="Menu_File_New">New</system:String>
+    <system:String x:Key="Menu_File_New_NewProject">New Project</system:String>
+    <system:String x:Key="Menu_File_Open">Open</system:String>
+    <system:String x:Key="Menu_File_Add">Add</system:String>
+    <system:String x:Key="Menu_File_Exit">Exit</system:String>
+    <system:String x:Key="Menu_Edit">Edit</system:String>
+    <system:String x:Key="Menu_Edit_Undo">Undo</system:String>
+    <system:String x:Key="Menu_Edit_Language">Language</system:String>
+    <system:String x:Key="Menu_Edit_Language_English">English(US)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Japanese">Japanese(日本語)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Inmu">Inmu(淫夢語録)</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme">GUI Color Theme</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_lightpink">Light / Pink</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_darkpink">Dark / Pink</system:String>
+    <system:String x:Key="Menu_Panel">Panel</system:String>
+    <system:String x:Key="Menu_Workspace">Workspace</system:String>
+    <system:String x:Key="Menu_Workspace_SaveAs">Save Current As</system:String>
+    <system:String x:Key="Menu_Workspace_Load">Load Layout</system:String>
+    
+    <system:String x:Key="ControlPanel_DrawingTools_Name">Drawing Tools</system:String>
+    <system:String x:Key="ControlPanel_Properties_Name">Properties</system:String>
+    <system:String x:Key="ControlPanel_CanvasView_Name">Canvas View</system:String>
+    <system:String x:Key="ControlPanel_IBProjectView_Name">IBProject View</system:String>
+
+</ResourceDictionary>

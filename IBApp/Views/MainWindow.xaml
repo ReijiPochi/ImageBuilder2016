@@ -1,0 +1,173 @@
+﻿<Window x:Name="window" x:Class="IBApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:app="clr-namespace:IBApp"
+        xmlns:v="clr-namespace:IBApp.Views"
+        xmlns:vm="clr-namespace:IBApp.ViewModels"
+        Title="{DynamicResource IB_MainWindowTitle}"
+        xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
+        xmlns:ibf="clr-namespace:IBFramework;assembly=IBFramework"
+        Style="{Binding Source={StaticResource IBWindowStyle}}" Background="{DynamicResource IBBackGroundBrush}" Width="931" Height="810" Activated="window_Activated" Deactivated="window_Deactivated" HorizontalContentAlignment="Center">
+    <Window.Resources>
+        <ibgui:Bool_VisibilityConverter x:Key="Bool_VisibilityConverter"/>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:MainWindowVM/>
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+
+        <!--Viewに特別な要件が存在しない限りは、トリガーやアクションの自作にこだわらず積極的にコードビハインドを使いましょう -->
+        <!--Viewのコードビハインドは、基本的にView内で完結するロジックとViewModelからのイベントの受信(専用リスナを使用する)に限るとトラブルが少なくなります -->
+        <!--Livet1.1からはコードビハインドでViewModelのイベントを受信するためのWeakEventLisnterサポートが追加されています -->
+
+        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="ContentRendered">
+            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
+        </i:EventTrigger>
+
+        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="Closed">
+            <l:DataContextDisposeAction/>
+        </i:EventTrigger>
+
+        <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <!--<Rectangle Grid.RowSpan="2" Fill="{StaticResource IBBackGroundBrush_T}" Panel.ZIndex="114514" Visibility="{Binding LockGUI, Converter={StaticResource Bool_VisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+        <!--<Label Content="{Binding Title, ElementName=window}" HorizontalAlignment="Center" VerticalAlignment="Center" MouseLeftButtonDown="Label_MouseLeftButtonDown" Foreground="{DynamicResource IBInactiveForeGroundBrush}" Padding="0,6,0,0" />-->
+        
+        <Menu Background="{x:Null}" Margin="6,6,100,0" HorizontalAlignment="Left">
+            <ibgui:IBMenuItem Header="{DynamicResource Menu_File}">
+                <ibgui:IBMenuItem.DataContext>
+                    <vm:FileVM/>
+                </ibgui:IBMenuItem.DataContext>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_File_New}">
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_File_New_NewProject}" InputGestureText="">
+                        <ibgui:IBMenuItem.Icon>
+                            <Image Width="18" Height="18"/>
+                        </ibgui:IBMenuItem.Icon>
+                    </ibgui:IBMenuItem>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_File_Open}" InputGestureText="Ctrl+O">
+                    <ibgui:IBMenuItem.Icon>
+                        <Image  Width="18" Height="18"/>
+                    </ibgui:IBMenuItem.Icon>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuSeparator/>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_File_Add}">
+                    <ibgui:IBMenuItem.Icon>
+                        <Image Source="{StaticResource AddIconImage}" Width="18" Height="18"/>
+                    </ibgui:IBMenuItem.Icon>
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_File_New_NewProject}" InputGestureText="">
+                        <ibgui:IBMenuItem.Icon>
+                            <Image Width="18" Height="18"/>
+                        </ibgui:IBMenuItem.Icon>
+                    </ibgui:IBMenuItem>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuSeparator/>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_File_Exit}" InputGestureText="Alt+F4" Command="{Binding AppExitCommand, Mode=OneWay}">
+                    <ibgui:IBMenuItem.Icon>
+                        <Image Source="{StaticResource CloseIconImage}" Width="18" Height="18"/>
+                    </ibgui:IBMenuItem.Icon>
+                </ibgui:IBMenuItem>
+            </ibgui:IBMenuItem>
+            <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit}">
+                <ibgui:IBMenuItem.DataContext>
+                    <vm:EditVM/>
+                </ibgui:IBMenuItem.DataContext>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Undo}" InputGestureText="Ctrl+Z" Command="">
+                    <ibgui:IBMenuItem.Icon>
+                        <Image  Width="18" Height="18"/>
+                    </ibgui:IBMenuItem.Icon>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuSeparator/>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Language}">
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Language_English}" Command="{Binding SetLanguageCommand, Mode=OneWay}" CommandParameter="en-US"/>
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Language_Japanese}" Command="{Binding SetLanguageCommand, Mode=OneWay}" CommandParameter="jp-JP"/>
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Language_Inmu}" Command="{Binding SetLanguageCommand, Mode=OneWay}" CommandParameter="in-MU"/>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_ColorTheme}">
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_ColorTheme_lightpink}" Command="{Binding SetColorThemeCommand, Mode=OneWay}" CommandParameter="light-pink"/>
+                    <ibgui:IBMenuSeparator/>
+                    <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_ColorTheme_darkpink}" Command="{Binding SetColorThemeCommand, Mode=OneWay}" CommandParameter="dark-pink"/>
+                </ibgui:IBMenuItem>
+            </ibgui:IBMenuItem>
+            <ibgui:IBMenuItem Header="{DynamicResource Menu_Panel}">
+                <ibgui:IBMenuItem.DataContext>
+                    <vm:PanelVM/>
+                </ibgui:IBMenuItem.DataContext>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_DrawingTools_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource DrawingTools}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Properties_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Properties}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_IBProjectView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource IBProjectView}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_CanvasView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource CanvasView}"/>
+            </ibgui:IBMenuItem>
+            <ibgui:IBMenuItem Header="{DynamicResource Menu_Workspace}">
+                <ibgui:IBMenuItem.DataContext>
+                    <vm:WorkspaceVM/>
+                </ibgui:IBMenuItem.DataContext>
+                <ibgui:IBMenuItem x:Name="SaveLayoutAs" Header="{DynamicResource Menu_Workspace_SaveAs}" Click="SaveLayoutAs_Click"/>
+                <ibgui:IBMenuItem x:Name="LoadLayout" Header="{DynamicResource Menu_Workspace_Load}" Click="LoadLayout_Click"/>
+            </ibgui:IBMenuItem>
+            <ibgui:IBMenuItem Header="test">
+                <ibgui:IBMenuItem.DataContext>
+                    <vm:TestVM/>
+                </ibgui:IBMenuItem.DataContext>
+                <ibgui:IBMenuItem Header="Get PenTablet Values" Command="{Binding GetPenTabletValuesCommand, Mode=OneWay}"/>
+                <ibgui:IBMenuItem Header="Values">
+                    <ibgui:IBMenuItem Header="{Binding PenTabletPos}" />
+                </ibgui:IBMenuItem>
+            </ibgui:IBMenuItem>
+        </Menu>
+
+        <ibgui:IBWorkspace Grid.Row="1" IsMainWindowContent="True">
+            <!--IBWorkspace内のリソースはダイナミックリソースである必要があるぞ（シリアル化の際にスタティックリソースだと問題あり）-->
+            <ibgui:IBPanel>
+                <ibgui:IBTabControl x:Name="test">
+                    <ibgui:IBTabItem Header="プロパティ">
+                        <Grid>
+                            <ibgui:IBScrollViewer HorizontalScrollBarVisibility="Auto">
+                                <Rectangle VerticalAlignment="Top" Height="1000" HorizontalAlignment="Left" Width="1000"/>
+                            </ibgui:IBScrollViewer>
+                        </Grid>
+                    </ibgui:IBTabItem>
+                    <ibgui:IBTabItem Header="カラー">
+                        <Grid/>
+                    </ibgui:IBTabItem>
+                    <ibgui:IBTabItem Header="ツールプロパティ">
+                        <Grid/>
+                    </ibgui:IBTabItem>
+                    <ibgui:IBTabItem Header="レイヤー">
+                        <Grid/>
+                    </ibgui:IBTabItem>
+                    <ibgui:IBTabItem Header="ビュー">
+                        <WindowsFormsHost Background="Black"/>
+                    </ibgui:IBTabItem>
+                    <ibgui:IBTabItem Header="ビュー">
+                        <Border BorderThickness="0,2,0,0" BorderBrush="{DynamicResource IBSelectedBrush}" Margin="0,-1,0,0">
+                            <ibgui:IBTabControl BorderThickness="0" Margin="0" AllowDrop="False">
+                                <ibgui:IBPageTabItem Header="Cut 001-23"/>
+                                <ibgui:IBPageTabItem Header="イメージイラスト"/>
+                                <ibgui:IBPageTabItem Header="456"/>
+                                <ibgui:IBPageTabItem Header="456"/>
+                                <ibgui:IBPageTabItem Header="456"/>
+                            </ibgui:IBTabControl>
+                        </Border>
+                    </ibgui:IBTabItem>
+                </ibgui:IBTabControl>
+            </ibgui:IBPanel>
+        </ibgui:IBWorkspace>
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBGUI">
+    
+    <BitmapImage x:Key="CloseIconImage" UriSource="icons/Close.png"/>
+    <BitmapImage x:Key="MaximizeIconImage" UriSource="icons/Maximize.png"/>
+    <BitmapImage x:Key="MinimizeIconImage" UriSource="icons/Minimize.png"/>
+
+    <BitmapImage x:Key="AddIconImage" UriSource="icons/Add.png"/>
+    <BitmapImage x:Key="DeleteIconImage" UriSource="icons/Delete.png"/>
+
+</ResourceDictionary>

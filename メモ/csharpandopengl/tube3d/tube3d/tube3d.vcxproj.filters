@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Classes">
+      <UniqueIdentifier>{8d5f338c-0e9e-420e-9182-e25bb0101c1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Classes\Job">
+      <UniqueIdentifier>{d3a4e58a-df0f-4ea7-8f73-1a30df392852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Classes\OpenGL">
+      <UniqueIdentifier>{dbadedd9-5842-4ee0-968b-c7b1e062f8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Classes">
+      <UniqueIdentifier>{24ae3ef4-6b7d-45a0-90e8-0d61bed27670}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Classes\Job">
+      <UniqueIdentifier>{dc43542b-e78e-40ab-a398-7e929522f2ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Classes\OpenGL">
+      <UniqueIdentifier>{5a3223c6-9031-4254-909c-8ba0f277ca21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="tube3d.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="tube3dfunc.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Job\Tube3DMain.cpp">
+      <Filter>ソース ファイル\Classes\Job</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\opengl\GLDrawingtool3D.cpp">
+      <Filter>ソース ファイル\Classes\OpenGL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tube3d.def">
+      <Filter>ソース ファイル</Filter>
+    </None>
+    <None Include="res\tube3d.rc2">
+      <Filter>リソース ファイル</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="glut.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tube3d.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tube3dfunc.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Job\Tube3DMain.h">
+      <Filter>ヘッダー ファイル\Classes\Job</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\opengl\GLDrawingtool3D.h">
+      <Filter>ヘッダー ファイル\Classes\OpenGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="tube3d.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

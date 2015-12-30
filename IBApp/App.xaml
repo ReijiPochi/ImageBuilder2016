@@ -1,0 +1,54 @@
+﻿<Application x:Class="IBApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views\MainWindow.xaml"
+             Startup="Application_Startup"
+             xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
+             xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IBGUI;component/ResourceDictionarys.xaml" />
+                <ResourceDictionary Source="Languages/LanguagePack.en-us.xaml"/>
+                <ResourceDictionary Source="Languages/LanguagePack.jp-jp.xaml"/>
+                <ResourceDictionary Source="Views/ControlPanels/ControlPanelResources.xaml"/>
+                <ResourceDictionary Source="Icons/IconResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+
+            <PopupAnimation x:Key="{x:Static SystemParameters.MenuPopupAnimationKey}">None</PopupAnimation>
+
+            <Style TargetType="{x:Type ContextMenu}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ContextMenu}">
+                            <Border BorderThickness="1" BorderBrush="{DynamicResource IBFocusBrush2_T}">
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type ToolTip}">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToolTip}">
+                            <Border BorderThickness="1" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" 
+						            BorderBrush="{DynamicResource IBBrightBorderBrush}" Background="{DynamicResource IBBackGroundBrush_T}">
+                                <ContentPresenter Margin="15,2,15,3" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
