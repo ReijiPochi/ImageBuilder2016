@@ -13,7 +13,7 @@ using Livet.EventListeners;
 using Livet.Messaging.Windows;
 
 using IBApp.Models;
-using IBFramework.IBProject;
+using IBFramework.Project;
 using IBFramework.Timeline.TimelineElements;
 
 namespace IBApp.ViewModels.ControlPanels
@@ -82,74 +82,56 @@ namespace IBApp.ViewModels.ControlPanels
         }
         #endregion
 
-        #region CurrentSelectedElement変更通知プロパティ
-        private IBProjectElement _CurrentSelectedElement;
 
-        public IBProjectElement CurrentSelectedElement
-        {
-            get
-            { return _CurrentSelectedElement; }
-            set
-            { 
-                if (_CurrentSelectedElement == value)
-                    return;
-                _CurrentSelectedElement = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
+        #region AddNewFolderCommand
+        private ListenerCommand<IBProjectElement> _AddNewFolderCommand;
 
-
-
-        #region AddFolderCommand
-        private ViewModelCommand _AddFolderCommand;
-
-        public ViewModelCommand AddFolderCommand
+        public ListenerCommand<IBProjectElement> AddNewFolderCommand
         {
             get
             {
-                if (_AddFolderCommand == null)
+                if (_AddNewFolderCommand == null)
                 {
-                    _AddFolderCommand = new ViewModelCommand(AddFolder, CanAddFolder);
+                    _AddNewFolderCommand = new ListenerCommand<IBProjectElement>(AddNewFolder, CanAddNewFolder);
                 }
-                return _AddFolderCommand;
+                return _AddNewFolderCommand;
             }
         }
 
-        public bool CanAddFolder()
+        public bool CanAddNewFolder()
         {
             return true;
         }
 
-        public void AddFolder()
+        public void AddNewFolder(IBProjectElement parameter)
         {
-
+            IBProjectModel.Current.AddNewFolder(parameter);
         }
         #endregion
 
-        #region AddCellCommand
-        private ViewModelCommand _AddCellCommand;
+        #region AddNewCellCommand
+        private ListenerCommand<IBProjectElement> _AddNewCellCommand;
 
-        public ViewModelCommand AddCellCommand
+        public ListenerCommand<IBProjectElement> AddNewCellCommand
         {
             get
             {
-                if (_AddCellCommand == null)
+                if (_AddNewCellCommand == null)
                 {
-                    _AddCellCommand = new ViewModelCommand(AddCell, CanAddCell);
+                    _AddNewCellCommand = new ListenerCommand<IBProjectElement>(AddNewCell, CanAddNewCell);
                 }
-                return _AddCellCommand;
+                return _AddNewCellCommand;
             }
         }
 
-        public bool CanAddCell()
+        public bool CanAddNewCell()
         {
             return true;
         }
 
-        public void AddCell()
+        public void AddNewCell(IBProjectElement parameter)
         {
-            IBProjectModel.Current.AddNewCell(CurrentSelectedElement);
+            IBProjectModel.Current.AddNewCell(parameter);
         }
         #endregion
 

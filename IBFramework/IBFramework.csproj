@@ -61,8 +61,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBProject\IBProject.cs" />
-    <Compile Include="IBProject\IBProjectElements\Folder.cs" />
+    <Compile Include="Project\IBProject.cs" />
+    <Compile Include="Project\IBProjectElements\Folder.cs" />
     <Compile Include="IBRectangle.cs" />
     <Compile Include="Image\BGRA32FormattedImage.cs" />
     <Compile Include="Image\Blend\Add.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="Image\Blend\Multiply.cs" />
     <Compile Include="Image\Blend\Normal.cs" />
     <Compile Include="Image\IBBrush.cs" />
-    <Compile Include="IBProject\IBProjectElement.cs" />
+    <Compile Include="Project\IBProjectElement.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
     <Compile Include="Timeline\IBCanvas.cs" />
     <Compile Include="Image\IBImage.cs" />

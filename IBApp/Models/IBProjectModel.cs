@@ -7,7 +7,8 @@ using System.Collections.ObjectModel;
 using Livet;
 
 using IBFramework;
-using IBFramework.IBProject;
+using IBFramework.Project;
+using IBFramework.Project.IBProjectElements;
 using IBFramework.Timeline.TimelineElements;
 
 namespace IBApp.Models
@@ -24,6 +25,9 @@ namespace IBApp.Models
         /// </summary>
         public static IBProjectModel Current { get; set; }
 
+        /// <summary>
+        /// 現在開かれているプロジェクト
+        /// </summary>
         public IBProject _OpenedIBProject;
 
 
@@ -75,14 +79,54 @@ namespace IBApp.Models
         }
         #endregion
 
+        /// <summary>
+        /// Parentの子に新規フォルダを追加
+        /// </summary>
+        /// <param name="Parent">nullの場合、現在開かれているプロジェクトにフォルダを追加</param>
+        public void AddNewFolder(IBProjectElement Parent)
+        {
+            Folder newFolder = new Folder(_OpenedIBProject)
+            {
+                Name = "Folder"
+            };
+
+            if (Parent != null)
+            {
+                Parent.Children.Add(newFolder);
+                newFolder.Parent = Parent;
+            }
+            else
+            {
+                _OpenedIBProject.IBProjectElements.Add(newFolder);
+                newFolder.Parent = null;
+            }
+
+            RaisePropertyChanged("IBProject_Elements");
+        }
+
+        /// <summary>
+        /// Parentの子に新規セルを追加
+        /// </summary>
+        /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルを追加</param>
         public void AddNewCell(IBProjectElement Parent)
         {
-            Cell newCell = new Cell()
+            Cell newCell = new Cell(_OpenedIBProject)
             {
                 Name = "Cell"
             };
 
-            Parent.Children.Add(newCell);
+            if(Parent != null)
+            {
+                Parent.Children.Add(newCell);
+                newCell.Parent = Parent;
+            }
+            else
+            {
+                _OpenedIBProject.IBProjectElements.Add(newCell);
+                newCell.Parent = null;
+            }
+
+            RaisePropertyChanged("IBProject_Elements");
         }
     }
 }
