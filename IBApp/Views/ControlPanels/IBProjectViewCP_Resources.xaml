@@ -1,0 +1,86 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
+                    xmlns:IBFramework="clr-namespace:IBFramework;assembly=IBFramework"
+                    xmlns:ibfp="clr-namespace:IBFramework.Project;assembly=IBFramework"
+                    xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
+                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
+
+    <vm:IBProjectViewVM x:Key="IBProjectViewVM"/>
+
+    <IBFramework:ElementToBrushConverter x:Key="ElementToBrushConverter"/>
+
+    <Style x:Key="IBProjectTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+        <Setter Property="Padding" Value="3,0,0,0"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+        <!--<Setter Property="IsExpanded" Value="{Binding isExpanded, Mode=TwoWay}"/>-->
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu DataContext="{StaticResource IBProjectViewVM}">
+                    <ibgui:IBMenuItem Header="114514" Command="{Binding AddNewCellCommand, Mode=OneWay}"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="19" Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition MinWidth="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ToggleButton x:Name="Expander" Style="{DynamicResource IBTreeViewItemToggleButtonStyle}" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Margin="4,0,0,0"/>
+                        <Border Grid.Column="1" x:Name="Selection_Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.ColumnSpan="2"/>
+                        <ContentPresenter x:Name="PART_Header" ContentSource="Header" Height="Auto" VerticalAlignment="Center" Margin="6,0,18,0" Grid.ColumnSpan="2" Grid.Column="1" />
+                        <ibfp:FlagButton x:Name="label" Flag="{Binding StateFlag}" HorizontalAlignment="Right" Grid.Column="2" Foreground="{DynamicResource IBSelectedBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <ItemsPresenter Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" x:Name="ItemsHost"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost"/>
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter Property="Visibility" Value="Hidden" TargetName="Expander"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsSelected" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Selection_Border" Value="{Binding Type, Converter={StaticResource ElementToBrushConverter}, Mode=OneWay}"/>
+                            <Setter Property="Opacity" TargetName="Selection_Border" Value="0.3"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="HasItems" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Selection_Border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="Selection_Border" Value="{Binding Type, Converter={StaticResource ElementToBrushConverter}, Mode=OneWay}"/>
+                            <Setter Property="BorderThickness" TargetName="Selection_Border" Value="1"/>
+                            <Setter Property="Opacity" TargetName="Selection_Border" Value="0.5"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" TargetName="Selection_Border" Value="{Binding Type, Converter={StaticResource ElementToBrushConverter}, Mode=OneWay}"/>
+                            <Setter Property="Opacity" TargetName="Selection_Border" Value="1"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource IBInactiveForeGroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -2,10 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
-                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
-
-    <vm:IBProjectViewVM x:Key="IBProjectViewVM"/>
-
+                    >
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="IBProjectViewCP_Resources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type local:IBProjectViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>

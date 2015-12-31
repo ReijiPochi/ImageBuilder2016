@@ -5,6 +5,10 @@
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
                     xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="IBProjectViewCP_Resources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
 
     <ibgui:IBTabItem x:Key="DrawingTools" Header="{DynamicResource ControlPanel_DrawingTools_Name}">
         <cp:DrawingToolsCP/>

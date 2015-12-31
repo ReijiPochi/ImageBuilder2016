@@ -33,6 +33,8 @@ namespace IBApp.Views.ControlPanels
             tv.SelectedItemChanged += Tv_SelectedItemChanged;
             tv.MouseLeftButtonDown += Tv_MouseLeftButtonDown;
 
+            AddHandler(TreeViewItem.MouseRightButtonDownEvent, new MouseButtonEventHandler(TreeViewItem_MouseRightButtonDown));
+
             Unloaded += IBProjectViewCP_Unloaded;
         }
 
@@ -59,9 +61,37 @@ namespace IBApp.Views.ControlPanels
             ((IBProjectElement)tv.SelectedItem).IsSelected = false;
         }
 
+        private void TreeViewItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem tvi = FindTreeViewItem(e.OriginalSource as FrameworkElement);
+            tvi.IsSelected = true;
+        }
+
         private void Tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SelectedElement = e.NewValue as IBProjectElement;
         }
+
+        /// <summary>
+        /// TemplatedParentからTreeViewItemを探し、返します
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private TreeViewItem FindTreeViewItem(FrameworkElement source)
+        {
+            TreeViewItem result = source as TreeViewItem;
+            if (result != null)
+                return result;
+            else
+            {
+                FrameworkElement parent = source.TemplatedParent as FrameworkElement;
+                if (parent == null) return null;
+
+                result = FindTreeViewItem(parent);
+            }
+
+            return result;
+        }
+
     }
 }
