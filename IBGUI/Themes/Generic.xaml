@@ -651,7 +651,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
 
-                        <local:IBScrollViewer Focusable="False" Background="{TemplateBinding Background}" CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}" Padding="{TemplateBinding Padding}">
+                        <local:IBScrollViewer Focusable="False" Background="{TemplateBinding Background}" CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}" Padding="{TemplateBinding Padding}" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
                             <ItemsPresenter/>
                         </local:IBScrollViewer>
                     </Border>

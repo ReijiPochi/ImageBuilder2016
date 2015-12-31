@@ -3,8 +3,9 @@
                     xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
                     xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
-    
+
     <vm:IBProjectViewVM x:Key="IBProjectViewVM"/>
+
 
     <Style TargetType="{x:Type local:IBProjectViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>
@@ -32,16 +33,15 @@
                                         CommandParameter="{Binding SelectedItem, ElementName=TreeView}"/>
                         </StackPanel>
 
-                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProjectElements}"
-                                          ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProjectElements}" ItemContainerStyle="{DynamicResource IBProjectTreeViewItemStyle}">
                             <ibgui:IBTreeView.ItemTemplate>
-                                
+
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"/>
                                     </StackPanel>
                                 </HierarchicalDataTemplate>
-                                
+
                             </ibgui:IBTreeView.ItemTemplate>
                         </ibgui:IBTreeView>
                     </Grid>

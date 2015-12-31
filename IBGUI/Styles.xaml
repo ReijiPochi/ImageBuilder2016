@@ -35,9 +35,9 @@
                             <local:IBWorkspaceFrame VerticalAlignment="Bottom" Margin="0" AllowDrop="False" HorizontalAlignment="Right" Grid.Row="1"/>
 
                             <local:IBWindowTop Margin="6,6,6,0" Visibility="Visible" HorizontalContentAlignment="Center"/>
-                            
+
                             <ContentPresenter Grid.Row="0" Grid.RowSpan="2"/>
-                            
+
                         </Grid>
                     </Border>
 
@@ -176,6 +176,53 @@
                             <Setter Property="Command" Value="ScrollBar.LineRightCommand" TargetName="IncreaseRepeat"/>
                             <Setter Property="Command" Value="ScrollBar.PageLeftCommand" TargetName="PageDown"/>
                             <Setter Property="Command" Value="ScrollBar.PageRightCommand" TargetName="PageUp"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IBTreeViewItemToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="Storyboard1">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="ExpandPath">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="45"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="Storyboard2">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="ExpandPath">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Grid Width="Auto" Height="Auto" Background="{DynamicResource IBEditableAreaBruah}">
+                        <Path HorizontalAlignment="Left" Margin="1,1,1,1" x:Name="ExpandPath" VerticalAlignment="Center" Fill="{DynamicResource IBForeGroundBrush}" Data="M 5 0 L 10 5 L 5 10 Z" RenderTransformOrigin="0.5,0.5">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.ExitActions>
+                                <BeginStoryboard x:Name="Storyboard2_BeginStoryboard" Storyboard="{StaticResource Storyboard2}"/>
+                            </Trigger.ExitActions>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource Storyboard1}"/>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource IBFocusBrush2_T}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

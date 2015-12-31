@@ -61,6 +61,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElementToBrushConverter.cs" />
     <Compile Include="Project\IBProject.cs" />
     <Compile Include="Project\IBProjectElements\Folder.cs" />
     <Compile Include="IBRectangle.cs" />
@@ -108,6 +109,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Colors.dark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Timeline\IBCanvas_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

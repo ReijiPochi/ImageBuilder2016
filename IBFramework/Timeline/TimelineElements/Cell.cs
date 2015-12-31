@@ -15,6 +15,7 @@ namespace IBFramework.Timeline.TimelineElements
     {
         public Cell(IBProject Master) : base(Master)
         {
+            Type = IBProjectElementTypes.Cell;
         }
 
         public ObservableCollection<IBImage> _Layers = new ObservableCollection<IBImage>();
