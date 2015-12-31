@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace IBGUI
 {
@@ -21,5 +22,16 @@ namespace IBGUI
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(IBButton), new FrameworkPropertyMetadata(typeof(IBButton)));
         }
+
+
+        [Category("IBGUI")]
+        public bool MonoColorIcon
+        {
+            get { return (bool)GetValue(MonoColorIconProperty); }
+            set { SetValue(MonoColorIconProperty, value); }
+        }
+        public static readonly DependencyProperty MonoColorIconProperty =
+            DependencyProperty.Register("MonoColorIcon", typeof(bool), typeof(IBButton), new PropertyMetadata(true));
+
     }
 }

@@ -147,7 +147,6 @@
         <Setter Property="Height" Value="20"/>
     </Style>
 
-
     <Style TargetType="{x:Type local:IBButton}">
         <Setter Property="Template">
             <Setter.Value>
@@ -168,11 +167,7 @@
                         <Border x:Name="border"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                            <ContentPresenter ContentSource="Content" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <ContentPresenter.Effect>
-                                    <ee:ColorToneEffect DarkColor="{DynamicResource IBIconForegroundColor}" LightColor="{DynamicResource IBIconForegroundColor}" Desaturation="1" ToneAmount="{Binding Desaturation, RelativeSource={RelativeSource Self}}"/>
-                                </ContentPresenter.Effect>
-                            </ContentPresenter>
+                            <ContentPresenter x:Name="contentPresenter" ContentSource="Content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <Rectangle x:Name="rectangle" Fill="{DynamicResource IBClickedBrush}" Visibility="Hidden"/>
                     </Grid>
@@ -184,8 +179,14 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="{DynamicResource IBFocusBrush_T}"/>
                         </MultiTrigger>
+                        <Trigger Property="MonoColorIcon" Value="True">
+                            <Setter Property="Effect" TargetName="contentPresenter" Value="{DynamicResource MonoColorEffect}"/>
+                        </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Effect" TargetName="contentPresenter" Value="{DynamicResource InvalidMonoColorEffect}"/>
                         </Trigger>
                         <EventTrigger RoutedEvent="ButtonBase.Click">
                             <BeginStoryboard Storyboard="{StaticResource OnClick1}"/>

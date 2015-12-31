@@ -6,6 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/IBFramework;component/Timeline/IBCanvas_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Timeline/TimelineElements/SubTabItem_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/Project/FlagButton_Design.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

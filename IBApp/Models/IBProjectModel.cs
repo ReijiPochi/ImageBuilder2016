@@ -112,7 +112,8 @@ namespace IBApp.Models
         {
             Cell newCell = new Cell(_OpenedIBProject)
             {
-                Name = "Cell"
+                Name = "Cell",
+                StateFlag = IBProjectElementFlags.Drawing
             };
 
             if(Parent != null)

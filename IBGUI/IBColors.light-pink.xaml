@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:IBGUI">
+                    xmlns:local="clr-namespace:IBGUI"
+                    xmlns:ee="http://schemas.microsoft.com/expression/2010/effects">
     
     <SolidColorBrush x:Key="IBBackGroundBrush" Color="#FFEEEEEE"/>
     <SolidColorBrush x:Key="IBBackGroundBrush_T" Color="#E5FFFFFF"/>
@@ -21,6 +22,10 @@
     <SolidColorBrush x:Key="IBClickedBrush_T" Color="#7F63083E"/>
 
     <Color x:Key="IBIconForegroundColor" A="255" B="70" G="70" R="70"/>
+    <Color x:Key="IBInvalidIconForegroundColor" A="255" B="150" G="150" R="150"/>
     <Color x:Key="IBDrawingAreaBackgroundColor" A="255" B="250" G="250" R="250"/>
+
+    <ee:ColorToneEffect x:Key="MonoColorEffect" Desaturation="1" ToneAmount="1" DarkColor="#FF1E1E1E" LightColor="#FF1E1E1E"/>
+    <ee:ColorToneEffect x:Key="InvalidMonoColorEffect" Desaturation="1" ToneAmount="1" DarkColor="#FF969696" LightColor="#FF969696"/>
 
 </ResourceDictionary>

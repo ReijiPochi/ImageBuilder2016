@@ -15,6 +15,15 @@ namespace IBFramework.Project
         Cell
     }
 
+    public enum IBProjectElementFlags
+    {
+        Non,
+        Drawing,
+        Finished,
+        Checked,
+        Advice
+    }
+
     public abstract class IBProjectElement : INotifyPropertyChanged
     {
         public IBProjectElement(IBProject Master)
@@ -107,6 +116,34 @@ namespace IBFramework.Project
                     return;
                 _UseCount = value;
                 RaisePropertyChanged("UseCount");
+            }
+        }
+
+        private string _Comment;
+        public string Comment
+        {
+            get
+            { return _Comment; }
+            set
+            {
+                if (_Comment == value)
+                    return;
+                _Comment = value;
+                RaisePropertyChanged("Comment");
+            }
+        }
+
+        private IBProjectElementFlags _StateFlag;
+        public IBProjectElementFlags StateFlag
+        {
+            get
+            { return _StateFlag; }
+            set
+            {
+                if (_StateFlag == value)
+                    return;
+                _StateFlag = value;
+                RaisePropertyChanged("StateFlag");
             }
         }
     }

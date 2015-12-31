@@ -47,6 +47,8 @@ namespace IBApp.Views.ControlPanels
 
         private void Tv_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (tv.SelectedItem == null) return;
+
             ((IBProjectElement)tv.SelectedItem).IsSelected = false;
         }
 
@@ -54,6 +56,5 @@ namespace IBApp.Views.ControlPanels
         {
             SelectedElement = e.NewValue as IBProjectElement;
         }
-
     }
 }

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:IBFramework">
 
-    <SolidColorBrush x:Key="FolderBrush" Color="#FFD47E25"/>
-    <SolidColorBrush x:Key="CellBrush" Color="#FF00A9C3"/>
+    <SolidColorBrush x:Key="FolderBrush" Color="#FFB07941"/>
+    <SolidColorBrush x:Key="CellBrush" Color="#FF1EBED6"/>
     
 </ResourceDictionary>

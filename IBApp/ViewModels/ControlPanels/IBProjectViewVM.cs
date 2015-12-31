@@ -97,6 +97,9 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _SelectedIBProjectElement = value;
                 RaisePropertyChanged();
+
+                AddNewFolderCommand.RaiseCanExecuteChanged();
+                AddNewCellCommand.RaiseCanExecuteChanged();
             }
         }
         #endregion
@@ -119,7 +122,13 @@ namespace IBApp.ViewModels.ControlPanels
 
         public bool CanAddNewFolder()
         {
-            return true;
+            if (SelectedIBProjectElement == null) return true;
+
+            if (SelectedIBProjectElement.Type == IBProjectElementTypes.File
+                || SelectedIBProjectElement.Type == IBProjectElementTypes.Null)
+                return true;
+            else
+                return false;
         }
 
         public void AddNewFolder()
@@ -145,7 +154,13 @@ namespace IBApp.ViewModels.ControlPanels
 
         public bool CanAddNewCell()
         {
-            return true;
+            if (SelectedIBProjectElement == null) return true;
+
+            if (SelectedIBProjectElement.Type == IBProjectElementTypes.File
+                || SelectedIBProjectElement.Type == IBProjectElementTypes.Null)
+                return true;
+            else
+                return false;
         }
 
         public void AddNewCell()
