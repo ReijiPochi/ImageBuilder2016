@@ -14,6 +14,7 @@ using Livet.Messaging.Windows;
 
 using IBApp.Models;
 using IBFramework.IBProject;
+using IBFramework.Timeline.TimelineElements;
 
 namespace IBApp.ViewModels.ControlPanels
 {
@@ -81,7 +82,50 @@ namespace IBApp.ViewModels.ControlPanels
         }
         #endregion
 
+        #region CurrentSelectedElement変更通知プロパティ
+        private IBProjectElement _CurrentSelectedElement;
 
+        public IBProjectElement CurrentSelectedElement
+        {
+            get
+            { return _CurrentSelectedElement; }
+            set
+            { 
+                if (_CurrentSelectedElement == value)
+                    return;
+                _CurrentSelectedElement = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+
+
+        #region AddFolderCommand
+        private ViewModelCommand _AddFolderCommand;
+
+        public ViewModelCommand AddFolderCommand
+        {
+            get
+            {
+                if (_AddFolderCommand == null)
+                {
+                    _AddFolderCommand = new ViewModelCommand(AddFolder, CanAddFolder);
+                }
+                return _AddFolderCommand;
+            }
+        }
+
+        public bool CanAddFolder()
+        {
+            return true;
+        }
+
+        public void AddFolder()
+        {
+
+        }
+        #endregion
 
         #region AddCellCommand
         private ViewModelCommand _AddCellCommand;
@@ -105,7 +149,7 @@ namespace IBApp.ViewModels.ControlPanels
 
         public void AddCell()
         {
-
+            IBProjectModel.Current.AddNewCell(CurrentSelectedElement);
         }
         #endregion
 

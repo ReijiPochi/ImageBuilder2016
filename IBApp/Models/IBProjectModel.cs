@@ -58,7 +58,6 @@ namespace IBApp.Models
         }
         #endregion
 
-
         #region SelectedPropertyItem変更通知プロパティ
         private IProperty _SelectedPropertyItem;
 
@@ -75,5 +74,15 @@ namespace IBApp.Models
             }
         }
         #endregion
+
+        public void AddNewCell(IBProjectElement Parent)
+        {
+            Cell newCell = new Cell()
+            {
+                Name = "Cell"
+            };
+
+            Parent.Children.Add(newCell);
+        }
     }
 }

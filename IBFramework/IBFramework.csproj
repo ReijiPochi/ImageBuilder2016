@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBProject\IBProject.cs" />
+    <Compile Include="IBProject\IBProjectElements\Folder.cs" />
     <Compile Include="IBRectangle.cs" />
     <Compile Include="Image\BGRA32FormattedImage.cs" />
     <Compile Include="Image\Blend\Add.cs" />
