@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace IBFramework.Project
 {
@@ -14,7 +15,7 @@ namespace IBFramework.Project
         Cell
     }
 
-    public abstract class IBProjectElement
+    public abstract class IBProjectElement : INotifyPropertyChanged
     {
         public IBProjectElement(IBProject Master)
         {
@@ -24,19 +25,89 @@ namespace IBFramework.Project
             }
         }
 
-        public int ID { get; private set; }
-
-        public string Name { get; set; }
-
-        public IBProjectElementTypes Type { get; set; }
-
-        /// <summary>
-        /// nullの場合、親は現在のプロジェクト
-        /// </summary>
-        public IBProjectElement Parent = null;
+        public IBProjectElementTypes Type { get; protected set; }
 
         public ObservableCollection<IBProjectElement> Children { get; set; } = new ObservableCollection<IBProjectElement>();
 
-        public int UseCount { get; set; } = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private int _ID;
+        public int ID
+        {
+            get
+            { return _ID; }
+            set
+            { 
+                if (_ID == value)
+                    return;
+                _ID = value;
+                RaisePropertyChanged("ID");
+            }
+        }
+
+        private string _Name;
+        public string Name
+        {
+            get
+            { return _Name; }
+            set
+            {
+                if (_Name == value)
+                    return;
+                _Name = value;
+                RaisePropertyChanged("Name");
+            }
+        }
+
+        private bool _IsSelected;
+        public bool IsSelected
+        {
+            get
+            { return _IsSelected; }
+            set
+            {
+                if (_IsSelected == value)
+                    return;
+                _IsSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
+
+        private IBProjectElement _Parent;
+        /// <summary>
+        /// nullの場合、親は現在のプロジェクト
+        /// </summary>
+        public IBProjectElement Parent
+        {
+            get
+            { return _Parent; }
+            set
+            {
+                if (_Parent == value)
+                    return;
+                _Parent = value;
+                RaisePropertyChanged("Parent");
+            }
+        }
+
+        private int _UseCount;
+        public int UseCount
+        {
+            get
+            { return _UseCount; }
+            set
+            {
+                if (_UseCount == value)
+                    return;
+                _UseCount = value;
+                RaisePropertyChanged("UseCount");
+            }
+        }
     }
 }

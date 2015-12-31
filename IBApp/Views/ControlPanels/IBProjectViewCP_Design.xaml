@@ -9,10 +9,12 @@
 
     <Style TargetType="{x:Type local:IBProjectViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="DataContext" Value="{StaticResource IBProjectViewVM}"/>
+        <Setter Property="SelectedElement" Value="{Binding SelectedIBProjectElement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBProjectViewCP}">
-                    <Grid DataContext="{StaticResource IBProjectViewVM}" Background="{DynamicResource IBBackGroundBrush}">
+                    <Grid Background="{DynamicResource IBBackGroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="22"/>
                             <RowDefinition/>
@@ -26,14 +28,12 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" Grid.Row="1">
                             <ibgui:IBButton Grid.Row="1" Height="22" Width="22" Content="F"
-                                        Command="{Binding AddNewFolderCommand, Mode=OneWay}"
-                                        CommandParameter="{Binding SelectedItem, ElementName=TreeView}"/>
+                                        Command="{Binding AddNewFolderCommand, Mode=OneWay}"/>
                             <ibgui:IBButton Grid.Row="1" Height="22" Width="22" Content="C"
-                                        Command="{Binding AddNewCellCommand, Mode=OneWay}"
-                                        CommandParameter="{Binding SelectedItem, ElementName=TreeView}"/>
+                                        Command="{Binding AddNewCellCommand, Mode=OneWay}"/>
                         </StackPanel>
 
-                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProjectElements}" ItemContainerStyle="{DynamicResource IBProjectTreeViewItemStyle}">
+                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProjectElements, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{DynamicResource IBProjectTreeViewItemStyle}">
                             <ibgui:IBTreeView.ItemTemplate>
 
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">

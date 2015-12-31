@@ -22,6 +22,8 @@ namespace IBApp.ViewModels.ControlPanels
     {
         public IBProjectViewVM()
         {
+            if (IBProjectModel.Current == null) return;
+
             CurrentIBProjectName = IBProjectModel.Current.IBProject_Name;
             IBProjectModel.Current.PropertyChanged += IBProjectModelCurrent_PropertyChanged;
         }
@@ -82,17 +84,34 @@ namespace IBApp.ViewModels.ControlPanels
         }
         #endregion
 
+        #region SelectedIBProjectElement変更通知プロパティ
+        private IBProjectElement _SelectedIBProjectElement;
+
+        public IBProjectElement SelectedIBProjectElement
+        {
+            get
+            { return _SelectedIBProjectElement; }
+            set
+            { 
+                if (_SelectedIBProjectElement == value)
+                    return;
+                _SelectedIBProjectElement = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
 
         #region AddNewFolderCommand
-        private ListenerCommand<IBProjectElement> _AddNewFolderCommand;
+        private ViewModelCommand _AddNewFolderCommand;
 
-        public ListenerCommand<IBProjectElement> AddNewFolderCommand
+        public ViewModelCommand AddNewFolderCommand
         {
             get
             {
                 if (_AddNewFolderCommand == null)
                 {
-                    _AddNewFolderCommand = new ListenerCommand<IBProjectElement>(AddNewFolder, CanAddNewFolder);
+                    _AddNewFolderCommand = new ViewModelCommand(AddNewFolder, CanAddNewFolder);
                 }
                 return _AddNewFolderCommand;
             }
@@ -103,22 +122,22 @@ namespace IBApp.ViewModels.ControlPanels
             return true;
         }
 
-        public void AddNewFolder(IBProjectElement parameter)
+        public void AddNewFolder()
         {
-            IBProjectModel.Current.AddNewFolder(parameter);
+            IBProjectModel.Current.AddNewFolder(SelectedIBProjectElement);
         }
         #endregion
 
         #region AddNewCellCommand
-        private ListenerCommand<IBProjectElement> _AddNewCellCommand;
+        private ViewModelCommand _AddNewCellCommand;
 
-        public ListenerCommand<IBProjectElement> AddNewCellCommand
+        public ViewModelCommand AddNewCellCommand
         {
             get
             {
                 if (_AddNewCellCommand == null)
                 {
-                    _AddNewCellCommand = new ListenerCommand<IBProjectElement>(AddNewCell, CanAddNewCell);
+                    _AddNewCellCommand = new ViewModelCommand(AddNewCell, CanAddNewCell);
                 }
                 return _AddNewCellCommand;
             }
@@ -129,11 +148,12 @@ namespace IBApp.ViewModels.ControlPanels
             return true;
         }
 
-        public void AddNewCell(IBProjectElement parameter)
+        public void AddNewCell()
         {
-            IBProjectModel.Current.AddNewCell(parameter);
+            IBProjectModel.Current.AddNewCell(SelectedIBProjectElement);
         }
         #endregion
+
 
     }
 }
