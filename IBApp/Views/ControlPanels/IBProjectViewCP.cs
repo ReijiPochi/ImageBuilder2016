@@ -32,6 +32,13 @@ namespace IBApp.Views.ControlPanels
             tv = GetTemplateChild("TreeView") as IBTreeView;
             tv.SelectedItemChanged += Tv_SelectedItemChanged;
             tv.MouseLeftButtonDown += Tv_MouseLeftButtonDown;
+
+            Unloaded += IBProjectViewCP_Unloaded;
+        }
+
+        private void IBProjectViewCP_Unloaded(object sender, RoutedEventArgs e)
+        {
+            GC.Collect();
         }
 
         IBTreeView tv;
