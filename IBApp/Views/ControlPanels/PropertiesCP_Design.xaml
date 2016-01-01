@@ -9,23 +9,27 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PropertiesCP}">
-                    <Grid Background="{DynamicResource IBBackGroundBrush}" VerticalAlignment="Stretch">
+                    <Grid Background="{DynamicResource IBBackGroundBrush}">
                         <Grid.DataContext>
                             <vm:PropertiesVM/>
                         </Grid.DataContext>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="22"/>
-                            <RowDefinition Height="0*"/>
+                            <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         
+                        <ibgui:IBFocusableBG Grid.RowSpan="2"/>
                         <Border x:Name="border" Height="Auto" Margin="0" Background="{DynamicResource IBBorderBrush}" HorizontalAlignment="Stretch"/>
                         <ibgui:IBToggleButton Width="20" Height="20" Content="P" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,2"
                                                 ButtonON="{Binding Pin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <ibgui:IBToggleButton Width="20" Height="20" Content="L" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,1,1,2"
                                                 ButtonON="{Binding CurrentPropertyItem.IsLocked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25,0,27,0" Padding="0" Foreground="{DynamicResource IBForeGroundBrush}"
-                                Content="{Binding CurrentPropertyItem.ElementName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25,0,27,0" Padding="0" Foreground="{DynamicResource IBForeGroundBrush}"
+                                Content="{Binding CurrentPropertyItem.PropertyHeaderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         
+                        <ibgui:IBScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False">
+                            <ContentPresenter Content="{Binding CurrentPP}"/>
+                        </ibgui:IBScrollViewer>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

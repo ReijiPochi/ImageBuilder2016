@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Windows.Controls;
 
 using Livet;
 using Livet.Commands;
@@ -62,9 +63,24 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _CurrentPropertyItem = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged("CurrentPP");
             }
         }
         #endregion
+
+        #region CurrentPPプロパティ
+        public Control CurrentPP
+        {
+            get
+            {
+                if (CurrentPropertyItem == null)
+                    return null;
+                return CurrentPropertyItem.GetPP();
+            }
+            set { }
+        }
+        #endregion
+
 
     }
 }

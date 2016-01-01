@@ -85,10 +85,10 @@ namespace IBGUI
             MaskRect.DragLeave += MaskRect_DragLeave;
             MaskRect.MouseLeave += MaskRect_MouseLeave;
 
-            MouseDown += IBTabItem_MouseDown;
+            PreviewMouseDown += IBTabItem_PreviewMouseDown;
         }
 
-        private void IBTabItem_MouseDown(object sender, MouseButtonEventArgs e)
+        private void IBTabItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             PanelActivate();
         }

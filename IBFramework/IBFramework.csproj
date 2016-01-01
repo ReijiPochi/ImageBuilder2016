@@ -94,6 +94,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Timeline\TimelineElements\CellPP.cs" />
     <Compile Include="Timeline\TimelineElements\SubTabItem.cs" />
     <Compile Include="Timeline\TimelineElement.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -125,6 +126,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Timeline\TimelineElements\CellPP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Timeline\TimelineElements\SubTabItem_Design.xaml">
       <SubType>Designer</SubType>

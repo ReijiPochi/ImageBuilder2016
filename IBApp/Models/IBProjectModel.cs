@@ -64,7 +64,9 @@ namespace IBApp.Models
 
         #region SelectedPropertyItem変更通知プロパティ
         private IProperty _SelectedPropertyItem;
-
+        /// <summary>
+        /// PropertiesCPに表示される
+        /// </summary>
         public IProperty SelectedPropertyItem
         {
             get
@@ -81,7 +83,9 @@ namespace IBApp.Models
 
         #region ActiveTargetElement変更通知プロパティ
         private IBProjectElement _ActiveTargetElement;
-
+        /// <summary>
+        /// 編集等の対象になっているエレメント。登録すると、可能ならSelectedPropertyItemにも追加される
+        /// </summary>
         public IBProjectElement ActiveTargetElement
         {
             get
@@ -92,6 +96,9 @@ namespace IBApp.Models
                     return;
                 _ActiveTargetElement = value;
                 RaisePropertyChanged();
+
+                if (value as IProperty != null)
+                    SelectedPropertyItem = (IProperty)value;
             }
         }
         #endregion
