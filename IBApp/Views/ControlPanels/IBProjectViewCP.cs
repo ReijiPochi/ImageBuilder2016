@@ -33,7 +33,7 @@ namespace IBApp.Views.ControlPanels
             tv.SelectedItemChanged += Tv_SelectedItemChanged;
             tv.MouseLeftButtonDown += Tv_MouseLeftButtonDown;
 
-            AddHandler(TreeViewItem.MouseRightButtonDownEvent, new MouseButtonEventHandler(TreeViewItem_MouseRightButtonDown));
+            AddHandler(MouseRightButtonDownEvent, new MouseButtonEventHandler(TreeViewItem_MouseRightButtonDown));
 
             Unloaded += IBProjectViewCP_Unloaded;
         }
@@ -53,7 +53,6 @@ namespace IBApp.Views.ControlPanels
         public static readonly DependencyProperty SelectedElementProperty =
             DependencyProperty.Register("SelectedElement", typeof(IBProjectElement), typeof(IBProjectViewCP), new PropertyMetadata(null));
 
-
         private void Tv_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (tv.SelectedItem == null) return;
@@ -64,7 +63,10 @@ namespace IBApp.Views.ControlPanels
         private void TreeViewItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             TreeViewItem tvi = FindTreeViewItem(e.OriginalSource as FrameworkElement);
+            if (tvi == null) return;
+
             tvi.IsSelected = true;
+            e.Handled = true;
         }
 
         private void Tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -92,6 +94,5 @@ namespace IBApp.Views.ControlPanels
 
             return result;
         }
-
     }
 }

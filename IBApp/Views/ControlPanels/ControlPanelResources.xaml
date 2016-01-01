@@ -6,7 +6,7 @@
                     xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="IBProjectViewCP_Resources.xaml"/>
+        <ResourceDictionary Source="iBProjectViewCP_Resource.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 

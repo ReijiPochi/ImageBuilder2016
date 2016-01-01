@@ -5,7 +5,7 @@
                     >
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="IBProjectViewCP_Resources.xaml"/>
+        <ResourceDictionary Source="IBProjectViewCP_Resource.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type local:IBProjectViewCP}">

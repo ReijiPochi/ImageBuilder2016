@@ -41,6 +41,10 @@ namespace IBApp.ViewModels.ControlPanels
                     RaisePropertyChanged("CurrentIBProjectElements");
                     break;
 
+                case "ActiveTargetElement":
+                    SelectedIBProjectElement = IBProjectModel.Current.ActiveTargetElement;
+                    break;
+
                 default:
                     break;
             }
@@ -96,6 +100,9 @@ namespace IBApp.ViewModels.ControlPanels
                 if (_SelectedIBProjectElement == value)
                     return;
                 _SelectedIBProjectElement = value;
+
+                IBProjectModel.Current.ActiveTargetElement = value;
+
                 RaisePropertyChanged();
 
                 AddNewFolderCommand.RaiseCanExecuteChanged();
@@ -133,7 +140,7 @@ namespace IBApp.ViewModels.ControlPanels
 
         public void AddNewFolder()
         {
-            IBProjectModel.Current.AddNewFolder(SelectedIBProjectElement);
+            IBProjectModel.Current.AddNewFolder();
         }
         #endregion
 
@@ -165,7 +172,7 @@ namespace IBApp.ViewModels.ControlPanels
 
         public void AddNewCell()
         {
-            IBProjectModel.Current.AddNewCell(SelectedIBProjectElement);
+            IBProjectModel.Current.AddNewCell();
         }
         #endregion
 

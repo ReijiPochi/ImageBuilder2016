@@ -79,21 +79,39 @@ namespace IBApp.Models
         }
         #endregion
 
+        #region ActiveTargetElement変更通知プロパティ
+        private IBProjectElement _ActiveTargetElement;
+
+        public IBProjectElement ActiveTargetElement
+        {
+            get
+            { return _ActiveTargetElement; }
+            set
+            { 
+                if (_ActiveTargetElement == value)
+                    return;
+                _ActiveTargetElement = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+
         /// <summary>
-        /// Parentの子に新規フォルダを追加
+        /// IBProjectModel.ActiveTargetElementの子に新規フォルダを追加
         /// </summary>
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにフォルダを追加</param>
-        public void AddNewFolder(IBProjectElement Parent)
+        public void AddNewFolder()
         {
             Folder newFolder = new Folder(_OpenedIBProject)
             {
                 Name = "Folder"
             };
 
-            if (Parent != null)
+            if (ActiveTargetElement != null)
             {
-                Parent.Children.Add(newFolder);
-                newFolder.Parent = Parent;
+                ActiveTargetElement.Children.Add(newFolder);
+                newFolder.Parent = ActiveTargetElement;
             }
             else
             {
@@ -105,10 +123,10 @@ namespace IBApp.Models
         }
 
         /// <summary>
-        /// Parentの子に新規セルを追加
+        /// IBProjectModel.ActiveTargetElementの子に新規セルを追加
         /// </summary>
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルを追加</param>
-        public void AddNewCell(IBProjectElement Parent)
+        public void AddNewCell()
         {
             Cell newCell = new Cell(_OpenedIBProject)
             {
@@ -116,10 +134,10 @@ namespace IBApp.Models
                 StateFlag = IBProjectElementFlags.Drawing
             };
 
-            if(Parent != null)
+            if(ActiveTargetElement != null)
             {
-                Parent.Children.Add(newCell);
-                newCell.Parent = Parent;
+                ActiveTargetElement.Children.Add(newCell);
+                newCell.Parent = ActiveTargetElement;
             }
             else
             {
