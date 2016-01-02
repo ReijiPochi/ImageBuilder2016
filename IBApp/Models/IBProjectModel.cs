@@ -131,12 +131,12 @@ namespace IBApp.Models
         }
 
         /// <summary>
-        /// IBProjectModel.ActiveTargetElementの子に新規セルを追加
+        /// IBProjectModel.ActiveTargetElementの子に新規セルソースを追加
         /// </summary>
-        /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルを追加</param>
-        public void AddNewCell()
+        /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルソースを追加</param>
+        public void AddNewCellSource()
         {
-            Cell newCell = new Cell(_OpenedIBProject)
+            CellSource newCellSource = new CellSource(_OpenedIBProject)
             {
                 Name = "Cell",
                 IsSelected = true
@@ -166,31 +166,31 @@ namespace IBApp.Models
                         Num = Reverse(Num);
                         tempName = Reverse(tempName);
                         tempNum = int.Parse(Num) + 1;
-                        newCell.Name = tempName + tempNum.ToString("d" + Num.Length.ToString());
+                        newCellSource.Name = tempName + tempNum.ToString("d" + Num.Length.ToString());
                     }
 
                     if(ActiveTargetElement.Parent != null)
                     {
                         IBProjectElement parent = ActiveTargetElement.Parent;
-                        parent.Children.Add(newCell);
-                        newCell.Parent = parent;
+                        parent.Children.Add(newCellSource);
+                        newCellSource.Parent = parent;
                     }
                     else
                     {
-                        _OpenedIBProject.IBProjectElements.Add(newCell);
-                        newCell.Parent = null;
+                        _OpenedIBProject.IBProjectElements.Add(newCellSource);
+                        newCellSource.Parent = null;
                     }
                 }
                 else
                 {
-                    ActiveTargetElement.Children.Add(newCell);
-                    newCell.Parent = ActiveTargetElement;
+                    ActiveTargetElement.Children.Add(newCellSource);
+                    newCellSource.Parent = ActiveTargetElement;
                 }
             }
             else
             {
-                _OpenedIBProject.IBProjectElements.Add(newCell);
-                newCell.Parent = null;
+                _OpenedIBProject.IBProjectElements.Add(newCellSource);
+                newCellSource.Parent = null;
             }
 
             RaisePropertyChanged("IBProject_Elements");

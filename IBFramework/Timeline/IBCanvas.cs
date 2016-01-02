@@ -25,6 +25,8 @@ using IBFramework.Image;
 using IBFramework.Image.Blend;
 using IBFramework.Timeline.TimelineElements;
 using IBGUI;
+using IBFramework.Project;
+using IBFramework.Project.IBProjectElements;
 
 namespace IBFramework.Timeline
 {
@@ -85,13 +87,13 @@ namespace IBFramework.Timeline
 
 
         [Description("開かれているタイムラインエレメント"), Category("IBFramework")]
-        public ObservableCollection<TimelineElement> OpenedElements
+        public ObservableCollection<IBProjectElement> OpenedElements
         {
-            get { return (ObservableCollection<TimelineElement>)GetValue(OpenedElementsProperty); }
+            get { return (ObservableCollection<IBProjectElement>)GetValue(OpenedElementsProperty); }
             set { SetValue(OpenedElementsProperty, value); }
         }
         public static readonly DependencyProperty OpenedElementsProperty =
-            DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<TimelineElement>), typeof(IBCanvas), new PropertyMetadata(new ObservableCollection<TimelineElement>()));
+            DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<IBProjectElement>), typeof(IBCanvas), new PropertyMetadata(new ObservableCollection<IBProjectElement>()));
 
 
         [Description("アクティブなブラシ"), Category("IBFramework")]
@@ -211,7 +213,7 @@ namespace IBFramework.Timeline
             if (Tabs.SelectedItem == null) return;
             if (((SubTabItem)Tabs.SelectedItem).Element as Cell == null) return;
 
-            foreach(IBImage i in ((Cell)((SubTabItem)Tabs.SelectedItem).Element).Layers)
+            foreach(IBImage i in ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers)
             {
                 i.RenderTo(RenderData);
             }
@@ -238,7 +240,7 @@ namespace IBFramework.Timeline
             // OpenedElementsにあってItemsにないものはItemsに追加
             for (int count = 0; count < OpenedElements.Count; count++)
             {
-                TimelineElement trgC = OpenedElements[count];
+                IBProjectElement trgC = OpenedElements[count];
 
                 bool result = false;
                 for (int i = 0; i < Tabs.Items.Count; i++)
@@ -247,7 +249,7 @@ namespace IBFramework.Timeline
                     if (s == null) break;
                     if (s.isDummyItem) return;
 
-                    TimelineElement c = s.Element as TimelineElement;
+                    IBProjectElement c = s.Element as IBProjectElement;
                     if (c == null) break;
 
                     if(c == trgC)
@@ -269,11 +271,11 @@ namespace IBFramework.Timeline
                 if (s == null) break;
                 if (s.isDummyItem) return;
 
-                TimelineElement trgC = s.Element as TimelineElement;
+                IBProjectElement trgC = s.Element as IBProjectElement;
                 if (trgC == null) break;
 
                 bool result = false;
-                foreach(TimelineElement c in OpenedElements)
+                foreach(IBProjectElement c in OpenedElements)
                 {
                     if (c == trgC)
                         result = true;
@@ -300,7 +302,7 @@ namespace IBFramework.Timeline
             {
                 if (s.isDummyItem) return;
 
-                TimelineElement c = s.Element as TimelineElement;
+                IBProjectElement c = s.Element as IBProjectElement;
                 if (c == null) break;
 
                 if (!OpenedElements.Contains(c))
@@ -314,12 +316,12 @@ namespace IBFramework.Timeline
             // OpenedElementsにあってItemsにないものはOpenedElementsから削除
             for (int i = 0; i < OpenedElements.Count; i++)
             {
-                TimelineElement trgC = OpenedElements[i];
+                IBProjectElement trgC = OpenedElements[i];
                 bool result = false;
 
                 foreach (SubTabItem s in Tabs.Items)
                 {
-                    TimelineElement c = s.Element as TimelineElement;
+                    IBProjectElement c = s.Element as IBProjectElement;
                     if (c == null) break;
 
                     if (c == trgC)
