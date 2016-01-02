@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 
 using IBFramework.Image;
 using IBFramework.Project;
-using IBFramework.Project.IBProjectElements;
 using System.Windows.Controls;
 
 namespace IBFramework.Timeline.TimelineElements
@@ -28,18 +27,11 @@ namespace IBFramework.Timeline.TimelineElements
                 PropertyHeaderName = "Cell \"" + Name + "\"";
         }
 
-        private CellSource _Source;
-        public CellSource Source
+        public ObservableCollection<IBImage> _Layers = new ObservableCollection<IBImage>();
+        public ObservableCollection<IBImage> Layers
         {
-            get { return _Source; }
-            set
-            {
-                if (_Source == value)
-                    return;
-                _Source = value;
-                value.UseCount++;
-                RaisePropertyChanged("Source");
-            }
+            get { return _Layers; }
+            set { Layers = value; }
         }
 
         private string _PropertyHeaderName;

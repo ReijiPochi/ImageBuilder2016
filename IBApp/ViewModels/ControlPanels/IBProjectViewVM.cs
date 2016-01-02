@@ -106,7 +106,7 @@ namespace IBApp.ViewModels.ControlPanels
                 RaisePropertyChanged();
 
                 AddNewFolderCommand.RaiseCanExecuteChanged();
-                AddNewCellSourceCommand.RaiseCanExecuteChanged();
+                AddNewCellCommand.RaiseCanExecuteChanged();
             }
         }
         #endregion
@@ -144,18 +144,18 @@ namespace IBApp.ViewModels.ControlPanels
         }
         #endregion
 
-        #region AddNewCellSourceCommand
-        private ViewModelCommand _AddNewCellSourceCommand;
+        #region AddNewCellCommand
+        private ViewModelCommand _AddNewCellCommand;
 
-        public ViewModelCommand AddNewCellSourceCommand
+        public ViewModelCommand AddNewCellCommand
         {
             get
             {
-                if (_AddNewCellSourceCommand == null)
+                if (_AddNewCellCommand == null)
                 {
-                    _AddNewCellSourceCommand = new ViewModelCommand(AddNewCellSource, CanAddNewCell);
+                    _AddNewCellCommand = new ViewModelCommand(AddNewCell, CanAddNewCell);
                 }
-                return _AddNewCellSourceCommand;
+                return _AddNewCellCommand;
             }
         }
 
@@ -171,9 +171,9 @@ namespace IBApp.ViewModels.ControlPanels
                 return false;
         }
 
-        public void AddNewCellSource()
+        public void AddNewCell()
         {
-            IBProjectModel.Current.AddNewCellSource();
+            IBProjectModel.Current.AddNewCell();
         }
         #endregion
 

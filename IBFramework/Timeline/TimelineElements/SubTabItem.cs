@@ -14,9 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using IBGUI;
-using IBFramework.Project;
 
-namespace IBFramework
+namespace IBFramework.Timeline.TimelineElements
 {
     public class SubTabItem : IBTabItem
     {
@@ -25,7 +24,7 @@ namespace IBFramework
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SubTabItem), new FrameworkPropertyMetadata(typeof(SubTabItem)));
         }
 
-        public IBProjectElement Element { get; set; }
+        public TimelineElement Element { get; set; }
 
 
         public bool isDummyItem { get; set; } = false;
@@ -65,9 +64,9 @@ namespace IBFramework
             if (ti == null) return;
             if (ti == this) return;
 
-            if (ti.Element as IBProjectElement == null)
+            if (ti.Element as Cell == null)
                 return;
-            if (ti.Element as IBProjectElement == Element)
+            if (ti.Element as Cell == Element)
                 return;
 
             IBTabControl parentTC = Parent as IBTabControl;

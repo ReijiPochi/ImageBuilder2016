@@ -64,8 +64,6 @@
     <Compile Include="ElementToBrushConverter.cs" />
     <Compile Include="Project\FlagButton.cs" />
     <Compile Include="Project\IBProject.cs" />
-    <Compile Include="Project\IBProjectElements\CellSource.cs" />
-    <Compile Include="Project\IBProjectElements\CellSourcePP.cs" />
     <Compile Include="Project\IBProjectElements\Folder.cs" />
     <Compile Include="IBRectangle.cs" />
     <Compile Include="Image\BGRA32FormattedImage.cs" />
@@ -97,7 +95,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Timeline\TimelineElements\CellPP.cs" />
-    <Compile Include="SubTabItem.cs" />
+    <Compile Include="Timeline\TimelineElements\SubTabItem.cs" />
     <Compile Include="Timeline\TimelineElement.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -121,10 +119,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Project\IBProjectElements\CellSourcePP_Design.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Timeline\IBCanvas_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -137,7 +131,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SubTabItem_Design.xaml">
+    <Page Include="Timeline\TimelineElements\SubTabItem_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
