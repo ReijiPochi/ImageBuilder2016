@@ -3,17 +3,22 @@
                     xmlns:local="clr-namespace:IBFramework.Timeline.TimelineElements"
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI">
 
+
+
     <Style TargetType="{x:Type local:CellPP}">
         <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:CellPP}">
-                    <Grid MinWidth="150">
-                        <StackPanel Width="100" Margin="10,0,0,0" HorizontalAlignment="Left">
-                            <Label Content="ID" HorizontalAlignment="Left" Height="22" Padding="0" Background="#FFC18989"/>
+                    <Grid MinWidth="150" Margin="10,10,10,0">
+                        <ibgui:IBFocusableBG/>
+                        <StackPanel Width="100" HorizontalAlignment="Left">
+                            <ibgui:IBLabel Content="Name" Height="22"/>
+                            <ibgui:IBLabel Content="ID" Height="22"/>
                         </StackPanel>
-                        <StackPanel Margin="110,0,0,0" Background="White">
-                            <Label Content="{Binding ID}" Height="22" Padding="0" Background="#FF22A428"/>
+                        <StackPanel Margin="100,0,0,0">
+                            <ibgui:IBTextBox Text="{Binding Name}" Height="20" Padding="0" Margin="0,1,0,1"/>
+                            <ibgui:IBLabel Content="{Binding ID}" Height="22" IsEnabled="False"/>
                         </StackPanel>
                     </Grid>
                 </ControlTemplate>

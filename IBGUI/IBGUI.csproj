@@ -80,6 +80,7 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="IBButton.cs" />
     <Compile Include="IBFocusableBG.cs" />
+    <Compile Include="IBLabel.cs" />
     <Compile Include="IBMenuItem.cs" />
     <Compile Include="IBMenuSeparator.cs" />
     <Compile Include="IBPageTabItem.cs" />

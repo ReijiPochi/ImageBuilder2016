@@ -112,7 +112,8 @@ namespace IBApp.Models
         {
             Folder newFolder = new Folder(_OpenedIBProject)
             {
-                Name = "Folder"
+                Name = "Folder",
+                IsSelected = true
             };
 
             if (ActiveTargetElement != null)
@@ -138,13 +139,53 @@ namespace IBApp.Models
             Cell newCell = new Cell(_OpenedIBProject)
             {
                 Name = "Cell",
-                StateFlag = IBProjectElementFlags.Drawing
+                IsSelected = true
             };
 
             if(ActiveTargetElement != null)
             {
-                ActiveTargetElement.Children.Add(newCell);
-                newCell.Parent = ActiveTargetElement;
+                if (ActiveTargetElement.Type == IBProjectElementTypes.Cell)
+                {
+                    string Num = "", tempName = "";
+                    int tempNum;
+                    bool f = false;
+                    for (int i = ActiveTargetElement.Name.Length - 1; i >= 0; i--)
+                    {
+                        if (!f && int.TryParse(ActiveTargetElement.Name[i].ToString(), out tempNum))
+                        {
+                            Num += tempNum.ToString();
+                        }
+                        else
+                        {
+                            f = true;
+                            tempName += ActiveTargetElement.Name[i].ToString();
+                        }
+                    }
+                    if(Num.Length != 0)
+                    {
+                        Num = Reverse(Num);
+                        tempName = Reverse(tempName);
+                        tempNum = int.Parse(Num) + 1;
+                        newCell.Name = tempName + tempNum.ToString("d" + Num.Length.ToString());
+                    }
+
+                    if(ActiveTargetElement.Parent != null)
+                    {
+                        IBProjectElement parent = ActiveTargetElement.Parent;
+                        parent.Children.Add(newCell);
+                        newCell.Parent = parent;
+                    }
+                    else
+                    {
+                        _OpenedIBProject.IBProjectElements.Add(newCell);
+                        newCell.Parent = null;
+                    }
+                }
+                else
+                {
+                    ActiveTargetElement.Children.Add(newCell);
+                    newCell.Parent = ActiveTargetElement;
+                }
             }
             else
             {
@@ -153,6 +194,16 @@ namespace IBApp.Models
             }
 
             RaisePropertyChanged("IBProject_Elements");
+        }
+
+        private string Reverse(string s)
+        {
+            string result = "";
+            for(int c = s.Length - 1; c >= 0; c--)
+            {
+                result += s[c];
+            }
+            return result;
         }
     }
 }

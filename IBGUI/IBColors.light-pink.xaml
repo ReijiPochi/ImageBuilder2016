@@ -7,6 +7,7 @@
     <SolidColorBrush x:Key="IBBackGroundBrush_T" Color="#E5FFFFFF"/>
     <SolidColorBrush x:Key="IBEditableAreaBruah" Color="LightGray"/>
     <SolidColorBrush x:Key="IBForeGroundBrush" Color="#FF232323"/>
+    <SolidColorBrush x:Key="IBEditableForeGroundBruah" Color="#FF943BFF"/>
     <SolidColorBrush x:Key="IBSelectedForeGroundBrush" Color="White"/>
     <SolidColorBrush x:Key="IBInactiveForeGroundBrush" Color="#FF818687"/>
     <SolidColorBrush x:Key="IBSelectedBrush" Color="#FFFF7DBF"/>

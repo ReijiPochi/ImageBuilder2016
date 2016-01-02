@@ -19,6 +19,16 @@
         </Setter>
     </Style>
 
+    <Style x:Key="IBFocusVisual_Non">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type local:IBTabControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -560,12 +570,13 @@
     </Style>
 
     <Style TargetType="{x:Type local:IBTextBox}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource IBFocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBTextBox}">
                     <Grid>
                         <Border x:Name="Border" Background="{TemplateBinding Background}">
-                            <ScrollViewer Padding="10,0" x:Name="PART_ContentHost" Background="{TemplateBinding Background}"/>
+                            <ScrollViewer Padding="10,0" x:Name="PART_ContentHost" Background="{TemplateBinding Background}" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -584,19 +595,20 @@
             </Setter.Value>
         </Setter>
         <Setter Property="SelectionBrush" Value="{DynamicResource IBFocusBrush2_T}"/>
-        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IBEditableForeGroundBruah}"/>
         <Setter Property="SelectionOpacity" Value="0.6"/>
         <Setter Property="CaretBrush" Value="{DynamicResource IBSelectedBrush}"/>
     </Style>
 
     <Style TargetType="{x:Type local:IBFocusableBG}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBFocusableBG}">
                     <Border x:Name="border" Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Focusable="True">
+                            Focusable="True" FocusVisualStyle="{StaticResource IBFocusVisual_Non}">
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -663,6 +675,27 @@
                             <ItemsPresenter/>
                         </local:IBScrollViewer>
                     </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:IBLabel}">
+        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IBLabel}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource IBInactiveForeGroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
