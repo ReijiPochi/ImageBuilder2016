@@ -3,19 +3,28 @@
                     xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI"
                     xmlns:ibft="clr-namespace:IBFramework.Timeline;assembly=IBFramework"
-                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels">
+                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels"
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
 
     <Style TargetType="{x:Type local:CanvasViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:CanvasViewCP}">
-                    <Grid>
+                    <Grid x:Name="root" Focusable="True">
                         <Grid.DataContext>
                             <vm:CanvasViewVM/>
                         </Grid.DataContext>
-                        
-                        <ibft:IBCanvas OpenedElements="{Binding Items}" BackgroundColor="{DynamicResource IBDrawingAreaBackgroundColor}"/>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding FocusCommand,Mode=OneWay}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <ibft:IBCanvas OpenedElements="{Binding Items,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                       ShowingElement="{Binding ShowingItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                       BackgroundColor="{DynamicResource IBDrawingAreaBackgroundColor}">
+                        </ibft:IBCanvas>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -124,6 +124,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ControlPanels\LayersViewCP_Resource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ControlPanels\LayersViewCP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ControlPanels\PropertiesCP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +150,7 @@
     <Compile Include="ViewModels\ControlPanels\CanvasViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\DrawingToolsVM.cs" />
     <Compile Include="ViewModels\ControlPanels\IBProjectViewVM.cs" />
+    <Compile Include="ViewModels\ControlPanels\LayersViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\PropertiesVM.cs" />
     <Compile Include="Views\ControlPanels\CanvasViewCP.cs" />
     <Compile Include="Views\ControlPanels\DrawingToolsCP.cs" />
@@ -153,6 +162,7 @@
     <Compile Include="ViewModels\TestVM.cs" />
     <Compile Include="ViewModels\WorkspaceVM.cs" />
     <Compile Include="Views\ControlPanels\IBProjectViewCP.cs" />
+    <Compile Include="Views\ControlPanels\LayersViewCP.cs" />
     <Compile Include="Views\ControlPanels\PropertiesCP.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

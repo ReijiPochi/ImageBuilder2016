@@ -29,5 +29,6 @@
     <system:String x:Key="ControlPanel_Properties_Name">Properties</system:String>
     <system:String x:Key="ControlPanel_CanvasView_Name">Canvas View</system:String>
     <system:String x:Key="ControlPanel_IBProjectView_Name">IBProject View</system:String>
+    <system:String x:Key="ControlPanel_LayarsView_Name">Layars</system:String>
 
 </ResourceDictionary>

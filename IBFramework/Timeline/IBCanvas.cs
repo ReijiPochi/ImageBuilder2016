@@ -71,11 +71,12 @@ namespace IBFramework.Timeline
             Tabs = GetTemplateChild("Tabs") as IBTabControl;
             Tabs.ItemsChanged += Tabs_ItemsChanged;
             Tabs.SelectionChanged += Tabs_SelectionChanged;
+            Tabs.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***" });
 
-            OpenedElements.CollectionChanged += Cells_CollectionChanged;
+            OpenedElements.CollectionChanged += OpenedElements_CollectionChanged;
 
             Render();
-            ResetTabs();
+            //ResetTabs();
         }
 
         private WindowsFormsHost glControlHost;
@@ -83,7 +84,7 @@ namespace IBFramework.Timeline
         private IBTabControl Tabs;
         private int textureNumber;
 
-        public BGRA32FormattedImage RenderData = new BGRA32FormattedImage(1000, 600, new PixelData() { b = 0, g = 0, r = 0, a = 0 });
+        public BGRA32FormattedImage RenderData = new BGRA32FormattedImage(1920, 1080, new PixelData() { b = 0, g = 0, r = 0, a = 0 });
 
 
         [Description("開かれているタイムラインエレメント"), Category("IBFramework")]
@@ -94,6 +95,16 @@ namespace IBFramework.Timeline
         }
         public static readonly DependencyProperty OpenedElementsProperty =
             DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<IBProjectElement>), typeof(IBCanvas), new PropertyMetadata(new ObservableCollection<IBProjectElement>()));
+
+
+        public IBProjectElement ShowingElement
+        {
+            get { return (IBProjectElement)GetValue(ShowingElementProperty); }
+            set { SetValue(ShowingElementProperty, value); }
+        }
+        public static readonly DependencyProperty ShowingElementProperty =
+            DependencyProperty.Register("ShowingElement", typeof(IBProjectElement), typeof(IBCanvas), new PropertyMetadata(null));
+
 
 
         [Description("アクティブなブラシ"), Category("IBFramework")]
@@ -157,7 +168,7 @@ namespace IBFramework.Timeline
             {
                 GL.Begin(PrimitiveType.Quads);
                 {
-                    double w = 1000, h = 600;
+                    double w = 1920, h = 1080;
                     GL.TexCoord2(1, 1);
                     GL.Vertex2(w, h);
                     GL.TexCoord2(0, 1);
@@ -179,19 +190,20 @@ namespace IBFramework.Timeline
             glControlHost.Child.Refresh();
         }
 
-        private void Cells_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void OpenedElements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ResetTabs();
         }
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (Tabs.SelectedItem != null)
+                ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
+
             Render();
         }
 
 
-        //private System.Drawing.Point pre = new System.Drawing.Point(0, 0);
-        //private System.Drawing.Point cur = new System.Drawing.Point(0, 0);
         private void GlControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
@@ -211,7 +223,7 @@ namespace IBFramework.Timeline
             RenderData.ClearData(new PixelData() { b = 0, g = 0, r = 0, a = 0 });
 
             if (Tabs.SelectedItem == null) return;
-            if (((SubTabItem)Tabs.SelectedItem).Element as Cell == null) return;
+            if (((SubTabItem)Tabs.SelectedItem).Element as CellSource == null) return;
 
             foreach(IBImage i in ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers)
             {
@@ -230,58 +242,27 @@ namespace IBFramework.Timeline
         }
 
         #region Tabs と OpenedElements のバインド
+        private bool ResetTabs_LOCK = false;
         /// <summary>
         /// OpenedElementsの変更をTabs.Itemsに反映
         /// </summary>
         private void ResetTabs()
         {
+            if (ResetTabs_LOCK) return;
+
             Tabs_ItemsChanged_LOCK = true;
 
-            // OpenedElementsにあってItemsにないものはItemsに追加
+            Tabs.Items.Clear();
+
+            // OpenedElementsからItemsに追加
             for (int count = 0; count < OpenedElements.Count; count++)
             {
                 IBProjectElement trgC = OpenedElements[count];
 
-                bool result = false;
-                for (int i = 0; i < Tabs.Items.Count; i++)
-                {
-                    SubTabItem s = Tabs.Items[i] as SubTabItem;
-                    if (s == null) break;
-                    if (s.isDummyItem) return;
-
-                    IBProjectElement c = s.Element as IBProjectElement;
-                    if (c == null) break;
-
-                    if(c == trgC)
-                        result = true;
-                }
-                if(!result)
-                {
-                    SubTabItem s = new SubTabItem();
-                    s.Element = trgC;
-                    s.Header = trgC.Name;
-                    Tabs.Items.Add(s);
-                }
-            }
-
-            // ItemsにあってOpenedElementsにないものはItemsから削除
-            for (int i = 0; i < Tabs.Items.Count; i++)
-            {
-                SubTabItem s = Tabs.Items[i] as SubTabItem;
-                if (s == null) break;
-                if (s.isDummyItem) return;
-
-                IBProjectElement trgC = s.Element as IBProjectElement;
-                if (trgC == null) break;
-
-                bool result = false;
-                foreach(IBProjectElement c in OpenedElements)
-                {
-                    if (c == trgC)
-                        result = true;
-                }
-                if (!result)
-                    Tabs.Items.Remove(s);
+                SubTabItem s = new SubTabItem();
+                s.Element = trgC;
+                s.Header = trgC.Name;
+                Tabs.Items.Add(s);
             }
 
             Tabs_ItemsChanged_LOCK = false;
@@ -297,44 +278,27 @@ namespace IBFramework.Timeline
         {
             if (Tabs_ItemsChanged_LOCK) return;
 
-            // ItemsにあってOpenedElementsにないものはOpenedElementsに追加
+            ResetTabs_LOCK = true;
+
+            OpenedElements.Clear();
+
+            // ItemsからOpenedElementsに追加
             foreach (SubTabItem s in Tabs.Items)
             {
-                if (s.isDummyItem) return;
+                if (s.isDummyItem)
+                {
+                    ResetTabs_LOCK = false;
+                    return;
+                }
 
                 IBProjectElement c = s.Element as IBProjectElement;
                 if (c == null) break;
 
-                if (!OpenedElements.Contains(c))
-                {
-                    OpenedElements.Add(c);
-                }
+                OpenedElements.Add(c);
+
             }
 
-            if (Tabs.Items.Count == 0) return;
-
-            // OpenedElementsにあってItemsにないものはOpenedElementsから削除
-            for (int i = 0; i < OpenedElements.Count; i++)
-            {
-                IBProjectElement trgC = OpenedElements[i];
-                bool result = false;
-
-                foreach (SubTabItem s in Tabs.Items)
-                {
-                    IBProjectElement c = s.Element as IBProjectElement;
-                    if (c == null) break;
-
-                    if (c == trgC)
-                    {
-                        result = true;
-                    }
-                }
-
-                if (!result)
-                {
-                    OpenedElements.Remove(trgC);
-                }
-            }
+            ResetTabs_LOCK = false;
         }
         #endregion
 

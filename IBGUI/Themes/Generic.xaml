@@ -1,6 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
     xmlns:local="clr-namespace:IBGUI" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ee="http://schemas.microsoft.com/expression/2010/effects" mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -158,6 +159,8 @@
     </Style>
 
     <Style TargetType="{x:Type local:IBButton}">
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBButton}">
@@ -205,8 +208,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
     </Style>
 
     <Style TargetType="{x:Type local:IBPanelSplitter}">
@@ -576,7 +577,7 @@
                 <ControlTemplate TargetType="{x:Type local:IBTextBox}">
                     <Grid>
                         <Border x:Name="Border" Background="{TemplateBinding Background}">
-                            <ScrollViewer Padding="10,0" x:Name="PART_ContentHost" Background="{TemplateBinding Background}" VerticalAlignment="Center"/>
+                            <local:IBScrollViewer Padding="10,0" x:Name="PART_ContentHost" Background="{TemplateBinding Background}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -584,6 +585,7 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsKeyboardFocused" Value="False"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="AcceptsReturn" Value="False"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" TargetName="Border" Value="{DynamicResource IBFocusBrush_T}"/>
                         </MultiTrigger>
@@ -598,6 +600,7 @@
         <Setter Property="Foreground" Value="{DynamicResource IBEditableForeGroundBruah}"/>
         <Setter Property="SelectionOpacity" Value="0.6"/>
         <Setter Property="CaretBrush" Value="{DynamicResource IBSelectedBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
     <Style TargetType="{x:Type local:IBFocusableBG}">
@@ -683,6 +686,7 @@
     <Style TargetType="{x:Type local:IBLabel}">
         <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Height" Value="22"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBLabel}">
@@ -700,4 +704,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 </ResourceDictionary>

@@ -10,25 +10,21 @@ namespace IBFramework.Image
     {
         public SingleColorImage()
         {
-
+            LayerType = ImageTypes.SingleColor;
         }
 
         public SingleColorImage(byte b, byte g, byte r, byte a)
         {
+            LayerType = ImageTypes.SingleColor;
             color.b = b;
             color.g = g;
             color.r = r;
             color.a = a;
         }
 
-        public override PixelData GetRenderdPixelData(int x, int y)
-        {
-            return color;
-        }
-
         public override void RenderTo(BGRA32FormattedImage trg)
         {
-            blendMode.Blend(this, trg);
+            BlendMode.Blend(this, trg);
         }
 
         public PixelData color = new PixelData();

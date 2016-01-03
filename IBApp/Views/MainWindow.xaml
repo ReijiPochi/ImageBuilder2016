@@ -111,6 +111,7 @@
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Properties_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Properties}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_IBProjectView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource IBProjectView}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_CanvasView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource CanvasView}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_LayarsView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource LayarsView}"/>
             </ibgui:IBMenuItem>
             <ibgui:IBMenuItem Header="{DynamicResource Menu_Workspace}">
                 <ibgui:IBMenuItem.DataContext>

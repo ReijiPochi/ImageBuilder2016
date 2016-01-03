@@ -26,4 +26,8 @@
         <cp:IBProjectViewCP/>
     </ibgui:IBTabItem>
 
+    <ibgui:IBTabItem x:Key="LayarsView" Header="{DynamicResource ControlPanel_LayarsView_Name}">
+        <cp:LayersViewCP/>
+    </ibgui:IBTabItem>
+
 </ResourceDictionary>

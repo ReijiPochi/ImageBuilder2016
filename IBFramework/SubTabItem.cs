@@ -25,8 +25,28 @@ namespace IBFramework
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SubTabItem), new FrameworkPropertyMetadata(typeof(SubTabItem)));
         }
 
-        public IBProjectElement Element { get; set; }
+        private IBProjectElement _Element;
+        public IBProjectElement Element
+        {
+            get { return _Element; }
+            set
+            {
+                if (_Element == value)
+                    return;
 
+                if (_Element != null)
+                    _Element.PropertyChanged -= Element_PropertyChanged;
+
+                _Element = value;
+                _Element.PropertyChanged += Element_PropertyChanged;
+            }
+        }
+
+        private void Element_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Name")
+                Header = Element.Name;
+        }
 
         public bool isDummyItem { get; set; } = false;
 
@@ -113,6 +133,9 @@ namespace IBFramework
         protected override void OnSelected(RoutedEventArgs e)
         {
             base.OnSelected(e);
+
+            if (Element != null)
+                Element.IsShowing = IsSelected;
 
             if (isDummyItem)
                 IsSelected = false;

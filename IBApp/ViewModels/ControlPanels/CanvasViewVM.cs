@@ -18,6 +18,7 @@ using IBFramework.Image;
 using IBFramework.Image.Blend;
 using IBFramework.Timeline;
 using IBFramework.Timeline.TimelineElements;
+using IBFramework.Project;
 
 namespace IBApp.ViewModels.ControlPanels
 {
@@ -25,47 +26,15 @@ namespace IBApp.ViewModels.ControlPanels
     {
         public CanvasViewVM()
         {
-            //SingleColorImage background = new SingleColorImage(100, 100, 100, 255);
-            //background.size.Height = 1080;
-            //background.size.Width = 1920;
+            if (IBProjectModel.Current == null) return;
 
-            //SingleColorImage test = new SingleColorImage(10, 10, 48, 255);
-            //test.size.Height = 1000;
-            //test.size.Width = 200;
-            //test.size.OffsetX = 200;
-            //test.size.OffsetY = 200;
-            //test.blendMode = new Add();
-
-            //SingleColorImage test2 = new SingleColorImage(100, 200, 19, 127);
-            //test2.size.Height = 99;
-            //test2.size.Width = 99;
-            //test2.size.OffsetX = 200;
-            //test2.size.OffsetY = 200;
-            //test2.blendMode = new Normal();
-
-            //Cell c = new Cell();
-            //c.Layers.Add(background);
-            //c.Layers.Add(test);
-            //c.Name = "cell1";
-
-            //Cell c2 = new Cell();
-            //c2.Layers.Add(test2);
-            //c2.Name = "cell2";
-
-            //Cell c3 = new Cell();
-            //c3.Layers.Add(background);
-            //c3.Layers.Add(test2);
-            //c3.Name = "cell3";
-
-            //_Items.Add(c);
-            //_Items.Add(c2);
-            //_Items.Add(c3);
+            IBProjectModel.Current.ActiveCanvasItems = Items;
         }
 
         #region Itemsプロパティ
-        private ObservableCollection<TimelineElement> _Items = new ObservableCollection<TimelineElement>();
+        private ObservableCollection<IBProjectElement> _Items = new ObservableCollection<IBProjectElement>();
 
-        public ObservableCollection<TimelineElement> Items
+        public ObservableCollection<IBProjectElement> Items
         {
             get
             { return _Items; }
@@ -74,10 +43,52 @@ namespace IBApp.ViewModels.ControlPanels
                 if (_Items == value)
                     return;
                 _Items = value;
-                //RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
         #endregion
+
+        #region ShowingItem変更通知プロパティ
+        private IBProjectElement _ShowingItem;
+
+        public IBProjectElement ShowingItem
+        {
+            get
+            { return _ShowingItem; }
+            set
+            { 
+                if (_ShowingItem == value)
+                    return;
+                _ShowingItem = value;
+
+                IBProjectModel.Current.ActiveShowingItem = value;
+
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region FocusCommand
+        private ViewModelCommand _FocusCommand;
+
+        public ViewModelCommand FocusCommand
+        {
+            get
+            {
+                if (_FocusCommand == null)
+                {
+                    _FocusCommand = new ViewModelCommand(Focus);
+                }
+                return _FocusCommand;
+            }
+        }
+
+        public void Focus()
+        {
+            IBProjectModel.Current.ActiveCanvasItems = Items; 
+        }
+        #endregion
+
 
     }
 }

@@ -23,8 +23,7 @@ namespace IBApp.ViewModels.ControlPanels
         public IBProjectViewVM()
         {
             if (IBProjectModel.Current == null) return;
-
-            CurrentIBProjectName = IBProjectModel.Current.IBProject_Name;
+            CurrentIBProject = IBProjectModel.Current._OpenedIBProject;
             IBProjectModel.Current.PropertyChanged += IBProjectModelCurrent_PropertyChanged;
         }
 
@@ -32,15 +31,6 @@ namespace IBApp.ViewModels.ControlPanels
         {
             switch (e.PropertyName)
             {
-                case "IBProject_Name":
-                    CurrentIBProjectName = IBProjectModel.Current.IBProject_Name;
-                    break;
-
-                case "IBProject_Elements":
-                    CurrentIBProjectElements = IBProjectModel.Current.IBProject_Elements;
-                    RaisePropertyChanged("CurrentIBProjectElements");
-                    break;
-
                 case "ActiveTargetElement":
                     SelectedIBProjectElement = IBProjectModel.Current.ActiveTargetElement;
                     break;
@@ -51,38 +41,18 @@ namespace IBApp.ViewModels.ControlPanels
         }
 
 
-        #region CurrentIBProjectName変更通知プロパティ
-        private string _CurrentIBProjectName;
+        #region CurrentIBProject変更通知プロパティ
+        private IBProject _CurrentIBProject;
 
-        public string CurrentIBProjectName
+        public IBProject CurrentIBProject
         {
             get
-            { return _CurrentIBProjectName; }
+            { return _CurrentIBProject; }
             set
             { 
-                if (_CurrentIBProjectName == value)
+                if (_CurrentIBProject == value)
                     return;
-                _CurrentIBProjectName = value;
-
-                IBProjectModel.Current.IBProject_Name = value;
-
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
-        #region CurrentIBProjectElements変更通知プロパティ
-        private ObservableCollection<IBProjectElement> _CurrentIBProjectElements;
-
-        public ObservableCollection<IBProjectElement> CurrentIBProjectElements
-        {
-            get
-            { return _CurrentIBProjectElements; }
-            set
-            {
-                if (_CurrentIBProjectElements == value)
-                    return;
-                _CurrentIBProjectElements = value;
+                _CurrentIBProject = value;
                 RaisePropertyChanged();
             }
         }
@@ -107,6 +77,7 @@ namespace IBApp.ViewModels.ControlPanels
 
                 AddNewFolderCommand.RaiseCanExecuteChanged();
                 AddNewCellSourceCommand.RaiseCanExecuteChanged();
+                ShowOnCanvasCommand.RaiseCanExecuteChanged();
             }
         }
         #endregion
@@ -174,6 +145,58 @@ namespace IBApp.ViewModels.ControlPanels
         public void AddNewCellSource()
         {
             IBProjectModel.Current.AddNewCellSource();
+        }
+        #endregion
+
+        #region ShowPropertiesCommand
+        private ViewModelCommand _ShowPropertiesCommand;
+
+        public ViewModelCommand ShowPropertiesCommand
+        {
+            get
+            {
+                if (_ShowPropertiesCommand == null)
+                {
+                    _ShowPropertiesCommand = new ViewModelCommand(ShowProperties);
+                }
+                return _ShowPropertiesCommand;
+            }
+        }
+
+        public void ShowProperties()
+        {
+            IBProjectModel.Current.SelectedPropertyItem = CurrentIBProject;
+        }
+        #endregion
+
+        #region ShowOnCanvasCommand
+        private ViewModelCommand _ShowOnCanvasCommand;
+
+        public ViewModelCommand ShowOnCanvasCommand
+        {
+            get
+            {
+                if (_ShowOnCanvasCommand == null)
+                {
+                    _ShowOnCanvasCommand = new ViewModelCommand(ShowOnCanvas, CanShowOnCanvas);
+                }
+                return _ShowOnCanvasCommand;
+            }
+        }
+
+        public bool CanShowOnCanvas()
+        {
+            if (SelectedIBProjectElement == null) return false;
+
+            if (SelectedIBProjectElement.Type != IBProjectElementTypes.File)
+                return true;
+
+            return false;
+        }
+
+        public void ShowOnCanvas()
+        {
+            IBProjectModel.Current.ActiveCanvasItems.Add(SelectedIBProjectElement);
         }
         #endregion
 

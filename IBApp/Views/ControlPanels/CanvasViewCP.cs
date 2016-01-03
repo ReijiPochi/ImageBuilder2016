@@ -21,5 +21,22 @@ namespace IBApp.Views.ControlPanels
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CanvasViewCP), new FrameworkPropertyMetadata(typeof(CanvasViewCP)));
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            g = GetTemplateChild("root") as Grid;
+
+            GotFocus += CanvasViewCP_GotFocus;
+        }
+
+        Grid g;
+
+        private void CanvasViewCP_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (g != null)
+                g.Focus();
+        }
     }
 }

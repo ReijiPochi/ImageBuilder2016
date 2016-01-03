@@ -8,12 +8,12 @@ namespace IBFramework.Image.Pixel
 {
     public class PixcelImage : IBImage
     {
-        public PixelData[,] currentData;
-
-        public override PixelData GetRenderdPixelData(int x, int y)
+        public PixcelImage()
         {
-            return currentData[x, y];
+            LayerType = ImageTypes.Pixel;
         }
+
+        public PixelData[,] currentData;
 
         public override void RenderTo(BGRA32FormattedImage trg)
         {

@@ -9,6 +9,7 @@ using Livet;
 using IBFramework;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
+using IBFramework.Image;
 using IBFramework.Timeline.TimelineElements;
 
 namespace IBApp.Models
@@ -17,7 +18,8 @@ namespace IBApp.Models
     {
         public IBProjectModel()
         {
-            _OpenedIBProject = new IBProject();
+            _OpenedIBProject = new IBProject() { IBProjectName = "Untitled" };
+            SelectedPropertyItem = _OpenedIBProject;
         }
 
         /// <summary>
@@ -103,6 +105,47 @@ namespace IBApp.Models
         }
         #endregion
 
+        #region ActiveCanvasItems変更通知プロパティ
+        private ObservableCollection<IBProjectElement> _ActiveCanvasItems;
+        /// <summary>
+        /// 現在、または最後にアクティブになったIBCanvasのアイテムリスト
+        /// </summary>
+        public ObservableCollection<IBProjectElement> ActiveCanvasItems
+        {
+            get
+            { return _ActiveCanvasItems; }
+            set
+            { 
+                if (_ActiveCanvasItems == value)
+                    return;
+                _ActiveCanvasItems = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region ActiveShowingItem変更通知プロパティ
+        private IBProjectElement _ActiveShowingItem;
+        /// <summary>
+        /// キャンバスに表示されているエレメント。登録すると、可能ならSelectedPropertyItemにも追加される
+        /// </summary>
+        public IBProjectElement ActiveShowingItem
+        {
+            get
+            { return _ActiveShowingItem; }
+            set
+            { 
+                if (_ActiveShowingItem == value)
+                    return;
+                _ActiveShowingItem = value;
+                RaisePropertyChanged();
+
+                if (value as IProperty != null)
+                    SelectedPropertyItem = (IProperty)value;
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// IBProjectModel.ActiveTargetElementの子に新規フォルダを追加
@@ -139,8 +182,16 @@ namespace IBApp.Models
             CellSource newCellSource = new CellSource(_OpenedIBProject)
             {
                 Name = "Cell",
-                IsSelected = true
+                IsSelected = true,
             };
+
+            SingleColorImage bg = new SingleColorImage(255, 255, 255, 255);
+            bg.Size.Height = 1920;
+            bg.Size.Width = 1080;
+            bg.Size.OffsetX = 0;
+            bg.Size.OffsetY = 0;
+            bg.LayerName = "BackGround";
+            newCellSource.Layers.Add(bg);
 
             if(ActiveTargetElement != null)
             {

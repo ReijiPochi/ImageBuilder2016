@@ -202,6 +202,9 @@ namespace IBGUI
             if (owner != null && owner.IsActive)
             {
                 IsActivePanel = true;
+                FrameworkElement child = Content as FrameworkElement;
+                if (child != null)
+                    child.Focus();
             }
 
             RaiseEvent(new PanelActivatedEventArgs(PanelActivatedEvent));

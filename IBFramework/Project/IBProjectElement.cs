@@ -88,6 +88,20 @@ namespace IBFramework.Project
             }
         }
 
+        private bool _IsShowing;
+        public bool IsShowing
+        {
+            get
+            { return _IsShowing; }
+            set
+            {
+                if (_IsShowing == value)
+                    return;
+                _IsShowing = value;
+                RaisePropertyChanged("IsShowing");
+            }
+        }
+
         private IBProjectElement _Parent;
         /// <summary>
         /// nullの場合、親は現在のプロジェクト

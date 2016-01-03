@@ -21,6 +21,7 @@ namespace IBApp.ViewModels.ControlPanels
     {
         public PropertiesVM()
         {
+            if (IBProjectModel.Current == null) return;
             CurrentPropertyItem = IBProjectModel.Current.SelectedPropertyItem;
             IBProjectModel.Current.PropertyChanged += IBAppModelCurrent_PropertyChanged;
         }

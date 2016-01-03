@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElementToBrushConverter.cs" />
+    <Compile Include="Image\ImageTypes.cs" />
     <Compile Include="Project\FlagButton.cs" />
     <Compile Include="Project\IBProject.cs" />
     <Compile Include="Project\IBProjectElements\CellSource.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Image\Blend\Normal.cs" />
     <Compile Include="Image\IBBrush.cs" />
     <Compile Include="Project\IBProjectElement.cs" />
+    <Compile Include="Project\IBProjectPP.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
     <Compile Include="Timeline\IBCanvas.cs" />
     <Compile Include="Image\IBImage.cs" />
@@ -122,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Project\IBProjectElements\CellSourcePP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Project\IBProjectPP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

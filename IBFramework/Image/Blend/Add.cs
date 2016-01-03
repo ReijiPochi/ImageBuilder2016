@@ -19,41 +19,41 @@ namespace IBFramework.Image.Blend
             int trgSizeW = (int)trg.size.Width;
             int trgSizeH = (int)trg.size.Height;
 
-            if ((int)source.size.OffsetX > trgSizeW || (int)source.size.OffsetY > trgSizeH)
+            if ((int)source.Size.OffsetX > trgSizeW || (int)source.Size.OffsetY > trgSizeH)
                 return;
 
             int strX = 0, strY = 0;
 
-            if ((int)source.size.OffsetX < 0)
+            if ((int)source.Size.OffsetX < 0)
                 strX = 0;
-            else if ((int)source.size.OffsetX > (int)trg.size.OffsetX + (int)trg.size.Width)
+            else if ((int)source.Size.OffsetX > (int)trg.size.OffsetX + (int)trg.size.Width)
                 strX = (int)trg.size.OffsetX + (int)trg.size.Width;
             else
-                strX = (int)source.size.OffsetX;
+                strX = (int)source.Size.OffsetX;
 
-            if ((int)source.size.OffsetY < 0)
+            if ((int)source.Size.OffsetY < 0)
                 strY = 0;
-            else if ((int)source.size.OffsetY > (int)trg.size.OffsetY + (int)trg.size.Height)
+            else if ((int)source.Size.OffsetY > (int)trg.size.OffsetY + (int)trg.size.Height)
                 strY = (int)trg.size.OffsetY + (int)trg.size.Height;
             else
-                strY = (int)source.size.OffsetY;
+                strY = (int)source.Size.OffsetY;
 
 
             int maxX = 0, maxY = 0;
 
-            if ((int)source.size.OffsetX + (int)source.size.Width < (int)trg.size.OffsetX)
+            if ((int)source.Size.OffsetX + (int)source.Size.Width < (int)trg.size.OffsetX)
                 maxX = (int)trg.size.OffsetX;
-            else if ((int)source.size.OffsetX + (int)source.size.Width > (int)trg.size.OffsetX + (int)trg.size.Width)
+            else if ((int)source.Size.OffsetX + (int)source.Size.Width > (int)trg.size.OffsetX + (int)trg.size.Width)
                 maxX = (int)trg.size.OffsetX + (int)trg.size.Width;
             else
-                maxX = (int)source.size.OffsetX + (int)source.size.Width;
+                maxX = (int)source.Size.OffsetX + (int)source.Size.Width;
 
-            if ((int)source.size.OffsetY + (int)source.size.Height < (int)trg.size.OffsetY)
+            if ((int)source.Size.OffsetY + (int)source.Size.Height < (int)trg.size.OffsetY)
                 maxY = (int)trg.size.OffsetY;
-            else if ((int)source.size.OffsetY + (int)source.size.Height > (int)trg.size.OffsetY + (int)trg.size.Height)
+            else if ((int)source.Size.OffsetY + (int)source.Size.Height > (int)trg.size.OffsetY + (int)trg.size.Height)
                 maxY = (int)trg.size.OffsetY + (int)trg.size.Height;
             else
-                maxY = (int)source.size.OffsetY + (int)source.size.Height;
+                maxY = (int)source.Size.OffsetY + (int)source.Size.Height;
 
             int trgDataLength = trg.data.Length;
 

@@ -19,17 +19,17 @@ namespace IBFramework.Image.Blend
             int trgSizeW = (int)trg.size.Width;
             int trgSizeH = (int)trg.size.Height;
 
-            if ((int)source.size.OffsetX > trgSizeW || (int)source.size.OffsetY > trgSizeH)
+            if ((int)source.Size.OffsetX > trgSizeW || (int)source.Size.OffsetY > trgSizeH)
                 return;
 
-            int maxX = (int)source.size.OffsetX + (int)source.size.Width;
-            int maxY = (int)source.size.OffsetY + (int)source.size.Height;
+            int maxX = (int)source.Size.OffsetX + (int)source.Size.Width;
+            int maxY = (int)source.Size.OffsetY + (int)source.Size.Height;
 
             int trgDataLength = trg.data.Length;
 
-            for (int y = (int)source.size.OffsetY; y < maxY; y++)
+            for (int y = (int)source.Size.OffsetY; y < maxY; y++)
             {
-                for (int x = (int)source.size.OffsetX; x < maxX; x++)
+                for (int x = (int)source.Size.OffsetX; x < maxX; x++)
                 {
                     int index = (x + y * trgSizeW) * 4;
                     if (index >= trgDataLength) break;

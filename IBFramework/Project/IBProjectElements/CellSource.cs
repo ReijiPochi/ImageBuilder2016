@@ -30,7 +30,13 @@ namespace IBFramework.Project.IBProjectElements
         public ObservableCollection<IBImage> Layers
         {
             get { return _Layers; }
-            set { Layers = value; }
+            set
+            {
+                if (_Layers == value)
+                    return;
+                _Layers = value;
+                RaisePropertyChanged("Layers");
+            }
         }
 
         private string _PropertyHeaderName;

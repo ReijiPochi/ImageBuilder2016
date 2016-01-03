@@ -11,6 +11,7 @@
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/PropertiesCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/CanvasView_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/IBProjectViewCP_Design.xaml"/>
+        <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/LayersViewCP_Design.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>
