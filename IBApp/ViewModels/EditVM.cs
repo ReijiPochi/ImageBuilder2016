@@ -17,9 +17,80 @@ namespace IBApp.ViewModels
 {
     public class EditVM : ViewModel
     {
-        public void Initialize()
+        public EditVM()
         {
+            RedoUndoModel.Current.PropertyChanged += RedoUndoModel_PropertyChanged;
         }
+
+        private void RedoUndoModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "CanRedoOneStep":
+                    RedoCommand.RaiseCanExecuteChanged();
+                    break;
+
+                case "CanUndoOneStep":
+                    UndoCommand.RaiseCanExecuteChanged();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        #region UndoCommand
+        private ViewModelCommand _UndoCommand;
+
+        public ViewModelCommand UndoCommand
+        {
+            get
+            {
+                if (_UndoCommand == null)
+                {
+                    _UndoCommand = new ViewModelCommand(Undo, CanUndo);
+                }
+                return _UndoCommand;
+            }
+        }
+
+        public bool CanUndo()
+        {
+            return RedoUndoModel.Current.CanUndoOneStep;
+        }
+
+        public void Undo()
+        {
+            RedoUndoModel.Current.UndoOneStep();
+        }
+        #endregion
+
+        #region RedoCommand
+        private ViewModelCommand _RedoCommand;
+
+        public ViewModelCommand RedoCommand
+        {
+            get
+            {
+                if (_RedoCommand == null)
+                {
+                    _RedoCommand = new ViewModelCommand(Redo, CanRedo);
+                }
+                return _RedoCommand;
+            }
+        }
+
+        public bool CanRedo()
+        {
+            return RedoUndoModel.Current.CanRedoOneStep;
+        }
+
+        public void Redo()
+        {
+            RedoUndoModel.Current.RedoOneStep();
+        }
+        #endregion
+
 
 
         #region SetLanguageCommand

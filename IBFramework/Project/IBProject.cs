@@ -13,6 +13,11 @@ namespace IBFramework.Project
 {
     public class IBProject : INotifyPropertyChanged, IProperty
     {
+        /// <summary>
+        /// 現在開かれているプロジェクト
+        /// </summary>
+        public static IBProject Current { get; set; }
+
         public ObservableCollection<IBProjectElement> IBProjectElements { get; set; } = new ObservableCollection<IBProjectElement>();
 
         private int IDCount { get; set; } = 0;

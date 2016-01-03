@@ -36,6 +36,7 @@ namespace IBApp.Views
         public MainWindow()
         {
             InitializeComponent();
+            LoadLayouts("default.iblayout");
         }
 
         private void window_Activated(object sender, EventArgs e)
@@ -112,33 +113,38 @@ namespace IBApp.Views
 
             if ((bool)result)
             {
-                IBWindow.AllWindowClose();
-                IBTabItem.ClearAllIBTabItemList();
+                LoadLayouts(dialog.FileName);
+            }
+        }
 
-                using (StreamReader sr = new StreamReader(dialog.FileName))
+        private static void LoadLayouts(string @FileName)
+        {
+            IBWindow.AllWindowClose();
+            IBTabItem.ClearAllIBTabItemList();
+
+            using (StreamReader sr = new StreamReader(FileName))
+            {
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
+                    string line = sr.ReadLine();
+
+                    switch (line)
                     {
-                        string line = sr.ReadLine();
+                        case "// MainWindow":
+                            LoadMainWindow(sr);
+                            break;
 
-                        switch (line)
-                        {
-                            case "// MainWindow":
-                                LoadMainWindow(sr);
-                                break;
+                        case "// Window":
+                            LoadWindow(sr);
+                            break;
 
-                            case "// Window":
-                                LoadWindow(sr);
-                                break;
-
-                            default:
-                                break;
-                        }
+                        default:
+                            break;
                     }
                 }
-
-                IBPanel.ResetLayout();
             }
+
+            IBPanel.ResetLayout();
         }
 
         /// <summary>

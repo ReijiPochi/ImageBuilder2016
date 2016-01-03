@@ -20,6 +20,7 @@ namespace IBApp
 
             Models.IBAppModel.Current = new Models.IBAppModel();
             Models.IBProjectModel.Current = new Models.IBProjectModel();
+            Models.RedoUndoModel.Current = new Models.RedoUndoModel();
 
             #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);

@@ -30,7 +30,10 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if(e.PropertyName == "ActiveShowingItem")
             {
-                if(IBProjectModel.Current.ActiveShowingItem as CellSource != null)
+                if (IBProjectModel.Current.ActiveShowingItem == null)
+                    CurrentCell = null;
+
+                if (IBProjectModel.Current.ActiveShowingItem as CellSource != null)
                     CurrentCell = IBProjectModel.Current.ActiveShowingItem as CellSource;
             }
         }

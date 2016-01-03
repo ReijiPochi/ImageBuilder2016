@@ -20,7 +20,7 @@ namespace IBFramework
         {
             switch ((IBProjectElementTypes)value)
             {
-                case IBProjectElementTypes.File:
+                case IBProjectElementTypes.Folder:
                     return Application.Current.FindResource("FolderBrush") as SolidColorBrush;
 
                 case IBProjectElementTypes.Cell:

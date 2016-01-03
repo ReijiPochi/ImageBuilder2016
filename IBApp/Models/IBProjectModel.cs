@@ -11,6 +11,7 @@ using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.Image;
 using IBFramework.Timeline.TimelineElements;
+using IBFramework.RedoUndo;
 
 namespace IBApp.Models
 {
@@ -18,8 +19,8 @@ namespace IBApp.Models
     {
         public IBProjectModel()
         {
-            _OpenedIBProject = new IBProject() { IBProjectName = "Untitled" };
-            SelectedPropertyItem = _OpenedIBProject;
+            IBProject.Current = new IBProject() { IBProjectName = "Untitled" };
+            SelectedPropertyItem = IBProject.Current;
         }
 
         /// <summary>
@@ -27,23 +28,18 @@ namespace IBApp.Models
         /// </summary>
         public static IBProjectModel Current { get; set; }
 
-        /// <summary>
-        /// 現在開かれているプロジェクト
-        /// </summary>
-        public IBProject _OpenedIBProject;
-
 
 
         #region IBProject_Name変更通知プロパティ
         public string IBProject_Name
         {
             get
-            { return _OpenedIBProject.IBProjectName; }
+            { return IBProject.Current.IBProjectName; }
             set
             { 
-                if (_OpenedIBProject.IBProjectName == value)
+                if (IBProject.Current.IBProjectName == value)
                     return;
-                _OpenedIBProject.IBProjectName = value;
+                IBProject.Current.IBProjectName = value;
                 RaisePropertyChanged();
             }
         }
@@ -53,12 +49,12 @@ namespace IBApp.Models
         public ObservableCollection<IBProjectElement> IBProject_Elements
         {
             get
-            { return _OpenedIBProject.IBProjectElements; }
+            { return IBProject.Current.IBProjectElements; }
             set
             { 
-                if (_OpenedIBProject.IBProjectElements == value)
+                if (IBProject.Current.IBProjectElements == value)
                     return;
-                _OpenedIBProject.IBProjectElements = value;
+                IBProject.Current.IBProjectElements = value;
                 RaisePropertyChanged();
             }
         }
@@ -96,11 +92,29 @@ namespace IBApp.Models
             { 
                 if (_ActiveTargetElement == value)
                     return;
+
+                if (_ActiveTargetElement != null)
+                    _ActiveTargetElement.PropertyChanged -= _ActiveTargetElement_PropertyChanged;
+
                 _ActiveTargetElement = value;
+
+                if (_ActiveTargetElement != null)
+                    _ActiveTargetElement.PropertyChanged += _ActiveTargetElement_PropertyChanged;
+
                 RaisePropertyChanged();
 
                 if (value as IProperty != null)
                     SelectedPropertyItem = (IProperty)value;
+            }
+        }
+
+        private void _ActiveTargetElement_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "DELETE")
+            {
+                ActiveTargetElement = null;
+                ActiveShowingItem = null;
+                SelectedPropertyItem = null;
             }
         }
         #endregion
@@ -137,11 +151,29 @@ namespace IBApp.Models
             { 
                 if (_ActiveShowingItem == value)
                     return;
+
+                if(_ActiveShowingItem != null)
+                    _ActiveShowingItem.PropertyChanged -= _ActiveShowingItem_PropertyChanged;
+
                 _ActiveShowingItem = value;
+
+                if (_ActiveShowingItem != null)
+                    _ActiveShowingItem.PropertyChanged += _ActiveShowingItem_PropertyChanged;
+
                 RaisePropertyChanged();
 
                 if (value as IProperty != null)
                     SelectedPropertyItem = (IProperty)value;
+            }
+        }
+
+        private void _ActiveShowingItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "DELETE")
+            {
+                ActiveTargetElement = null;
+                ActiveShowingItem = null;
+                SelectedPropertyItem = null;
             }
         }
         #endregion
@@ -153,7 +185,7 @@ namespace IBApp.Models
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにフォルダを追加</param>
         public void AddNewFolder()
         {
-            Folder newFolder = new Folder(_OpenedIBProject)
+            Folder newFolder = new Folder(IBProject.Current)
             {
                 Name = "Folder",
                 IsSelected = true
@@ -161,13 +193,18 @@ namespace IBApp.Models
 
             if (ActiveTargetElement != null)
             {
-                ActiveTargetElement.Children.Add(newFolder);
-                newFolder.Parent = ActiveTargetElement;
+                IBProjectElement parent = ActiveTargetElement.Parent;
+                if (ActiveTargetElement.Type != IBProjectElementTypes.Folder) return;
+
+                parent.Children.Add(newFolder);
+                newFolder.Parent = parent;
+                RedoUndoModel.Current.Record(new RUAddNewElement(parent, newFolder));
             }
             else
             {
-                _OpenedIBProject.IBProjectElements.Add(newFolder);
+                IBProject.Current.IBProjectElements.Add(newFolder);
                 newFolder.Parent = null;
+                RedoUndoModel.Current.Record(new RUAddNewElement(null, newFolder));
             }
 
             RaisePropertyChanged("IBProject_Elements");
@@ -179,7 +216,7 @@ namespace IBApp.Models
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルソースを追加</param>
         public void AddNewCellSource()
         {
-            CellSource newCellSource = new CellSource(_OpenedIBProject)
+            CellSource newCellSource = new CellSource(IBProject.Current)
             {
                 Name = "Cell",
                 IsSelected = true,
@@ -197,54 +234,96 @@ namespace IBApp.Models
             {
                 if (ActiveTargetElement.Type == IBProjectElementTypes.Cell)
                 {
-                    string Num = "", tempName = "";
-                    int tempNum;
-                    bool f = false;
-                    for (int i = ActiveTargetElement.Name.Length - 1; i >= 0; i--)
-                    {
-                        if (!f && int.TryParse(ActiveTargetElement.Name[i].ToString(), out tempNum))
-                        {
-                            Num += tempNum.ToString();
-                        }
-                        else
-                        {
-                            f = true;
-                            tempName += ActiveTargetElement.Name[i].ToString();
-                        }
-                    }
-                    if(Num.Length != 0)
-                    {
-                        Num = Reverse(Num);
-                        tempName = Reverse(tempName);
-                        tempNum = int.Parse(Num) + 1;
-                        newCellSource.Name = tempName + tempNum.ToString("d" + Num.Length.ToString());
-                    }
+                    SetName(newCellSource);
 
-                    if(ActiveTargetElement.Parent != null)
+                    if (ActiveTargetElement.Parent != null)
                     {
                         IBProjectElement parent = ActiveTargetElement.Parent;
+                        if (parent.Type != IBProjectElementTypes.Folder) return;
+
                         parent.Children.Add(newCellSource);
                         newCellSource.Parent = parent;
+                        RedoUndoModel.Current.Record(new RUAddNewElement(parent, newCellSource));
                     }
                     else
                     {
-                        _OpenedIBProject.IBProjectElements.Add(newCellSource);
+                        IBProject.Current.IBProjectElements.Add(newCellSource);
                         newCellSource.Parent = null;
+                        RedoUndoModel.Current.Record(new RUAddNewElement(null, newCellSource));
                     }
                 }
                 else
                 {
                     ActiveTargetElement.Children.Add(newCellSource);
                     newCellSource.Parent = ActiveTargetElement;
+                    RedoUndoModel.Current.Record(new RUAddNewElement(ActiveTargetElement, newCellSource));
                 }
             }
             else
             {
-                _OpenedIBProject.IBProjectElements.Add(newCellSource);
+                IBProject.Current.IBProjectElements.Add(newCellSource);
                 newCellSource.Parent = null;
+                RedoUndoModel.Current.Record(new RUAddNewElement(null, newCellSource));
             }
 
             RaisePropertyChanged("IBProject_Elements");
+        }
+
+        private class RUAddNewElement : RedoUndoAction
+        {
+            public RUAddNewElement(IBProjectElement parent, IBProjectElement newElement)
+            {
+                _parent = parent;
+                _newElement = newElement;
+            }
+            private IBProjectElement _parent;
+            private IBProjectElement _newElement;
+            public override void Redo()
+            {
+                base.Redo();
+
+                if (_parent != null)
+                    _parent.Children.Add(_newElement);
+                else if (IBProject.Current != null)
+                    IBProject.Current.IBProjectElements.Add(_newElement);
+            }
+
+            public override void Undo()
+            {
+                base.Undo();
+
+                _newElement.Remove();
+            }
+        }
+
+        /// <summary>
+        /// 名前をActiveTargetElementの名前からつけます
+        /// </summary>
+        /// <param name="newCellSource"></param>
+        private void SetName(CellSource newCellSource)
+        {
+            string Num = "", tempName = "";
+            int tempNum;
+            bool f = false;
+            for (int i = ActiveTargetElement.Name.Length - 1; i >= 0; i--)
+            {
+                if (!f && int.TryParse(ActiveTargetElement.Name[i].ToString(), out tempNum))
+                {
+                    Num += tempNum.ToString();
+                }
+                else
+                {
+                    f = true;
+                    tempName += ActiveTargetElement.Name[i].ToString();
+                }
+            }
+            if (Num.Length != 0)
+            {
+                Num = Reverse(Num);
+                tempName = Reverse(tempName);
+                tempNum = int.Parse(Num) + 1;
+                newCellSource.Name = tempName + tempNum.ToString("d" + Num.Length.ToString());
+            }
         }
 
         private string Reverse(string s)

@@ -329,5 +329,77 @@ namespace IBGUI
         }
         #endregion
 
+        #region HideTitleBarCommand
+        private ListenerCommand<object> _HideTitleBarCommand;
+
+        public ListenerCommand<object> HideTitleBarCommand
+        {
+            get
+            {
+                if (_HideTitleBarCommand == null)
+                {
+                    _HideTitleBarCommand = new ListenerCommand<object>(HideTitleBar, CanHideTitleBar);
+                }
+                return _HideTitleBarCommand;
+            }
+        }
+
+        public bool CanHideTitleBar()
+        {
+            return true;
+        }
+
+        public void HideTitleBar(object parameter)
+        {
+            IBMenuItem from = parameter as IBMenuItem;
+            if (from == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+            ContextMenu cm = from.Parent as ContextMenu;
+            if (cm == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+            IBTabItem trg = cm.PlacementTarget as IBTabItem;
+            if (trg == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+
+            trg.Height = 1;
+        }
+        #endregion
+
+        #region ShowTitleBarCommand
+        private ListenerCommand<object> _ShowTitleBarCommand;
+
+        public ListenerCommand<object> ShowTitleBarCommand
+        {
+            get
+            {
+                if (_ShowTitleBarCommand == null)
+                {
+                    _ShowTitleBarCommand = new ListenerCommand<object>(ShowTitleBar, CanShowTitleBar);
+                }
+                return _ShowTitleBarCommand;
+            }
+        }
+
+        public bool CanShowTitleBar()
+        {
+            return true;
+        }
+
+        public void ShowTitleBar(object parameter)
+        {
+            IBMenuItem from = parameter as IBMenuItem;
+            if (from == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+            ContextMenu cm = from.Parent as ContextMenu;
+            if (cm == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+            IBTabItem trg = cm.PlacementTarget as IBTabItem;
+            if (trg == null)
+                throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
+
+            trg.Height = double.NaN;
+        }
+        #endregion
+
     }
 }

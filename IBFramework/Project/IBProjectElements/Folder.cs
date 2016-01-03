@@ -10,7 +10,7 @@ namespace IBFramework.Project.IBProjectElements
     {
         public Folder(IBProject Master) : base(Master)
         {
-            Type = IBProjectElementTypes.File;
+            Type = IBProjectElementTypes.Folder;
         }
     }
 }

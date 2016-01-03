@@ -11,7 +11,7 @@ namespace IBFramework.Project
     public enum IBProjectElementTypes
     {
         Null,
-        File,
+        Folder,
         Cell
     }
 
@@ -71,6 +71,23 @@ namespace IBFramework.Project
                     return;
                 _Name = value;
                 RaisePropertyChanged("Name");
+            }
+        }
+
+        private bool _DELETE;
+        /// <summary>
+        /// trueになると、削除されるようにして
+        /// </summary>
+        public bool DELETE
+        {
+            get
+            { return _DELETE; }
+            private set
+            {
+                if (_DELETE == value)
+                    return;
+                _DELETE = value;
+                RaisePropertyChanged("DELETE");
             }
         }
 
@@ -159,6 +176,20 @@ namespace IBFramework.Project
                 _StateFlag = value;
                 RaisePropertyChanged("StateFlag");
             }
+        }
+
+        public virtual void Remove()
+        {
+            if(Parent != null)
+            {
+                Parent.Children.Remove(this);
+            }
+            else if (IBProject.Current != null)
+            {
+                IBProject.Current.IBProjectElements.Remove(this);
+            }
+
+            DELETE = true;
         }
     }
 }

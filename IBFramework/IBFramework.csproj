@@ -77,6 +77,7 @@
     <Compile Include="Image\IBBrush.cs" />
     <Compile Include="Project\IBProjectElement.cs" />
     <Compile Include="Project\IBProjectPP.cs" />
+    <Compile Include="RedoUndo\RedoUndoAction.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
     <Compile Include="Timeline\IBCanvas.cs" />
     <Compile Include="Image\IBImage.cs" />

@@ -9,6 +9,8 @@
 
     <system:String x:Key="PanelEdit_Close" >Close this Panel</system:String>
     <system:String x:Key="PanelEdit_Float" >Float</system:String>
+    <system:String x:Key="PanelEdit_HideTitleBar" >Hide TitleBar</system:String>
+    <system:String x:Key="PanelEdit_ShowTitleBar" >Show TitleBar</system:String>
 
     <system:String x:Key="PageEdit_Rename">Rename</system:String>
     <system:String x:Key="PageEdit_Delete">Delete</system:String>

@@ -13,6 +13,7 @@
     <system:String x:Key="Menu_File_Exit">Exit</system:String>
     <system:String x:Key="Menu_Edit">Edit</system:String>
     <system:String x:Key="Menu_Edit_Undo">Undo</system:String>
+    <system:String x:Key="Menu_Edit_Redo">Redo</system:String>
     <system:String x:Key="Menu_Edit_Language">Language</system:String>
     <system:String x:Key="Menu_Edit_Language_English">English(US)</system:String>
     <system:String x:Key="Menu_Edit_Language_Japanese">Japanese(日本語)</system:String>

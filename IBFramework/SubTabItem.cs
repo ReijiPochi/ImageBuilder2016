@@ -46,6 +46,8 @@ namespace IBFramework
         {
             if (e.PropertyName == "Name")
                 Header = Element.Name;
+            if (e.PropertyName == "DELETE")
+                RemoveThis();
         }
 
         public bool isDummyItem { get; set; } = false;
@@ -142,6 +144,11 @@ namespace IBFramework
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveThis();
+        }
+
+        private void RemoveThis()
         {
             if (isDummyItem) return;
 

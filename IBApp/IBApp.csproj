@@ -147,6 +147,7 @@
     <Compile Include="Models\IBAppModel.cs" />
     <Compile Include="Models\IBProjectModel.cs" />
     <Compile Include="Models\LayoutControlModel.cs" />
+    <Compile Include="Models\RedoUndoModel.cs" />
     <Compile Include="ViewModels\ControlPanels\CanvasViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\DrawingToolsVM.cs" />
     <Compile Include="ViewModels\ControlPanels\IBProjectViewVM.cs" />

@@ -16,6 +16,8 @@
                 <Image  HorizontalAlignment="Center" VerticalAlignment="Center" Width="18" Height="18"/>
             </local:IBMenuItem.Icon>
         </local:IBMenuItem>
+        <local:IBMenuItem Header="{DynamicResource PanelEdit_HideTitleBar}" Command="{Binding HideTitleBarCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
+        <local:IBMenuItem Header="{DynamicResource PanelEdit_ShowTitleBar}" Command="{Binding ShowTitleBarCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
         <local:IBMenuSeparator/>
         <local:IBMenuItem Header="{DynamicResource PanelEdit_Close}" Command="{Binding CloseCommand, Mode=OneWay}" CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
             <local:IBMenuItem.Icon>

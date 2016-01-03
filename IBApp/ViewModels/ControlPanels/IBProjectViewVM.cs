@@ -23,7 +23,7 @@ namespace IBApp.ViewModels.ControlPanels
         public IBProjectViewVM()
         {
             if (IBProjectModel.Current == null) return;
-            CurrentIBProject = IBProjectModel.Current._OpenedIBProject;
+            CurrentIBProject = IBProject.Current;
             IBProjectModel.Current.PropertyChanged += IBProjectModelCurrent_PropertyChanged;
         }
 
@@ -102,7 +102,7 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (SelectedIBProjectElement == null) return true;
 
-            if (SelectedIBProjectElement.Type == IBProjectElementTypes.File
+            if (SelectedIBProjectElement.Type == IBProjectElementTypes.Folder
                 || SelectedIBProjectElement.Type == IBProjectElementTypes.Null)
                 return true;
             else
@@ -134,7 +134,7 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (SelectedIBProjectElement == null) return true;
 
-            if (SelectedIBProjectElement.Type == IBProjectElementTypes.File
+            if (SelectedIBProjectElement.Type == IBProjectElementTypes.Folder
                 || SelectedIBProjectElement.Type == IBProjectElementTypes.Null
                 || SelectedIBProjectElement.Type == IBProjectElementTypes.Cell)
                 return true;
@@ -188,7 +188,7 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (SelectedIBProjectElement == null) return false;
 
-            if (SelectedIBProjectElement.Type != IBProjectElementTypes.File)
+            if (SelectedIBProjectElement.Type != IBProjectElementTypes.Folder)
                 return true;
 
             return false;

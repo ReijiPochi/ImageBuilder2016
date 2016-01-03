@@ -86,7 +86,12 @@
                 <ibgui:IBMenuItem.DataContext>
                     <vm:EditVM/>
                 </ibgui:IBMenuItem.DataContext>
-                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Undo}" InputGestureText="Ctrl+Z" Command="">
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Undo}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand,Mode=OneWay}">
+                    <ibgui:IBMenuItem.Icon>
+                        <Image  Width="18" Height="18"/>
+                    </ibgui:IBMenuItem.Icon>
+                </ibgui:IBMenuItem>
+                <ibgui:IBMenuItem Header="{DynamicResource Menu_Edit_Redo}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand,Mode=OneWay}">
                     <ibgui:IBMenuItem.Icon>
                         <Image  Width="18" Height="18"/>
                     </ibgui:IBMenuItem.Icon>
@@ -135,36 +140,7 @@
             <!--IBWorkspace内のリソースはダイナミックリソースである必要があるぞ（シリアル化の際にスタティックリソースだと問題あり）-->
             <ibgui:IBPanel>
                 <ibgui:IBTabControl x:Name="test">
-                    <ibgui:IBTabItem Header="プロパティ">
-                        <Grid>
-                            <ibgui:IBScrollViewer HorizontalScrollBarVisibility="Auto">
-                                <Rectangle VerticalAlignment="Top" Height="1000" HorizontalAlignment="Left" Width="1000"/>
-                            </ibgui:IBScrollViewer>
-                        </Grid>
-                    </ibgui:IBTabItem>
-                    <ibgui:IBTabItem Header="カラー">
-                        <Grid/>
-                    </ibgui:IBTabItem>
-                    <ibgui:IBTabItem Header="ツールプロパティ">
-                        <Grid/>
-                    </ibgui:IBTabItem>
-                    <ibgui:IBTabItem Header="レイヤー">
-                        <Grid/>
-                    </ibgui:IBTabItem>
-                    <ibgui:IBTabItem Header="ビュー">
-                        <WindowsFormsHost Background="Black"/>
-                    </ibgui:IBTabItem>
-                    <ibgui:IBTabItem Header="ビュー">
-                        <Border BorderThickness="0,2,0,0" BorderBrush="{DynamicResource IBSelectedBrush}" Margin="0,-1,0,0">
-                            <ibgui:IBTabControl BorderThickness="0" Margin="0" AllowDrop="False">
-                                <ibgui:IBPageTabItem Header="Cut 001-23"/>
-                                <ibgui:IBPageTabItem Header="イメージイラスト"/>
-                                <ibgui:IBPageTabItem Header="456"/>
-                                <ibgui:IBPageTabItem Header="456"/>
-                                <ibgui:IBPageTabItem Header="456"/>
-                            </ibgui:IBTabControl>
-                        </Border>
-                    </ibgui:IBTabItem>
+                    
                 </ibgui:IBTabControl>
             </ibgui:IBPanel>
         </ibgui:IBWorkspace>
