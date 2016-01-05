@@ -40,6 +40,9 @@
     <Reference Include="IBGUI">
       <HintPath>..\IBGUI\bin\Debug\IBGUI.dll</HintPath>
     </Reference>
+    <Reference Include="OpenCLFunctions">
+      <HintPath>..\OpenCLFunctions\bin\Debug\OpenCLFunctions.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -63,6 +66,8 @@
   <ItemGroup>
     <Compile Include="ElementToBrushConverter.cs" />
     <Compile Include="Image\ImageTypes.cs" />
+    <Compile Include="OpenCL\CLImageProcessing.cs" />
+    <Compile Include="OpenCL\CLUtilities.cs" />
     <Compile Include="Project\FlagButton.cs" />
     <Compile Include="Project\IBProject.cs" />
     <Compile Include="Project\IBProjectElements\CellSource.cs" />
@@ -120,6 +125,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="OpenCL\ProgramSources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Project\FlagButton_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Project\IBProjectPP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionaries.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,6 +165,11 @@
   <ItemGroup>
     <Folder Include="Animation\" />
     <Folder Include="Audio\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README_IBFramework.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

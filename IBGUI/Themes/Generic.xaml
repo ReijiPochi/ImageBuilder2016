@@ -5,7 +5,7 @@
     xmlns:local="clr-namespace:IBGUI" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ee="http://schemas.microsoft.com/expression/2010/effects" mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/IBGUI;component/ResourceDictionarys.xaml"/>
+        <ResourceDictionary Source="/IBGUI;component/ResourceDictionaries.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="IBFocusVisual">

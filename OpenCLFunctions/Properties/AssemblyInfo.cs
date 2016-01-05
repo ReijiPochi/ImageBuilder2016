@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OpenCLFunctions")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright © Reiji 2016 (Reference source:http://memeplex.blog.shinobi.jp/opencl/)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

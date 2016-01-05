@@ -129,7 +129,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResourceDictionarys.xaml">
+    <Page Include="ResourceDictionaries.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -168,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="README_IBGUI.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

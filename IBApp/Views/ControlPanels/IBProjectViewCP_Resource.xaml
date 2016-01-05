@@ -22,7 +22,7 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu DataContext="{StaticResource IBProjectViewVM}">
-                    <ibgui:IBMenuItem Header="114514" Command="{Binding AddNewCellCommand, Mode=OneWay}"/>
+                    <ibgui:IBMenuItem Header="114514" Command="{Binding AddNewCellSourceCommand, Mode=OneWay}"/>
                 </ContextMenu>
             </Setter.Value>
         </Setter>

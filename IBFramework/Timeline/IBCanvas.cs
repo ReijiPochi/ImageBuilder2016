@@ -27,6 +27,7 @@ using IBFramework.Timeline.TimelineElements;
 using IBGUI;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
+using IBFramework.OpenCL;
 
 namespace IBFramework.Timeline
 {
@@ -220,6 +221,8 @@ namespace IBFramework.Timeline
 
         private void Render()
         {
+            CLImageProcessing.Test();
+
             RenderData.ClearData(new PixelData() { b = 0, g = 0, r = 0, a = 0 });
 
             if (Tabs.SelectedItem == null) return;
@@ -265,12 +268,17 @@ namespace IBFramework.Timeline
                 Tabs.Items.Add(s);
             }
 
+            if (Tabs.Items.Count != 0)
+            {
+                ((SubTabItem)Tabs.Items[Tabs.Items.Count - 1]).IsSelected = true;
+            }
+
             Tabs_ItemsChanged_LOCK = false;
         }
 
         private bool Tabs_ItemsChanged_LOCK = false;
         /// <summary>
-        /// Tabs.Itemsの変更をCellsに反映
+        /// Tabs.Itemsの変更をOpenedElementsに反映
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

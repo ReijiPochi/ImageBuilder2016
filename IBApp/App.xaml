@@ -9,8 +9,8 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IBGUI;component/ResourceDictionarys.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/IBFramework;component/Colors.dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IBGUI;component/ResourceDictionaries.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IBFramework;component/ResourceDictionaries.xaml" />
                 <ResourceDictionary Source="Languages/LanguagePack.en-us.xaml"/>
                 <ResourceDictionary Source="Styles.xaml" />
                 <ResourceDictionary Source="Views/ControlPanels/ControlPanelResources.xaml"/>

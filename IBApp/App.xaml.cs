@@ -35,7 +35,7 @@ namespace IBApp
             if(ex != null)
             {
                 MessageBox.Show(
-                    "解決できない例外がスローされました。\nプロジェクトのバックアップが、プロジェクトファイルと同じディレクトリに保存される予定です。\n\n"
+                    "解決できない例外がスローされました。(´・ω・｀)\nプロジェクトのバックアップが、プロジェクトファイルと同じディレクトリに保存される予定です。\n\n"
                     + ex.Message + "\n\n場所 : " + ex.Source + "\nターゲット : " + ex.TargetSite,
                     "ご迷惑をお掛けして申し訳ありません",
                     MessageBoxButton.OK,

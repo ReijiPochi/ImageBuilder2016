@@ -4,7 +4,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="StringResources.en-US.xaml"/>
-        <ResourceDictionary Source="StringResources.jp-JP.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <ContextMenu x:Key="IBTabItemCM">

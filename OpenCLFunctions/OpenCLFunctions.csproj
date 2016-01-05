@@ -40,8 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CL.cs" />
+    <Compile Include="CLBuffer.cs" />
+    <Compile Include="CLCommandQueue.cs" />
+    <Compile Include="CLImage2D.cs" />
+    <Compile Include="CLKernel.cs" />
+    <Compile Include="CLProgram.cs" />
+    <Compile Include="Utilities\CL.cs" />
+    <Compile Include="Wrappers\CLfunc.cs" />
+    <Compile Include="Wrappers\Delegates.cs" />
+    <Compile Include="enumsAndStructs.cs" />
+    <Compile Include="CLContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="testKernelProgram.cl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
