@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:IBGUI"
         mc:Ignorable="d"
         Title="Image Builder" Height="300" Width="300" Style="{StaticResource IBWindowStyle}" Background="{DynamicResource IBBackGroundBrush}" Closing="window_Closing">
-    <Window.Resources>
+    <!--<Window.Resources>
         <ResourceDictionary Source="/IBGUI;component/ResourceDictionarys.xaml"/>
-    </Window.Resources>
+    </Window.Resources>-->
 
     <local:IBWorkspace Margin="0,28,0,0">
         <local:IBPanel>
