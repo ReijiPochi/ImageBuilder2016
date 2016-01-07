@@ -193,7 +193,7 @@ namespace IBApp.Models
 
             if (ActiveTargetElement != null)
             {
-                IBProjectElement parent = ActiveTargetElement.Parent;
+                IBProjectElement parent = ActiveTargetElement;
                 if (ActiveTargetElement.Type != IBProjectElementTypes.Folder) return;
 
                 parent.Children.Add(newFolder);
@@ -254,9 +254,11 @@ namespace IBApp.Models
                 }
                 else
                 {
-                    ActiveTargetElement.Children.Add(newCellSource);
-                    newCellSource.Parent = ActiveTargetElement;
-                    RedoUndoModel.Current.Record(new RUAddNewElement(ActiveTargetElement, newCellSource));
+                    IBProjectElement parent = ActiveTargetElement;
+
+                    parent.Children.Add(newCellSource);
+                    newCellSource.Parent = parent;
+                    RedoUndoModel.Current.Record(new RUAddNewElement(parent, newCellSource));
                 }
             }
             else

@@ -322,6 +322,87 @@ namespace OpenCLFunctions.Wrappers
             IntPtr eventObject);
 
         /// <summary>
+        /// コマンドキューに「画像塗りつぶし命令」を追加します
+        /// </summary>
+        /// <param name="commandQueue"></param>
+        /// <param name="image"></param>
+        /// <param name="fillColor"></param>
+        /// <param name="origin"></param>
+        /// <param name="region"></param>
+        /// <param name="countOfEventsInWaitList"></param>
+        /// <param name="eventList"></param>
+        /// <param name="eventObject"></param>
+        /// <returns></returns>
+        [DllImport("OpenCL.dll")]
+        public static extern int clEnqueueFillImage(
+            IntPtr commandQueue,
+            IntPtr image,
+            IntPtr fillColor,
+            ref Coordinate2D origin,
+            ref Coordinate2D region,
+            int countOfEventsInWaitList,
+            IntPtr[] eventList,
+            IntPtr eventObject);
+
+        /// <summary>
+        /// コマンドキューに「画像データ書き込み命令」を追加します
+        /// </summary>
+        /// <param name="commandQueue"></param>
+        /// <param name="image"></param>
+        /// <param name="blockingWrite"></param>
+        /// <param name="origin"></param>
+        /// <param name="region"></param>
+        /// <param name="inputRowPitch"></param>
+        /// <param name="inputSlicePitch"></param>
+        /// <param name="ptr"></param>
+        /// <param name="countOfEventsInWaitList"></param>
+        /// <param name="eventList"></param>
+        /// <param name="eventObject"></param>
+        /// <returns></returns>
+        [DllImport("OpenCL.dll")]
+        public static extern int clEnqueueWriteImage(
+            IntPtr commandQueue,
+            IntPtr image,
+            bool blockingWrite,
+            ref Coordinate2D origin,
+            ref Coordinate2D region,
+            int inputRowPitch,
+            int inputSlicePitch,
+            IntPtr ptr,
+            int countOfEventsInWaitList,
+            IntPtr[] eventList,
+            IntPtr eventObject);
+
+        /// <summary>
+        /// コマンドキューに「画像データ読み出し命令」を追加します
+        /// </summary>
+        /// <param name="commandQueue"></param>
+        /// <param name="image"></param>
+        /// <param name="blockingWrite"></param>
+        /// <param name="origin"></param>
+        /// <param name="region"></param>
+        /// <param name="rowPitch"></param>
+        /// <param name="slicePitch"></param>
+        /// <param name="ptr"></param>
+        /// <param name="countOfEventsInWaitList"></param>
+        /// <param name="eventList"></param>
+        /// <param name="eventObject"></param>
+        /// <returns></returns>
+        [DllImport("OpenCL.dll")]
+        public static extern int clEnqueueReadImage(
+            IntPtr commandQueue,
+            IntPtr image,
+            bool blockingWrite,
+            ref Coordinate2D origin,
+            ref Coordinate2D region,
+            int rowPitch,
+            int slicePitch,
+            IntPtr ptr,
+            int countOfEventsInWaitList,
+            IntPtr[] eventList,
+            IntPtr eventObject);
+
+        /// <summary>
         /// コンパイルエラーを取得します
         /// </summary>
         /// <param name="program">ビルドしたプログラム</param>

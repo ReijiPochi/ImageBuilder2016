@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows;
+using System.IO;
+using System.Reflection;
 
 using OpenCLFunctions.Utilities;
-
 using OpenCLFunctions;
 
 namespace IBFramework.OpenCL
@@ -24,19 +25,32 @@ namespace IBFramework.OpenCL
         {
             if (CL.Program == null)
             {
-                CL.Initialize(Application.Current.FindResource("TestProgram") as string);
+                string source;
+                Assembly a = Assembly.GetExecutingAssembly();
+                using (StreamReader sr = new StreamReader(a.GetManifestResourceStream("IBFramework.OpenCL.Sources.cl")))
+                {
+                    source = sr.ReadToEnd();
+                }
+
+                CL.Initialize(source);
 
                 int maxW, maxH;
                 CL.GetDeviceImage2DMaxSize(out maxW, out maxH);
                 MaxImage2DWidth = maxW;
                 MaxImage2DHeight = maxH;
 
-                CLImage2D image = CL.GenImage2D(
-                    MemoryFlags.CopyHostMemory,
-                    new CLImageFormat(ChannelOrder.Bgra, ChannelType.UnsignedInt8),
-                    8,
-                    8,
-                    new byte[8 * 8 * 4]);
+                //CLImage2D image = CL.GenImage2D(
+                //    MemoryFlags.ReadWrite,
+                //    1920,
+                //    1080,
+                //    null);
+
+                //CL.WriteImage2DData(image, new byte[1920 * 1080 * 4]);
+
+                //CL.FillImage2D(image, new CLColor(114, 51, 4, 255));
+
+                //byte[] ret = new byte[8 * 8 * 4];
+                //CL.ReadImage2DData(image, ret);
             }
         }
     }

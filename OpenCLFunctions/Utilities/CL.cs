@@ -84,9 +84,41 @@ namespace OpenCLFunctions.Utilities
         /// <param name="H"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static CLImage2D GenImage2D(MemoryFlags flags, CLImageFormat format, int W, int H, byte[] data)
+        public static CLImage2D GenImage2D(MemoryFlags flags, int W, int H, byte[] data)
         {
-            return new CLImage2D(Context, flags, format, W, H, data);
+            return new CLImage2D(Context, flags, W, H, data);
+        }
+
+        /// <summary>
+        /// 2D Imageオブジェクトを塗りつぶします
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="fillColor"></param>
+        /// <param name="origin"></param>
+        /// <param name="region"></param>
+        public static void FillImage2D(CLImage2D image, CLColor fillColor)
+        {
+            CommandQueue.EnqueueFillColor(image, fillColor);
+        }
+
+        /// <summary>
+        /// 2D Imageオブジェクトにデータを書き込みます
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="data"></param>
+        public static void WriteImage2DData(CLImage2D image, byte[] data)
+        {
+            CommandQueue.EnqueueWriteImageData(image, data);
+        }
+
+        /// <summary>
+        /// 2D Imageオブジェクトからデータを読み出します
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="data"></param>
+        public static void ReadImage2DData(CLImage2D image, byte[] data)
+        {
+            CommandQueue.EnqueueReadImageData(image, data);
         }
 
         /// <summary>

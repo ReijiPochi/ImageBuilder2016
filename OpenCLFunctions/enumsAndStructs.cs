@@ -200,5 +200,50 @@ namespace OpenCLFunctions
             Z = 0;
             Dimension = 1;
         }
+
+        public MultiDimension(int x, int y)
+        {
+            X = x;
+            Y = y;
+            Z = 0;
+            Dimension = 2;
+        }
+    }
+
+    public struct Coordinate2D
+    {
+        public int X;
+        public int Y;
+        public int Z;
+
+        public Coordinate2D(int value)
+        {
+            X = value;
+            Y = value;
+            Z = value;
+        }
+
+        public Coordinate2D(int x, int y)
+        {
+            X = x;
+            Y = y;
+            Z = 1;
+        }
+    }
+
+    public struct CLColor
+    {
+        public int R;
+        public int G;
+        public int B;
+        public int A;
+
+        public CLColor(int r, int g, int b, int a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
     }
 }

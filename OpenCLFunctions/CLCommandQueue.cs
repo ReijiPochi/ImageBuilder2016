@@ -77,5 +77,53 @@ namespace OpenCLFunctions
                 null,
                 IntPtr.Zero);
         }
+
+        public void EnqueueFillColor(CLImage2D image, CLColor fillColor)
+        {
+            int errorCode;
+            Coordinate2D origin = new Coordinate2D(0);
+            GCHandle handle = GCHandle.Alloc(fillColor, GCHandleType.Pinned);
+
+            errorCode = CLfunc.clEnqueueFillImage(InternalPointer, image.InternalPointer, handle.AddrOfPinnedObject(),
+                ref origin, ref image._Size, 0, null, IntPtr.Zero);
+
+            handle.Free();
+            if (errorCode != 0)
+            {
+                throw new Exception("OpenCL 2D Image オブジェクトの塗りつぶしに失敗しまた。\nエラーコード：" + errorCode.ToString() + "\n");
+            }
+        }
+
+        public void EnqueueWriteImageData(CLImage2D image, byte[] data)
+        {
+            int errorCode;
+            Coordinate2D origin = new Coordinate2D(0);
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+
+            errorCode = CLfunc.clEnqueueWriteImage(InternalPointer, image.InternalPointer, true,
+                ref origin, ref image._Size, image._Size.X * 4, 0, handle.AddrOfPinnedObject(), 0, null, IntPtr.Zero);
+
+            handle.Free();
+            if (errorCode != 0)
+            {
+                throw new Exception("OpenCL 2D Image オブジェクトへのデータ書き込みに失敗しまた。\nエラーコード：" + errorCode.ToString() + "\n");
+            }
+        }
+
+        public void EnqueueReadImageData(CLImage2D image, byte[] data)
+        {
+            int errorCode;
+            Coordinate2D origin = new Coordinate2D(0);
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+
+            errorCode = CLfunc.clEnqueueReadImage(InternalPointer, image.InternalPointer, true,
+                ref origin, ref image._Size, image._Size.X * 4, 0, handle.AddrOfPinnedObject(), 0, null, IntPtr.Zero);
+
+            handle.Free();
+            if (errorCode != 0)
+            {
+                throw new Exception("OpenCL 2D Image オブジェクトからのデータ読み出しに失敗しまた。\nエラーコード：" + errorCode.ToString() + "\n");
+            }
+        }
     }
 }
