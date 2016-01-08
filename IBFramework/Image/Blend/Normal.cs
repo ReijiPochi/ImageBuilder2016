@@ -18,7 +18,7 @@ namespace IBFramework.Image.Blend
 
         public override void Blend(SingleColorImage source, CLBuffer trg, IBRectangle trgSize, CLBuffer buffer)
         {
-            CLImageProcessing.FillRectangle(trg, trgSize, source.color, source.Rect);
+            CLImageProcessing.FillRectangle(trg, trgSize, source.Color, source.Rect);
             //int trgSizeW = (int)trg.size.Width;
             //int trgSizeH = (int)trg.size.Height;
 

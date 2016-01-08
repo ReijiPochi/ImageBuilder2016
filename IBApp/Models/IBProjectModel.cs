@@ -222,6 +222,20 @@ namespace IBApp.Models
                 IsSelected = true,
             };
 
+            SingleColorImage i = new SingleColorImage(255, 0, 0, 100);
+            i.Rect.Width = 192;
+            i.Rect.Height = 108;
+            i.Rect.OffsetX = 100;
+            i.Rect.OffsetY = 150;
+            i.LayerName = "layer2";
+            newCellSource.Layers.Add(i);
+            SingleColorImage i2 = new SingleColorImage(0, 0, 255, 100);
+            i2.Rect.Width = 192;
+            i2.Rect.Height = 108;
+            i2.Rect.OffsetX = 100;
+            i2.Rect.OffsetY = 100;
+            i2.LayerName = "layer1";
+            newCellSource.Layers.Add(i2);
             SingleColorImage bg = new SingleColorImage(200, 255, 255, 255);
             bg.Rect.Width = 1920;
             bg.Rect.Height = 1080;
@@ -230,7 +244,7 @@ namespace IBApp.Models
             bg.LayerName = "BackGround";
             newCellSource.Layers.Add(bg);
 
-            if(ActiveTargetElement != null)
+            if (ActiveTargetElement != null)
             {
                 if (ActiveTargetElement.Type == IBProjectElementTypes.Cell)
                 {

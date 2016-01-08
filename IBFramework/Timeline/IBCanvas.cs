@@ -60,17 +60,6 @@ namespace IBFramework.Timeline
             glControlHost.SizeChanged += GlControlHost_SizeChanged;
             glControlHost.Child = glControl;
 
-            // glControlが表示されてからテクスチャを生成しないといけない
-            textureNumber = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, textureNumber);
-            {
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            }
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-
             Tabs = GetTemplateChild("Tabs") as IBTabControl;
             Tabs.ItemsChanged += Tabs_ItemsChanged;
             Tabs.SelectionChanged += Tabs_SelectionChanged;
@@ -78,23 +67,15 @@ namespace IBFramework.Timeline
 
             OpenedElements.CollectionChanged += OpenedElements_CollectionChanged;
 
-            CLUtilities.Init();
-            CLRenderData = CL.GenBuffer(new byte[1920 * 1080 * 4]);
-            ImageBuffer = CL.GenBuffer(new byte[1920 * 1080 * 4]);
-            Render();
+            glControl.Refresh();
         }
 
         private WindowsFormsHost glControlHost;
         private GLControl glControl;
         private IBTabControl Tabs;
-        private int textureNumber;
-
-        public BGRA32FormattedImage RenderData = new BGRA32FormattedImage(1920, 1080, new PixelData() { b = 0, g = 0, r = 0, a = 0 });
-        public CLBuffer CLRenderData;
-        public CLBuffer ImageBuffer;
 
 
-        [Description("開かれているタイムラインエレメント"), Category("IBFramework")]
+        [Description("開かれているエレメント"), Category("IBFramework")]
         public ObservableCollection<IBProjectElement> OpenedElements
         {
             get { return (ObservableCollection<IBProjectElement>)GetValue(OpenedElementsProperty); }
@@ -103,7 +84,7 @@ namespace IBFramework.Timeline
         public static readonly DependencyProperty OpenedElementsProperty =
             DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<IBProjectElement>), typeof(IBCanvas), new PropertyMetadata(new ObservableCollection<IBProjectElement>()));
 
-
+        [Description("表示している（選択されている）エレメント"), Category("IBFramework")]
         public IBProjectElement ShowingElement
         {
             get { return (IBProjectElement)GetValue(ShowingElementProperty); }
@@ -112,7 +93,14 @@ namespace IBFramework.Timeline
         public static readonly DependencyProperty ShowingElementProperty =
             DependencyProperty.Register("ShowingElement", typeof(IBProjectElement), typeof(IBCanvas), new PropertyMetadata(null));
 
-
+        [Description("ズーム"), Category("IBFramework")]
+        public double ZoomPerCent
+        {
+            get { return (double)GetValue(ZoomPerCentProperty); }
+            set { SetValue(ZoomPerCentProperty, value); }
+        }
+        public static readonly DependencyProperty ZoomPerCentProperty =
+            DependencyProperty.Register("ZoomPerCent", typeof(double), typeof(IBCanvas), new PropertyMetadata(66.6));
 
         [Description("アクティブなブラシ"), Category("IBFramework")]
         public IBBrush Brush
@@ -153,9 +141,6 @@ namespace IBFramework.Timeline
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             SetCam();
-            GL.ClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-
-            SetCam();
         }
 
         private void GlControl_SizeChanged(object sender, EventArgs e)
@@ -171,23 +156,7 @@ namespace IBFramework.Timeline
             glControl.MakeCurrent();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.BindTexture(TextureTarget.Texture2D, textureNumber);
-            {
-                GL.Begin(PrimitiveType.Quads);
-                {
-                    double w = 1920, h = 1080;
-                    GL.TexCoord2(1, 1);
-                    GL.Vertex2(w, h);
-                    GL.TexCoord2(0, 1);
-                    GL.Vertex2(0, h);
-                    GL.TexCoord2(0, 0);
-                    GL.Vertex2(0, 0);
-                    GL.TexCoord2(1, 0);
-                    GL.Vertex2(w, 0);
-                }
-                GL.End();
-            }
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            Render();
 
             glControl.SwapBuffers();
         }
@@ -207,7 +176,7 @@ namespace IBFramework.Timeline
             if (Tabs.SelectedItem != null)
                 ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
 
-            Render();
+            glControl.Refresh();
         }
 
 
@@ -218,8 +187,8 @@ namespace IBFramework.Timeline
                 //cur = e.Location;
                 //if ((pre.X - cur.X) * (pre.X - cur.X) + (pre.Y - cur.Y) * (pre.Y - cur.Y) >= 2.0)
                 //{
-                    //pre = cur;
-                    Render();
+                //pre = cur;
+                glControl.Refresh();
                 //}
             }
         }
@@ -227,30 +196,44 @@ namespace IBFramework.Timeline
 
         private void Render()
         {
-            //RenderData.ClearData(new PixelData() { b = 0, g = 0, r = 0, a = 0 });
-
             if (Tabs.SelectedItem == null) return;
             if (((SubTabItem)Tabs.SelectedItem).Element as CellSource == null) return;
 
-            //CLImageProcessing.ClearColor(CLRenderData, new CLColor(255, 255, 255, 255));
+            double zoom = ZoomPerCent / 100.0;
+            double layer = 0;
 
-            foreach (IBImage i in ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers)
+            for(int c = ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers.Count - 1; c >= 0; c--)
             {
-                i.Render(CLRenderData, RenderData.size, ImageBuffer);
+                IBImage i = ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers[c];
+
+                GL.BindTexture(TextureTarget.Texture2D, i.imageData.texNumber);
+                {
+                    GL.Begin(PrimitiveType.Quads);
+                    {
+                        double offsetX = i.Rect.OffsetX * zoom, offsetY = i.Rect.OffsetY * zoom;
+                        double w = i.Rect.Width * zoom, h = i.Rect.Height * zoom;
+                        double texMin = 0, texMax = 1.0;
+
+                        if (i.LayerType == ImageTypes.SingleColor)
+                        {
+                            texMin = 0.5;
+                            texMax = 0.5;
+                        }
+
+                        GL.TexCoord2(texMax, texMax);
+                        GL.Vertex3(offsetX + w, offsetY + h, layer);
+                        GL.TexCoord2(texMin, texMax);
+                        GL.Vertex3(offsetX, offsetY + h, layer);
+                        GL.TexCoord2(texMin, texMin);
+                        GL.Vertex3(offsetX, offsetY, layer);
+                        GL.TexCoord2(texMax, texMin);
+                        GL.Vertex3(offsetX + w, offsetY, layer);
+                    }
+                    GL.End();
+                    layer += 0.01;
+                }
+                GL.BindTexture(TextureTarget.Texture2D, 0);
             }
-
-            //CL.ReadImage2DData(CLRenderData, RenderData.data);
-            CL.ReadBuffer(CLRenderData, RenderData.data);
-
-            GL.BindTexture(TextureTarget.Texture2D, textureNumber);
-            {
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                    (int)RenderData.size.Width, (int)RenderData.size.Height, 0,
-                    OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, RenderData.data);
-            }
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-
-            glControl.Refresh();
         }
 
         #region Tabs と OpenedElements のバインド

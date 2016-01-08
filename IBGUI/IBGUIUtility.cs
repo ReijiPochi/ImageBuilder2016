@@ -34,7 +34,7 @@ namespace IBGUI
             themeRes.Source = new Uri(@"/IBGUI;component/IBColors." + theme + @".xaml", UriKind.Relative);
 
             ResourceDictionary resource = new ResourceDictionary();
-            resource.Source = new Uri(@"/IBGUI;component/ResourceDictionarys.xaml", UriKind.Relative);
+            resource.Source = new Uri(@"/IBGUI;component/ResourceDictionaries.xaml", UriKind.Relative);
             Application.Current.Resources.MergedDictionaries.Add(themeRes);
         }
     }

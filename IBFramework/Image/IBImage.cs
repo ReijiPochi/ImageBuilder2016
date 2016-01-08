@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using IBFramework.Image.Blend;
 using System.ComponentModel;
-using OpenCLFunctions;
 
 namespace IBFramework.Image
 {
@@ -18,6 +17,8 @@ namespace IBFramework.Image
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public BGRA32FormattedImage imageData;
 
         private string _LayerName;
         public string LayerName
@@ -89,12 +90,5 @@ namespace IBFramework.Image
                 RaisePropertyChanged("blendMode");
             }
         }
-
-        /// <summary>
-        /// trgにこの画像をレンダリングします。buffer1は、データ転送に使います
-        /// </summary>
-        /// <param name="trg"></param>
-        /// <param name="buffer1"></param>
-        public abstract void Render(CLBuffer trg, IBRectangle trgSize, CLBuffer buffer1);
     }
 }
