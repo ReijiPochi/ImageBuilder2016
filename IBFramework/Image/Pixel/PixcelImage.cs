@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenCLFunctions;
+
 namespace IBFramework.Image.Pixel
 {
     public class PixcelImage : IBImage
@@ -15,7 +17,7 @@ namespace IBFramework.Image.Pixel
 
         public PixelData[,] currentData;
 
-        public override void RenderTo(BGRA32FormattedImage trg)
+        public override void Render(CLBuffer trg, IBRectangle trgSize, CLBuffer buffer1)
         {
             throw new NotImplementedException();
         }

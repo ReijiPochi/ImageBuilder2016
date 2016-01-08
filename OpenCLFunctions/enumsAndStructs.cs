@@ -208,6 +208,14 @@ namespace OpenCLFunctions
             Z = 0;
             Dimension = 2;
         }
+
+        public MultiDimension(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            Dimension = 3;
+        }
     }
 
     public struct Coordinate2D

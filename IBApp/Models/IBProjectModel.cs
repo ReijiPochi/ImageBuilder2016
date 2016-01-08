@@ -222,11 +222,11 @@ namespace IBApp.Models
                 IsSelected = true,
             };
 
-            SingleColorImage bg = new SingleColorImage(255, 255, 255, 255);
-            bg.Size.Height = 1920;
-            bg.Size.Width = 1080;
-            bg.Size.OffsetX = 0;
-            bg.Size.OffsetY = 0;
+            SingleColorImage bg = new SingleColorImage(200, 255, 255, 255);
+            bg.Rect.Width = 1920;
+            bg.Rect.Height = 1080;
+            bg.Rect.OffsetX = 0;
+            bg.Rect.OffsetY = 0;
             bg.LayerName = "BackGround";
             newCellSource.Layers.Add(bg);
 

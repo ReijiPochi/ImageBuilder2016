@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using IBFramework.Image.Pixel;
+using OpenCLFunctions;
 
 namespace IBFramework.Image.Blend
 {
@@ -16,7 +17,7 @@ namespace IBFramework.Image.Blend
 
     public abstract class BlendMode
     {
-        public abstract void Blend(SingleColorImage source, BGRA32FormattedImage trg);
-        public abstract void Blend(PixcelImage source, BGRA32FormattedImage trg);
+        public abstract void Blend(SingleColorImage source, CLBuffer trg, IBRectangle trgSize, CLBuffer buffer);
+        public abstract void Blend(PixcelImage source, CLBuffer trg, IBRectangle trgSize, CLBuffer buffer);
     }
 }

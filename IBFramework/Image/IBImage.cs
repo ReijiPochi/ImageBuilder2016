@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using IBFramework.Image.Blend;
 using System.ComponentModel;
+using OpenCLFunctions;
 
 namespace IBFramework.Image
 {
@@ -61,17 +62,17 @@ namespace IBFramework.Image
         }
 
 
-        private IBRectangle _Size = new IBRectangle();
-        public IBRectangle Size
+        private IBRectangle _Rect = new IBRectangle();
+        public IBRectangle Rect
         {
             get
-            { return _Size; }
+            { return _Rect; }
             set
             {
-                if (_Size == value)
+                if (_Rect == value)
                     return;
-                _Size = value;
-                RaisePropertyChanged("Size");
+                _Rect = value;
+                RaisePropertyChanged("Rect");
             }
         }
 
@@ -89,6 +90,11 @@ namespace IBFramework.Image
             }
         }
 
-        public abstract void RenderTo(BGRA32FormattedImage trg);
+        /// <summary>
+        /// trgにこの画像をレンダリングします。buffer1は、データ転送に使います
+        /// </summary>
+        /// <param name="trg"></param>
+        /// <param name="buffer1"></param>
+        public abstract void Render(CLBuffer trg, IBRectangle trgSize, CLBuffer buffer1);
     }
 }

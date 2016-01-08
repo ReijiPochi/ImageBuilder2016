@@ -79,7 +79,8 @@ namespace IBFramework.Timeline
             OpenedElements.CollectionChanged += OpenedElements_CollectionChanged;
 
             CLUtilities.Init();
-            CLRenderData = CL.GenImage2D(MemoryFlags.ReadWrite, 1920, 1080, null);
+            CLRenderData = CL.GenBuffer(new byte[1920 * 1080 * 4]);
+            ImageBuffer = CL.GenBuffer(new byte[1920 * 1080 * 4]);
             Render();
         }
 
@@ -89,7 +90,8 @@ namespace IBFramework.Timeline
         private int textureNumber;
 
         public BGRA32FormattedImage RenderData = new BGRA32FormattedImage(1920, 1080, new PixelData() { b = 0, g = 0, r = 0, a = 0 });
-        public CLImage2D CLRenderData;
+        public CLBuffer CLRenderData;
+        public CLBuffer ImageBuffer;
 
 
         [Description("開かれているタイムラインエレメント"), Category("IBFramework")]
@@ -227,17 +229,18 @@ namespace IBFramework.Timeline
         {
             //RenderData.ClearData(new PixelData() { b = 0, g = 0, r = 0, a = 0 });
 
-            //if (Tabs.SelectedItem == null) return;
-            //if (((SubTabItem)Tabs.SelectedItem).Element as CellSource == null) return;
+            if (Tabs.SelectedItem == null) return;
+            if (((SubTabItem)Tabs.SelectedItem).Element as CellSource == null) return;
 
-            CLImageProcessing.ClearColor(CLRenderData, new CLColor(100, 200, 250, 255));
+            //CLImageProcessing.ClearColor(CLRenderData, new CLColor(255, 255, 255, 255));
 
-            //foreach(IBImage i in ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers)
-            //{
-            //    i.RenderTo(RenderData);
-            //}
+            foreach (IBImage i in ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers)
+            {
+                i.Render(CLRenderData, RenderData.size, ImageBuffer);
+            }
 
-            CL.ReadImage2DData(CLRenderData, RenderData.data);
+            //CL.ReadImage2DData(CLRenderData, RenderData.data);
+            CL.ReadBuffer(CLRenderData, RenderData.data);
 
             GL.BindTexture(TextureTarget.Texture2D, textureNumber);
             {

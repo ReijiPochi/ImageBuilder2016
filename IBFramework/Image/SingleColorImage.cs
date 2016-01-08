@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenCLFunctions;
+
 namespace IBFramework.Image
 {
     public class SingleColorImage : IBImage
@@ -22,9 +24,9 @@ namespace IBFramework.Image
             color.a = a;
         }
 
-        public override void RenderTo(BGRA32FormattedImage trg)
+        public override void Render(CLBuffer trg, IBRectangle trgSize, CLBuffer buffer)
         {
-            BlendMode.Blend(this, trg);
+            BlendMode.Blend(this, trg, trgSize, buffer);
         }
 
         public PixelData color = new PixelData();

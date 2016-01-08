@@ -43,8 +43,8 @@ namespace IBApp.Views
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("OpenCL Initialized : OK\nImage2D Max Width : " + CLUtilities.MaxImage2DWidth + "\nImage2D Max Height : " + CLUtilities.MaxImage2DHeight,
-                "Alt + PrtSc でスクショとってください何でもしますから");
+            //MessageBox.Show("OpenCL Initialized : OK\nImage2D Max Width : " + CLUtilities.MaxImage2DWidth + "\nImage2D Max Height : " + CLUtilities.MaxImage2DHeight,
+            //    "Alt + PrtSc でスクショとってください何でもしますから");
         }
 
         private void window_Activated(object sender, EventArgs e)
