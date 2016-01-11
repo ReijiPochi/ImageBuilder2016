@@ -18,6 +18,32 @@ namespace IBApp.ViewModels.ControlPanels
 {
     public class DrawingToolsVM : ViewModel
     {
+        public DrawingToolsVM()
+        {
+            if (IBProjectModel.Current == null) return;
+            IBProjectModel.Current.PropertyChanged += IBProjectModel_PropertyChanged;
+        }
+
+        private void IBProjectModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectedBrush")
+            {
+                switch (IBProjectModel.Current.SelectedBrush.GetType().Name)
+                {
+                    case "Pen":
+                        PenON = true;
+                        break;
+
+                    case "Eraser":
+                        EraserON = true;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
         #region PencilON変更通知プロパティ
         private bool _PencilON;
 
@@ -52,6 +78,8 @@ namespace IBApp.ViewModels.ControlPanels
                 RaisePropertyChanged("PencilON");
                 RaisePropertyChanged("PenON");
                 RaisePropertyChanged("EraserON");
+
+                IBBrushModel.SetToProjectPen();
             }
         }
         #endregion
@@ -72,11 +100,53 @@ namespace IBApp.ViewModels.ControlPanels
                 RaisePropertyChanged("PenON");
                 RaisePropertyChanged("EraserON");
 
-                //IBAppModel.Current.SelectedPropertyItem = Eraser;
+                IBBrushModel.SetToProjectEraser();
             }
         }
         #endregion
 
+
+        #region OnPenCommand
+        private ViewModelCommand _OnPenCommand;
+
+        public ViewModelCommand OnPenCommand
+        {
+            get
+            {
+                if (_OnPenCommand == null)
+                {
+                    _OnPenCommand = new ViewModelCommand(OnPen);
+                }
+                return _OnPenCommand;
+            }
+        }
+
+        public void OnPen()
+        {
+            PenON = true;
+        }
+        #endregion
+
+        #region OnEraserCommand
+        private ViewModelCommand _OnEraserCommand;
+
+        public ViewModelCommand OnEraserCommand
+        {
+            get
+            {
+                if (_OnEraserCommand == null)
+                {
+                    _OnEraserCommand = new ViewModelCommand(OnEraser);
+                }
+                return _OnEraserCommand;
+            }
+        }
+
+        public void OnEraser()
+        {
+            EraserON = true;
+        }
+        #endregion
 
     }
 }

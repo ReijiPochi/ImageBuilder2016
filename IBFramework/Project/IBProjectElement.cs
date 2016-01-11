@@ -12,7 +12,8 @@ namespace IBFramework.Project
     {
         Null,
         Folder,
-        Cell
+        Cell,
+        CellSource
     }
 
     public enum IBProjectElementFlags
@@ -26,11 +27,15 @@ namespace IBFramework.Project
 
     public abstract class IBProjectElement : INotifyPropertyChanged
     {
-        public IBProjectElement(IBProject Master)
+        public IBProjectElement()
         {
-            if(Master != null)
+            if(IBProject.Current != null)
             {
-                ID = Master.GenNewID();
+                ID = IBProject.Current.GenNewID();
+            }
+            else
+            {
+                throw new Exception("IBProject.Current が null です");
             }
         }
 
@@ -71,6 +76,34 @@ namespace IBFramework.Project
                     return;
                 _Name = value;
                 RaisePropertyChanged("Name");
+            }
+        }
+
+        private int _Width;
+        public int Width
+        {
+            get
+            { return _Width; }
+            set
+            {
+                if (_Width == value)
+                    return;
+                _Width = value;
+                RaisePropertyChanged("Width");
+            }
+        }
+
+        private int _Height;
+        public int Height
+        {
+            get
+            { return _Height; }
+            set
+            {
+                if (_Height == value)
+                    return;
+                _Height = value;
+                RaisePropertyChanged("Height");
             }
         }
 

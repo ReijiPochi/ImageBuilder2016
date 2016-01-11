@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,12 +63,19 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Wintab">
+      <HintPath>..\Wintab\bin\Debug\Wintab.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElementToBrushConverter.cs" />
+    <Compile Include="IBCoord.cs" />
     <Compile Include="Image\ImageTypes.cs" />
+    <Compile Include="Image\Pixel\Eraser.cs" />
     <Compile Include="OpenCL\CLImageProcessing.cs" />
     <Compile Include="OpenCL\CLUtilities.cs" />
+    <Compile Include="OpenGL\Render.cs" />
+    <Compile Include="OpenGL\Texture.cs" />
     <Compile Include="Project\FlagButton.cs" />
     <Compile Include="Project\IBProject.cs" />
     <Compile Include="Project\IBProjectElements\CellSource.cs" />
@@ -83,6 +91,7 @@
     <Compile Include="Project\IBProjectElement.cs" />
     <Compile Include="Project\IBProjectPP.cs" />
     <Compile Include="RedoUndo\RedoUndoAction.cs" />
+    <Compile Include="Timeline\IBCanvas_utilities.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
     <Compile Include="Timeline\IBCanvas.cs" />
     <Compile Include="Image\IBImage.cs" />
@@ -108,7 +117,7 @@
     <Compile Include="SubTabItem.cs" />
     <Compile Include="Timeline\TimelineElement.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenCL\Sources.cl" />

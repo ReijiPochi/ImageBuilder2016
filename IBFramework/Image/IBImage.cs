@@ -90,5 +90,19 @@ namespace IBFramework.Image
                 RaisePropertyChanged("blendMode");
             }
         }
+
+        public virtual void CopyTo(IBImage i)
+        {
+            i.imageData = new BGRA32FormattedImage((int)imageData.size.Width, (int)imageData.size.Height);
+            for(int c = 0; c < i.imageData.data.Length; c++)
+            {
+                i.imageData.data[c] = imageData.data[c];
+            }
+            i.IsSelectedLayer = IsSelectedLayer;
+            i.LayerName = LayerName;
+            i.LayerType = LayerType;
+            i.PropertyChanged = PropertyChanged;
+            i.Rect = new IBRectangle(Rect.Width, Rect.Height, Rect.OffsetX, Rect.OffsetY);
+        }
     }
 }

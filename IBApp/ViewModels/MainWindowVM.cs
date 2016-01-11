@@ -62,7 +62,7 @@ namespace IBApp.ViewModels
 
         public void Initialize()
         {
-            Wintab.Wintab.Initialize();
+            Wintab.WintabUtility.Initialize();
         }
 
         protected override void Dispose(bool disposing)

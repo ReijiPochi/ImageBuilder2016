@@ -40,5 +40,12 @@ namespace IBFramework.Image
                 RaisePropertyChanged("Color");
             }
         }
+
+        public override void CopyTo(IBImage i)
+        {
+            i = new SingleColorImage();
+            base.CopyTo(i);
+            ((SingleColorImage)i).Color = Color;
+        }
     }
 }

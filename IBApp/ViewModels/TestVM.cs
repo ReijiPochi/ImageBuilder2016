@@ -54,7 +54,7 @@ namespace IBApp.ViewModels
 
         public void GetPenTabletValues()
         {
-            PenTabletPos = Wintab.Wintab.Position;
+            PenTabletPos = Wintab.WintabUtility.Position;
         }
         #endregion
 

@@ -30,6 +30,8 @@ using IBFramework.Project.IBProjectElements;
 using IBFramework.OpenCL;
 using OpenCLFunctions;
 using OpenCLFunctions.Utilities;
+using IBFramework.OpenGL;
+using Wintab;
 
 namespace IBFramework.Timeline
 {
@@ -38,6 +40,13 @@ namespace IBFramework.Timeline
         static IBCanvas()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(IBCanvas), new FrameworkPropertyMetadata(typeof(IBCanvas)));
+        }
+        private static List<IBCanvas> all = new List<IBCanvas>();
+
+        public static void RefreshAll()
+        {
+            foreach (IBCanvas c in all)
+                c.glControl.Refresh();
         }
 
         public IBCanvas()
@@ -48,8 +57,33 @@ namespace IBFramework.Timeline
                 glControl.Load += GlControl_Load;
                 glControl.SizeChanged += GlControl_SizeChanged;
                 glControl.Paint += GlControl_Paint;
+                glControl.MouseEnter += GlControl_MouseEnter;
+                glControl.MouseDown += GlControl_MouseDown;
                 glControl.MouseMove += GlControl_MouseMove;
+                glControl.MouseWheel += GlControl_MouseWheel;
+                glControl.LostFocus += GlControl_LostFocus;
+                glControl.MouseLeave += GlControl_MouseLeave;
+                glControl.MouseUp += GlControl_MouseUp;
+                Application.Current.Exit += Current_Exit;
+
+                System.Drawing.Bitmap cur = new System.Drawing.Bitmap("cursorTest.png");
+                IntPtr h = cur.GetHicon();
+                var icon = System.Drawing.Icon.FromHandle(h);
+                glControl.Cursor = new System.Windows.Forms.Cursor(icon.Handle);
+
+                all.Add(this);
             }
+        }
+
+        ~IBCanvas()
+        {
+            all.Remove(this);
+        }
+
+        private void Current_Exit(object sender, ExitEventArgs e)
+        {
+            // GLコントロールがDisposeされる前にコールしないとだめらしい
+            BGRA32FormattedImage.FinalizeBGRA32FormattedImage();
         }
 
         public override void OnApplyTemplate()
@@ -71,8 +105,15 @@ namespace IBFramework.Timeline
         }
 
         private WindowsFormsHost glControlHost;
-        private GLControl glControl;
+        internal GLControl glControl;
+        private bool IsCurrentGLControl = false;
         private IBTabControl Tabs;
+        private int zoomListIndex = 5;
+        private double[] zoomList = new double[] { 10, 12.5, 25, 100 / 3, 50, 200 / 3, 75, 100, 150, 200, 300, 400, 500, 600, 800 };
+        private bool PenDraging;
+        int preX, preY;
+        private int offsetX = 0, offsetY = 0;
+        internal int camX = 0, camY = 0;
 
 
         [Description("開かれているエレメント"), Category("IBFramework")]
@@ -143,6 +184,12 @@ namespace IBFramework.Timeline
             SetCam();
         }
 
+        private void GlControl_LostFocus(object sender, EventArgs e)
+        {
+            IsCurrentGLControl = false;
+            Brush.EndRequest();
+        }
+
         private void GlControl_SizeChanged(object sender, EventArgs e)
         {
             glControl.MakeCurrent();
@@ -153,10 +200,28 @@ namespace IBFramework.Timeline
 
         private void GlControl_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            glControl.MakeCurrent();
+            if (!IsCurrentGLControl)
+            {
+                glControl.MakeCurrent();
+                IsCurrentGLControl = true;
+            }
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            Render();
+            if (ShowingElement != null)
+            {
+                GL.Enable(EnableCap.Texture2D);
+                RenderAll();
+
+                GL.Disable(EnableCap.Texture2D);
+                GL.Color3(1.0f, 0.3f, 1.0f);
+                DrawOuterCenterMark();
+                DrawCornerMark();
+                DrawCinemaScopeFrame();
+                GL.Color3(0.3f, 0.3f, 0.3f);
+                DrawImageFrame();
+                GL.Color3(1.0f, 1.0f, 1.0f);
+            }
 
             glControl.SwapBuffers();
         }
@@ -164,6 +229,89 @@ namespace IBFramework.Timeline
         private void GlControlHost_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             glControlHost.Child.Refresh();
+        }
+
+        private void GlControl_MouseEnter(object sender, EventArgs e)
+        {
+            //glControl.Focus();
+        }
+
+        private void GlControl_MouseLeave(object sender, EventArgs e)
+        {
+            //this.Focus();
+        }
+
+        private void GlControl_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            preX = e.X;
+            preY = e.Y;
+            if (Brush != null)
+                Brush.Set(this, ShowingElement, IBCanvas_utilities.GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
+        }
+
+        private void GlControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (WintabUtility.PenUsing) return;
+
+            if(e.Delta > 0)
+            {
+                if (zoomListIndex + 1 < zoomList.Length)
+                    zoomListIndex++;
+            }
+            else
+            {
+                if (zoomListIndex > 1)
+                    zoomListIndex--;
+            }
+
+            ZoomPerCent = zoomList[zoomListIndex];
+            SetCam();
+            glControl.Refresh();
+        }
+
+        private void GlControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                offsetX -= e.X - preX;
+                offsetY += e.Y - preY;
+                SetCam();
+                glControl.Refresh();
+
+                preX = e.X;
+                preY = e.Y;
+            }
+            else if (WintabUtility.PenButtonPressed)
+            {
+                if (!PenDraging)
+                {
+                    preX = e.X;
+                    preY = e.Y;
+                    PenDraging = true;
+                }
+                offsetX -= (e.X - preX) * 2;
+                offsetY += (e.Y - preY) * 2;
+                SetCam();
+                glControl.Refresh();
+
+                preX = e.X;
+                preY = e.Y;
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (Brush == null || ShowingElement == null) return;
+
+                Brush.Draw(IBCanvas_utilities.GetImageCoord(this, e.Location, ZoomPerCent / 100.0), new PixelData() { r = 100, g = 200, b = 255, a = 255 });
+            }
+            else
+            {
+                PenDraging = false;
+            }
+        }
+
+        private void GlControl_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Brush.EndRequest();
         }
 
         private void OpenedElements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -175,64 +323,30 @@ namespace IBFramework.Timeline
         {
             if (Tabs.SelectedItem != null)
                 ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
+            else
+                ShowingElement = null;
 
             glControl.Refresh();
         }
 
 
-        private void GlControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void RenderAll()
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                //cur = e.Location;
-                //if ((pre.X - cur.X) * (pre.X - cur.X) + (pre.Y - cur.Y) * (pre.Y - cur.Y) >= 2.0)
-                //{
-                //pre = cur;
-                glControl.Refresh();
-                //}
-            }
-        }
-
-
-        private void Render()
-        {
-            if (Tabs.SelectedItem == null) return;
-            if (((SubTabItem)Tabs.SelectedItem).Element as CellSource == null) return;
-
-            double zoom = ZoomPerCent / 100.0;
             double layer = 0;
 
-            for(int c = ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers.Count - 1; c >= 0; c--)
+            switch (ShowingElement.Type)
             {
-                IBImage i = ((CellSource)((SubTabItem)Tabs.SelectedItem).Element).Layers[c];
+                case IBProjectElementTypes.CellSource:
+                    Render.RenderCellSource(ShowingElement as CellSource, ZoomPerCent, ref layer);
+                    break;
 
-                GL.BindTexture(TextureTarget.Texture2D, i.imageData.texNumber);
-                {
-                    GL.Begin(PrimitiveType.Quads);
-                    {
-                        double offsetX = i.Rect.OffsetX * zoom, offsetY = i.Rect.OffsetY * zoom;
-                        double w = i.Rect.Width * zoom, h = i.Rect.Height * zoom;
-                        double texMin = 0, texMax = 1.0;
+                case IBProjectElementTypes.Cell:
+                    Render.RenderCell(ShowingElement as Cell, ZoomPerCent, ref layer, glControl.Width / 2, glControl.Height / 2, offsetX, offsetY);
+                    SetCam();
+                    break;
 
-                        if (i.LayerType == ImageTypes.SingleColor)
-                        {
-                            texMin = 0.5;
-                            texMax = 0.5;
-                        }
-
-                        GL.TexCoord2(texMax, texMax);
-                        GL.Vertex3(offsetX + w, offsetY + h, layer);
-                        GL.TexCoord2(texMin, texMax);
-                        GL.Vertex3(offsetX, offsetY + h, layer);
-                        GL.TexCoord2(texMin, texMin);
-                        GL.Vertex3(offsetX, offsetY, layer);
-                        GL.TexCoord2(texMax, texMin);
-                        GL.Vertex3(offsetX + w, offsetY, layer);
-                    }
-                    GL.End();
-                    layer += 0.01;
-                }
-                GL.BindTexture(TextureTarget.Texture2D, 0);
+                default:
+                    break;
             }
         }
 
@@ -304,20 +418,119 @@ namespace IBFramework.Timeline
 
         private void SetCam()
         {
+            int h = glControl.Height;
+            int w = glControl.Width;
+
+            if (w % 2 != 0) glControl.Width++;
+            if (h % 2 != 0) glControl.Height++;
+
+            int x = w / 2;
+            int y = h / 2;
+
+            int xc = (int)(x - 1920 * ZoomPerCent * 0.01 * 0.5);
+            int yc = (int)(y - 1080 * ZoomPerCent * 0.01 * 0.5);
+            camX = offsetX + x - xc;
+            camY = offsetY + y - yc;
+
             GL.Viewport(0, 0, glControl.Width, glControl.Height);
 
             GL.MatrixMode(MatrixMode.Projection);
-            float h = glControl.Height;
-            float w = glControl.Width;
             Matrix4 proj = Matrix4.CreateOrthographic(w, h, 0.01f, 64.0f);
             GL.LoadMatrix(ref proj);
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-            float x = w / 2;
-            float y = h / 2;
-            Matrix4 look = Matrix4.LookAt(new Vector3(x, y, 32.0f), new Vector3(x, y, 0.0f), Vector3.UnitY);
+            Matrix4 look = Matrix4.LookAt(new Vector3(camX, camY, 32.0f), new Vector3(camX, camY, 0.0f), Vector3.UnitY);
             GL.LoadMatrix(ref look);
+        }
+
+        private void DrawOuterCenterMark()
+        {
+            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
+            GL.Begin(PrimitiveType.Lines);
+            {
+                GL.Vertex3(0, imageH / 2, 30);
+                GL.Vertex3(-15, imageH / 2, 30);
+
+                GL.Vertex3(imageW, imageH / 2, 30);
+                GL.Vertex3(imageW + 15, imageH / 2, 30);
+
+                GL.Vertex3(imageW / 2, 0, 30);
+                GL.Vertex3(imageW / 2, -15, 30);
+
+                GL.Vertex3(imageW / 2, imageH, 30);
+                GL.Vertex3(imageW / 2, imageH + 15, 30);
+            }
+            GL.End();
+        }
+
+        private void DrawCornerMark()
+        {
+            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
+            GL.Begin(PrimitiveType.Lines);
+            {
+                GL.Vertex3(0, -1, 30);
+                GL.Vertex3(-10, -1, 30);
+                GL.Vertex3(-1, 0, 30);
+                GL.Vertex3(-1, -10, 30);
+
+                GL.Vertex3(-1, imageH, 30);
+                GL.Vertex3(-1-10, imageH, 30);
+                GL.Vertex3(-1, imageH, 30);
+                GL.Vertex3(-1, imageH + 10, 30);
+
+                GL.Vertex3(imageW, -1, 30);
+                GL.Vertex3(imageW + 10, -1, 30);
+                GL.Vertex3(imageW, -1, 30);
+                GL.Vertex3(imageW, -1-10, 30);
+
+                GL.Vertex3(imageW, imageH, 30);
+                GL.Vertex3(imageW + 10, imageH, 30);
+                GL.Vertex3(imageW, imageH, 30);
+                GL.Vertex3(imageW, imageH + 10, 30);
+            }
+            GL.End();
+        }
+
+        private void DrawImageFrame()
+        {
+            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
+            GL.Begin(PrimitiveType.Lines);
+            {
+                GL.Vertex3(-1, -1, 30);
+                GL.Vertex3(-1, imageH, 30);
+
+                GL.Vertex3(-1, imageH, 30);
+                GL.Vertex3(imageW, imageH, 30);
+
+                GL.Vertex3(imageW, imageH, 30);
+                GL.Vertex3(imageW, -1, 30);
+
+                GL.Vertex3(imageW, -1, 30);
+                GL.Vertex3(-1, -1, 30);
+            }
+            GL.End();
+        }
+
+        public void DrawCinemaScopeFrame()
+        {
+            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Width * ZoomPerCent * 0.01 / 2.35;
+            double LowHori = (ShowingElement.Height * ZoomPerCent * 0.01 - imageH) / 2, HighHori = ShowingElement.Height * ZoomPerCent * 0.01 - LowHori;
+            GL.Begin(PrimitiveType.Lines);
+            {
+                GL.Vertex3(-1, LowHori, 29);
+                GL.Vertex3(-1, HighHori, 29);
+
+                GL.Vertex3(-1, HighHori, 29);
+                GL.Vertex3(imageW, HighHori, 29);
+
+                GL.Vertex3(imageW, HighHori, 29);
+                GL.Vertex3(imageW, LowHori, 29);
+
+                GL.Vertex3(imageW, LowHori, 29);
+                GL.Vertex3(-1, LowHori, 29);
+            }
+            GL.End();
         }
     }
 }

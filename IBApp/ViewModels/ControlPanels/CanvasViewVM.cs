@@ -29,6 +29,14 @@ namespace IBApp.ViewModels.ControlPanels
             if (IBProjectModel.Current == null) return;
 
             IBProjectModel.Current.ActiveCanvasItems = Items;
+            ActiveBrush = IBProjectModel.Current.SelectedBrush;
+            IBProjectModel.Current.PropertyChanged += IBProjectModel_PropertyChanged;
+        }
+
+        private void IBProjectModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectedBrush")
+                ActiveBrush = IBProjectModel.Current.SelectedBrush;
         }
 
         #region Itemsプロパティ
@@ -67,6 +75,26 @@ namespace IBApp.ViewModels.ControlPanels
             }
         }
         #endregion
+
+        #region ActiveBrush変更通知プロパティ
+        private IBBrush _ActiveBrush;
+
+        public IBBrush ActiveBrush
+        {
+            get
+            { return _ActiveBrush; }
+            set
+            { 
+                if (_ActiveBrush == value)
+                    return;
+                _ActiveBrush = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+
+
 
         #region FocusCommand
         private ViewModelCommand _FocusCommand;

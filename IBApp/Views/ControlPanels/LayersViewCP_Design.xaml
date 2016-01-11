@@ -5,7 +5,7 @@
                     >
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="LayersViewCP_Resource.xaml"/>
+        <ResourceDictionary Source="/IBApp;component/ViewModels/VMResources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type local:LayersViewCP}">

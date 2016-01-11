@@ -23,8 +23,8 @@
 
                         <ibft:IBCanvas OpenedElements="{Binding Items,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                        ShowingElement="{Binding ShowingItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                       BackgroundColor="{DynamicResource IBDrawingAreaBackgroundColor}">
-                        </ibft:IBCanvas>
+                                       BackgroundColor="{DynamicResource IBDrawingAreaBackgroundColor}"
+                                       Brush="{Binding ActiveBrush,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

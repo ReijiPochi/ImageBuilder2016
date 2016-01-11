@@ -136,7 +136,7 @@ namespace IBApp.ViewModels.ControlPanels
 
             if (SelectedIBProjectElement.Type == IBProjectElementTypes.Folder
                 || SelectedIBProjectElement.Type == IBProjectElementTypes.Null
-                || SelectedIBProjectElement.Type == IBProjectElementTypes.Cell)
+                || SelectedIBProjectElement.Type == IBProjectElementTypes.CellSource)
                 return true;
             else
                 return false;

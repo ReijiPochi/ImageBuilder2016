@@ -15,10 +15,11 @@ namespace IBFramework.Timeline.TimelineElements
 {
     public class Cell : TimelineElement, IProperty
     {
-        public Cell(IBProject Master) : base(Master)
+        public Cell(CellSource source, int w, int h) : base(w, h)
         {
             Type = IBProjectElementTypes.Cell;
             PropertyHeaderName = "Cell";
+            Source = source;
             PropertyChanged += Cell_PropertyChanged;
         }
 
@@ -27,6 +28,7 @@ namespace IBFramework.Timeline.TimelineElements
             if (e.PropertyName == "Name")
                 PropertyHeaderName = "Cell \"" + Name + "\"";
         }
+
 
         private CellSource _Source;
         public CellSource Source

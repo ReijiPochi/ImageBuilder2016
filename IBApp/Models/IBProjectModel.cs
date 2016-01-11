@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Drawing;
 
 using Livet;
 
@@ -10,6 +11,7 @@ using IBFramework;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.Image;
+using IBFramework.Image.Pixel;
 using IBFramework.Timeline.TimelineElements;
 using IBFramework.RedoUndo;
 
@@ -178,6 +180,23 @@ namespace IBApp.Models
         }
         #endregion
 
+        #region SelectedBrush変更通知プロパティ
+        private IBBrush _SelectedBrush;
+
+        public IBBrush SelectedBrush
+        {
+            get
+            { return _SelectedBrush; }
+            set
+            { 
+                if (_SelectedBrush == value)
+                    return;
+                _SelectedBrush = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// IBProjectModel.ActiveTargetElementの子に新規フォルダを追加
@@ -185,7 +204,7 @@ namespace IBApp.Models
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにフォルダを追加</param>
         public void AddNewFolder()
         {
-            Folder newFolder = new Folder(IBProject.Current)
+            Folder newFolder = new Folder()
             {
                 Name = "Folder",
                 IsSelected = true
@@ -198,13 +217,13 @@ namespace IBApp.Models
 
                 parent.Children.Add(newFolder);
                 newFolder.Parent = parent;
-                RedoUndoModel.Current.Record(new RUAddNewElement(parent, newFolder));
+                RedoUndoManager.Current.Record(new RUAddNewElement(parent, newFolder));
             }
             else
             {
                 IBProject.Current.IBProjectElements.Add(newFolder);
                 newFolder.Parent = null;
-                RedoUndoModel.Current.Record(new RUAddNewElement(null, newFolder));
+                RedoUndoManager.Current.Record(new RUAddNewElement(null, newFolder));
             }
 
             RaisePropertyChanged("IBProject_Elements");
@@ -216,37 +235,28 @@ namespace IBApp.Models
         /// <param name="Parent">nullの場合、現在開かれているプロジェクトにセルソースを追加</param>
         public void AddNewCellSource()
         {
-            CellSource newCellSource = new CellSource(IBProject.Current)
+            CellSource newCellSource = new CellSource()
             {
                 Name = "Cell",
                 IsSelected = true,
+                Width = 1920,
+                Height = 1080
             };
 
-            SingleColorImage i = new SingleColorImage(255, 0, 0, 100);
-            i.Rect.Width = 192;
-            i.Rect.Height = 108;
-            i.Rect.OffsetX = 100;
-            i.Rect.OffsetY = 150;
-            i.LayerName = "layer2";
-            newCellSource.Layers.Add(i);
-            SingleColorImage i2 = new SingleColorImage(0, 0, 255, 100);
-            i2.Rect.Width = 192;
-            i2.Rect.Height = 108;
-            i2.Rect.OffsetX = 100;
-            i2.Rect.OffsetY = 100;
-            i2.LayerName = "layer1";
-            newCellSource.Layers.Add(i2);
-            SingleColorImage bg = new SingleColorImage(200, 255, 255, 255);
-            bg.Rect.Width = 1920;
-            bg.Rect.Height = 1080;
-            bg.Rect.OffsetX = 0;
-            bg.Rect.OffsetY = 0;
-            bg.LayerName = "BackGround";
-            newCellSource.Layers.Add(bg);
+            //PixcelImage i2 = new PixcelImage(new Bitmap("test.png"));
+            //i2.Rect.OffsetX = 0;
+            //i2.Rect.OffsetY = 0;
+            //i2.LayerName = "layer2";
+            //newCellSource.Layers.Add(i2);
+            SingleColorImage BG = new SingleColorImage(255, 255, 255, 255);
+            BG.Rect = new IBRectangle(1920 + 300, 1080 + 300, -150, -150);
+            BG.LayerName = "BG";
+            newCellSource.Layers.Add(BG);
+            newCellSource.AddNewLayer();
 
             if (ActiveTargetElement != null)
             {
-                if (ActiveTargetElement.Type == IBProjectElementTypes.Cell)
+                if (ActiveTargetElement.Type == IBProjectElementTypes.CellSource)
                 {
                     SetName(newCellSource);
 
@@ -257,13 +267,13 @@ namespace IBApp.Models
 
                         parent.Children.Add(newCellSource);
                         newCellSource.Parent = parent;
-                        RedoUndoModel.Current.Record(new RUAddNewElement(parent, newCellSource));
+                        RedoUndoManager.Current.Record(new RUAddNewElement(parent, newCellSource));
                     }
                     else
                     {
                         IBProject.Current.IBProjectElements.Add(newCellSource);
                         newCellSource.Parent = null;
-                        RedoUndoModel.Current.Record(new RUAddNewElement(null, newCellSource));
+                        RedoUndoManager.Current.Record(new RUAddNewElement(null, newCellSource));
                     }
                 }
                 else
@@ -272,15 +282,19 @@ namespace IBApp.Models
 
                     parent.Children.Add(newCellSource);
                     newCellSource.Parent = parent;
-                    RedoUndoModel.Current.Record(new RUAddNewElement(parent, newCellSource));
+                    RedoUndoManager.Current.Record(new RUAddNewElement(parent, newCellSource));
                 }
             }
             else
             {
                 IBProject.Current.IBProjectElements.Add(newCellSource);
                 newCellSource.Parent = null;
-                RedoUndoModel.Current.Record(new RUAddNewElement(null, newCellSource));
+                RedoUndoManager.Current.Record(new RUAddNewElement(null, newCellSource));
             }
+
+            Cell newc = new Cell(newCellSource, 1920, 1080);
+            newc.Name = "new Cell";
+            IBProject.Current.IBProjectElements.Add(newc);
 
             RaisePropertyChanged("IBProject_Elements");
         }

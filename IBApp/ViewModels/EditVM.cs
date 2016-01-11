@@ -12,6 +12,7 @@ using Livet.EventListeners;
 using Livet.Messaging.Windows;
 
 using IBApp.Models;
+using IBFramework.RedoUndo;
 
 namespace IBApp.ViewModels
 {
@@ -19,6 +20,7 @@ namespace IBApp.ViewModels
     {
         public EditVM()
         {
+            if (RedoUndoModel.Current == null) return;
             RedoUndoModel.Current.PropertyChanged += RedoUndoModel_PropertyChanged;
         }
 
@@ -61,7 +63,7 @@ namespace IBApp.ViewModels
 
         public void Undo()
         {
-            RedoUndoModel.Current.UndoOneStep();
+            RedoUndoManager.Current.UndoOneStep();
         }
         #endregion
 
@@ -87,7 +89,7 @@ namespace IBApp.ViewModels
 
         public void Redo()
         {
-            RedoUndoModel.Current.RedoOneStep();
+            RedoUndoManager.Current.RedoOneStep();
         }
         #endregion
 

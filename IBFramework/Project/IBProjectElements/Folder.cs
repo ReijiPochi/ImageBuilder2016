@@ -8,7 +8,7 @@ namespace IBFramework.Project.IBProjectElements
 {
     public class Folder : IBProjectElement
     {
-        public Folder(IBProject Master) : base(Master)
+        public Folder() : base()
         {
             Type = IBProjectElementTypes.Folder;
         }

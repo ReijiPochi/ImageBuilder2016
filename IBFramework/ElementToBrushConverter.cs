@@ -24,6 +24,7 @@ namespace IBFramework
                     return Application.Current.FindResource("FolderBrush") as SolidColorBrush;
 
                 case IBProjectElementTypes.Cell:
+                case IBProjectElementTypes.CellSource:
                     return Application.Current.FindResource("CellBrush") as SolidColorBrush;
 
                 default:

@@ -38,6 +38,13 @@
         <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
     </i:Interaction.Triggers>
 
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding UndoCommand, Mode=OneWay, Source={StaticResource EditVMResource}}" Gesture="Ctrl+Z"/>
+        <KeyBinding Command="{Binding RedoCommand, Mode=OneWay, Source={StaticResource EditVMResource}}" Gesture="Ctrl+Y"/>
+        <KeyBinding Command="{Binding OnPenCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="P"/>
+        <KeyBinding Command="{Binding OnEraserCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="E"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>

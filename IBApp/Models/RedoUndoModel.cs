@@ -14,26 +14,29 @@ namespace IBApp.Models
     {
         public static RedoUndoModel Current { get; set; }
 
-        private ObservableCollection<RedoUndoAction> History = new ObservableCollection<RedoUndoAction>();
-
-        private int index = 0;
-
-        public void Record(RedoUndoAction ru)
+        public RedoUndoModel()
         {
-            if (CanRedoOneStep)
-            {
-                int count = History.Count - index;
-                for(int i = 0; i < count; i++)
-                {
-                    History.RemoveAt(index);
-                }
-                CanRedoOneStep = false;
-            }
-            History.Add(ru);
-            index++;
-
-            CanUndoOneStep = true;
+            RedoUndoManager.Current = new RedoUndoManager();
+            RedoUndoManager.Current.PropertyChanged += CurrentRedoUndo_PropertyChanged;
         }
+
+        private void CurrentRedoUndo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "CanRedoOneStep":
+                    CanRedoOneStep = RedoUndoManager.Current.CanRedoOneStep;
+                    break;
+
+                case "CanUndoOneStep":
+                    CanUndoOneStep = RedoUndoManager.Current.CanUndoOneStep;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
 
 
         #region CanRedoOneStep変更通知プロパティ
@@ -69,42 +72,5 @@ namespace IBApp.Models
             }
         }
         #endregion
-
-
-        public void RedoOneStep()
-        {
-            History[index].Redo();
-            index++;
-
-            if (index >= History.Count)
-                CanRedoOneStep = false;
-
-            if(index <= History.Count)
-            {
-                CanUndoOneStep = true;
-            }
-            else
-            {
-                CanUndoOneStep = false;
-            }
-        }
-
-        public void UndoOneStep()
-        {
-            index--;
-            History[index].Undo();
-
-            if (index <= 0)
-                CanUndoOneStep = false;
-
-            if(index < History.Count)
-            {
-                CanRedoOneStep = true;
-            }
-            else
-            {
-                CanRedoOneStep = false;
-            }
-        }
     }
 }

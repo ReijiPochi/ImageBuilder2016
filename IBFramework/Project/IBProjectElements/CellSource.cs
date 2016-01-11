@@ -8,14 +8,15 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 
 using IBFramework.Image;
+using IBFramework.Image.Pixel;
 
 namespace IBFramework.Project.IBProjectElements
 {
     public class CellSource : IBProjectElement, IProperty
     {
-        public CellSource(IBProject Master) : base(Master)
+        public CellSource() : base()
         {
-            Type = IBProjectElementTypes.Cell;
+            Type = IBProjectElementTypes.CellSource;
             PropertyHeaderName = "CellSource";
             PropertyChanged += CellSource_PropertyChanged;
         }
@@ -68,6 +69,18 @@ namespace IBFramework.Project.IBProjectElements
         public Control GetPP()
         {
             return new CellSourcePP() { DataContext = this };
+        }
+
+        public void AddNewLayer()
+        {
+            PixcelImage pi = new PixcelImage(Width + 300, Height + 300, -150, -150);
+            pi.imageData.ClearData(new PixelData() { r = 255, g = 255, b = 255, a = 0 });
+            pi.LayerName = "Layer";
+            pi.LayerType = ImageTypes.LineDrawing;
+            pi.IsSelectedLayer = true;
+            pi.imageData.TextureUpdate();
+
+            Layers.Insert(0, pi);
         }
     }
 }

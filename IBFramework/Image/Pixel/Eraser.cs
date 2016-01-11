@@ -8,7 +8,7 @@ using Wintab;
 
 namespace IBFramework.Image.Pixel
 {
-    public class Pen : IBBrush
+    public class Eraser : IBBrush
     {
         private double last_t = 0;
 
@@ -16,13 +16,16 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord, color);
 
-            if (trgLayer == null) return;
+
+            IBImage trg = GetSelectedLayer();
+            if (trg == null) return;
+
             double radius = 10.0;
 
-            switch (trgLayer.LayerType)
+            switch (trg.LayerType)
             {
                 case ImageTypes.LineDrawing:
-                    DrawToLineDrawingImage(trgLayer, radius, color);
+                    EraseLineDrawingImage(trg, radius);
                     break;
 
                 default:
@@ -30,7 +33,7 @@ namespace IBFramework.Image.Pixel
             }
         }
 
-        private void DrawToLineDrawingImage(IBImage trg, double r, PixelData color)
+        private void EraseLineDrawingImage(IBImage trg, double r)
         {
             double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
             if (_x < 0 || _y < 0 || _x >= trg.imageData.size.Width || _y >= trg.imageData.size.Height) return;
@@ -38,7 +41,7 @@ namespace IBFramework.Image.Pixel
             double preX = histCoord[1].x - trg.Rect.OffsetX, preY = histCoord[1].y - trg.Rect.OffsetY, prePre = histPressure[1];
             double dx = curCoord.x - histCoord[1].x, dy = curCoord.y - histCoord[1].y, dp = curPressure - prePre;
             double length = Math.Sqrt(dx * dx + dy * dy);
-            if (length > 50) return;
+            if (length > 100) return;
             double interval = 0.1 / length;
             double t = last_t / length;
 
@@ -49,9 +52,9 @@ namespace IBFramework.Image.Pixel
 
                 double p = prePre + dp * t;
                 double _r = r;
-                if (p != 0.0) _r *= PenTouch(p);
+                if (p != 0.0) _r *= p;
 
-                DrawCircle(trg, x, y, _r, color);
+                EraseCircle(trg, x, y, _r);
 
                 t += r * interval;
             }
@@ -62,15 +65,7 @@ namespace IBFramework.Image.Pixel
             EntryTexUpdate(trg.imageData);
         }
 
-        private double PenTouch(double inValue)
-        {
-            const double PI2 = Math.PI / 2.5;
-
-            return 1.0 - Math.Sin((1 - inValue * inValue) * PI2);
-            //return inValue;
-        }
-
-        private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
+        private void EraseCircle(IBImage trg, double x, double y, double r)
         {
             if (r < 0.001) return;
 
@@ -103,11 +98,11 @@ namespace IBFramework.Image.Pixel
                 {
                     int c = 0;
 
-                    for(int _yi = 0; _yi < sample; _yi++)
+                    for (int _yi = 0; _yi < sample; _yi++)
                     {
                         double yy = yi - y + _yi / sample;
 
-                        for(int _xi = 0; _xi < sample; _xi++)
+                        for (int _xi = 0; _xi < sample; _xi++)
                         {
                             double xx = xi - x + _xi / sample;
 
@@ -116,14 +111,15 @@ namespace IBFramework.Image.Pixel
                         }
                     }
 
-                    if(c != 0)
+                    if (c != 0)
                     {
-                        data[offset + xp] = color.b;
-                        data[offset + xp + 1] = color.g;
-                        data[offset + xp + 2] = color.r;
+                        //data[offset + xp] = color.b;
+                        //data[offset + xp + 1] = color.g;
+                        //data[offset + xp + 2] = color.r;
 
-                        int a = (color.a * c) >> 4;
-                        data[offset + xp + 3] = a > data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
+                        int a = data[offset + xp + 3] - ((255 * c) >> 4);
+                        if (a < 0) a = 0;
+                        data[offset + xp + 3] = a < data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
                     }
 
                     xp += 4;

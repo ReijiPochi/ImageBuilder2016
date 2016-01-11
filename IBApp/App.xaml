@@ -13,8 +13,10 @@
                 <ResourceDictionary Source="pack://application:,,,/IBFramework;component/ResourceDictionaries.xaml" />
                 <ResourceDictionary Source="Languages/LanguagePack.en-us.xaml"/>
                 <ResourceDictionary Source="Styles.xaml" />
-                <ResourceDictionary Source="Views/ControlPanels/ControlPanelResources.xaml"/>
                 <ResourceDictionary Source="Icons/IconResources.xaml"/>
+
+                <ResourceDictionary Source="Views/ControlPanels/ControlPanelResources.xaml"/>
+                <ResourceDictionary Source="ViewModels/VMResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
 

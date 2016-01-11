@@ -12,7 +12,7 @@ namespace Wintab
     * 　　　：http://blog.wdnet.jp/tech/archives/168
     */
 
-    class WintabManager
+    public class WintabManager
     {
         private const int MAX_STRING_SIZE = 256;
 
