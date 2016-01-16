@@ -11,6 +11,7 @@
     <SolidColorBrush x:Key="IBSelectedForeGroundBrush" Color="#FFE6E6E6"/>
     <SolidColorBrush x:Key="IBInactiveForeGroundBrush" Color="#FF686B6C"/>
     <SolidColorBrush x:Key="IBSelectedBrush" Color="#FFE42785"/>
+    <SolidColorBrush x:Key="IBDarkSelectedBrush" Color="#FF272727"/>
     <SolidColorBrush x:Key="IBBorderBrush" Color="#FF474747"/>
     <SolidColorBrush x:Key="IBWindowBorderBrush" Color="#FF2B2B2B"/>
     <SolidColorBrush x:Key="IBBrightBorderBrush" Color="#FF7D8087"/>
@@ -22,8 +23,6 @@
     <SolidColorBrush x:Key="IBClickedBrush" Color="#FFF032A2"/>
     <SolidColorBrush x:Key="IBClickedBrush_T" Color="#7F63083E"/>
     
-    <Color x:Key="IBIconForegroundColor" A="255" B="240" G="240" R="240"/>
-    <Color x:Key="IBInvalidIconForegroundColor" A="255" B="120" G="120" R="120"/>
     <Color x:Key="IBDrawingAreaBackgroundColor" A="255" B="39" G="39" R="39"/>
 
     <ee:ColorToneEffect x:Key="MonoColorEffect" Desaturation="1" ToneAmount="1" DarkColor="#FFF0F0F0" LightColor="#FFF0F0F0"/>

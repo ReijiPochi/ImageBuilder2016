@@ -80,6 +80,8 @@
     <Compile Include="Converters.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IBButton.cs" />
+    <Compile Include="IBColorButton.cs" />
+    <Compile Include="IBControlPanelBase.cs" />
     <Compile Include="IBFocusableBG.cs" />
     <Compile Include="IBLabel.cs" />
     <Compile Include="IBMenuItem.cs" />
@@ -89,7 +91,9 @@
     <Compile Include="IBPanelSplitter.cs" />
     <Compile Include="IBScrollViewer.cs" />
     <Compile Include="IBTabControl.cs" />
+    <Compile Include="IBTabControl2.cs" />
     <Compile Include="IBTabItem.cs" />
+    <Compile Include="IBTabItem2.cs" />
     <Compile Include="IBTextBox.cs" />
     <Compile Include="IBToggleButton.cs" />
     <Compile Include="IBTreeView.cs" />

@@ -545,11 +545,7 @@
                         <Border x:Name="border"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="6">
-                            <ContentPresenter ContentSource="Content" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <ContentPresenter.Effect>
-                                    <ee:ColorToneEffect DarkColor="{DynamicResource IBIconForegroundColor}" LightColor="{DynamicResource IBIconForegroundColor}" Desaturation="1" ToneAmount="{Binding Desaturation, RelativeSource={RelativeSource Self}}"/>
-                                </ContentPresenter.Effect>
-                            </ContentPresenter>
+                            <ContentPresenter ContentSource="Content" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource MonoColorEffect}"/>
                         </Border>
                         <Rectangle x:Name="rectangle" Fill="{DynamicResource IBClickedBrush}" Visibility="Hidden"/>
                     </Grid>
@@ -705,4 +701,82 @@
         </Setter>
     </Style>
 
+
+    <Style TargetType="{x:Type local:IBColorButton}">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IBColorButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:IBTabControl2}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IBTabControl2}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <UniformGrid Grid.Row="0" x:Name="HeaderPanel" Background="Transparent" IsItemsHost="True" KeyboardNavigation.TabIndex="1" Rows="1">
+                            <UniformGrid.Clip>
+                                <RectangleGeometry RadiusX="5" RadiusY="5" Rect="{Binding Area, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged}"/>
+                            </UniformGrid.Clip>
+                        </UniformGrid>
+                        <Border CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource IBBorderBrush}"/>
+
+                        <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="0,3,0,0"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="AllowDrop" Value="True"/>
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource IBBorderBrush}"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style TargetType="{x:Type local:IBTabItem2}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IBTabItem2}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border Margin="0" x:Name="Border">
+                            <ContentPresenter HorizontalAlignment="Center" Margin="12,2,12,2" x:Name="ContentSite" VerticalAlignment="Center" RecognizesAccessKey="True" ContentSource="Header"/>
+                        </Border>
+                        <Rectangle x:Name="IBMaskRect" AllowDrop="True" Fill="#01000000"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource IBDarkSelectedBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource IBSelectedBrush}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="Selector.IsSelected" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{DynamicResource IBFocusBrush}" TargetName="Border"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="AllowDrop" Value="True"/>
+        <Setter Property="ContextMenu" Value="{x:Null}"/>
+    </Style>
 </ResourceDictionary>

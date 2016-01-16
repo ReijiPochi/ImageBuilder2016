@@ -93,7 +93,7 @@ namespace IBFramework.Image
 
         public virtual void CopyTo(IBImage i)
         {
-            i.imageData = new BGRA32FormattedImage((int)imageData.size.Width, (int)imageData.size.Height);
+            i.imageData = new BGRA32FormattedImage((int)imageData.actualSize.Width, (int)imageData.actualSize.Height);
             for(int c = 0; c < i.imageData.data.Length; c++)
             {
                 i.imageData.data[c] = imageData.data[c];

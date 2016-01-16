@@ -27,15 +27,12 @@ using IBFramework.Timeline.TimelineElements;
 using IBGUI;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
-using IBFramework.OpenCL;
-using OpenCLFunctions;
-using OpenCLFunctions.Utilities;
 using IBFramework.OpenGL;
 using Wintab;
 
 namespace IBFramework.Timeline
 {
-    public class IBCanvas : Control
+    public partial class IBCanvas : Control
     {
         static IBCanvas()
         {
@@ -187,7 +184,8 @@ namespace IBFramework.Timeline
         private void GlControl_LostFocus(object sender, EventArgs e)
         {
             IsCurrentGLControl = false;
-            Brush.EndRequest();
+            if (Brush != null)
+                Brush.EndRequest();
         }
 
         private void GlControl_SizeChanged(object sender, EventArgs e)
@@ -246,7 +244,7 @@ namespace IBFramework.Timeline
             preX = e.X;
             preY = e.Y;
             if (Brush != null)
-                Brush.Set(this, ShowingElement, IBCanvas_utilities.GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
+                Brush.Set(this, ShowingElement, GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
         }
 
         private void GlControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -301,7 +299,7 @@ namespace IBFramework.Timeline
             {
                 if (Brush == null || ShowingElement == null) return;
 
-                Brush.Draw(IBCanvas_utilities.GetImageCoord(this, e.Location, ZoomPerCent / 100.0), new PixelData() { r = 100, g = 200, b = 255, a = 255 });
+                Brush.Draw(GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
             }
             else
             {
@@ -311,7 +309,8 @@ namespace IBFramework.Timeline
 
         private void GlControl_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            Brush.EndRequest();
+            if (Brush != null)
+                Brush.EndRequest();
         }
 
         private void OpenedElements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -321,8 +320,20 @@ namespace IBFramework.Timeline
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            foreach(IBProjectElement ele in OpenedElements)
+            {
+                if (ele.Type == IBProjectElementTypes.CellSource)
+                    ((CellSource)ele).EndDrawingModeLayers();
+            }
+
             if (Tabs.SelectedItem != null)
+            {
                 ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
+                if(ShowingElement != null && ShowingElement.Type == IBProjectElementTypes.CellSource)
+                {
+                    ((CellSource)ShowingElement).SetDrawingModeLayers();
+                }
+            }
             else
                 ShowingElement = null;
 
@@ -442,95 +453,6 @@ namespace IBFramework.Timeline
 
             Matrix4 look = Matrix4.LookAt(new Vector3(camX, camY, 32.0f), new Vector3(camX, camY, 0.0f), Vector3.UnitY);
             GL.LoadMatrix(ref look);
-        }
-
-        private void DrawOuterCenterMark()
-        {
-            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
-            GL.Begin(PrimitiveType.Lines);
-            {
-                GL.Vertex3(0, imageH / 2, 30);
-                GL.Vertex3(-15, imageH / 2, 30);
-
-                GL.Vertex3(imageW, imageH / 2, 30);
-                GL.Vertex3(imageW + 15, imageH / 2, 30);
-
-                GL.Vertex3(imageW / 2, 0, 30);
-                GL.Vertex3(imageW / 2, -15, 30);
-
-                GL.Vertex3(imageW / 2, imageH, 30);
-                GL.Vertex3(imageW / 2, imageH + 15, 30);
-            }
-            GL.End();
-        }
-
-        private void DrawCornerMark()
-        {
-            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
-            GL.Begin(PrimitiveType.Lines);
-            {
-                GL.Vertex3(0, -1, 30);
-                GL.Vertex3(-10, -1, 30);
-                GL.Vertex3(-1, 0, 30);
-                GL.Vertex3(-1, -10, 30);
-
-                GL.Vertex3(-1, imageH, 30);
-                GL.Vertex3(-1-10, imageH, 30);
-                GL.Vertex3(-1, imageH, 30);
-                GL.Vertex3(-1, imageH + 10, 30);
-
-                GL.Vertex3(imageW, -1, 30);
-                GL.Vertex3(imageW + 10, -1, 30);
-                GL.Vertex3(imageW, -1, 30);
-                GL.Vertex3(imageW, -1-10, 30);
-
-                GL.Vertex3(imageW, imageH, 30);
-                GL.Vertex3(imageW + 10, imageH, 30);
-                GL.Vertex3(imageW, imageH, 30);
-                GL.Vertex3(imageW, imageH + 10, 30);
-            }
-            GL.End();
-        }
-
-        private void DrawImageFrame()
-        {
-            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Height * ZoomPerCent * 0.01;
-            GL.Begin(PrimitiveType.Lines);
-            {
-                GL.Vertex3(-1, -1, 30);
-                GL.Vertex3(-1, imageH, 30);
-
-                GL.Vertex3(-1, imageH, 30);
-                GL.Vertex3(imageW, imageH, 30);
-
-                GL.Vertex3(imageW, imageH, 30);
-                GL.Vertex3(imageW, -1, 30);
-
-                GL.Vertex3(imageW, -1, 30);
-                GL.Vertex3(-1, -1, 30);
-            }
-            GL.End();
-        }
-
-        public void DrawCinemaScopeFrame()
-        {
-            double imageW = ShowingElement.Width * ZoomPerCent * 0.01, imageH = ShowingElement.Width * ZoomPerCent * 0.01 / 2.35;
-            double LowHori = (ShowingElement.Height * ZoomPerCent * 0.01 - imageH) / 2, HighHori = ShowingElement.Height * ZoomPerCent * 0.01 - LowHori;
-            GL.Begin(PrimitiveType.Lines);
-            {
-                GL.Vertex3(-1, LowHori, 29);
-                GL.Vertex3(-1, HighHori, 29);
-
-                GL.Vertex3(-1, HighHori, 29);
-                GL.Vertex3(imageW, HighHori, 29);
-
-                GL.Vertex3(imageW, HighHori, 29);
-                GL.Vertex3(imageW, LowHori, 29);
-
-                GL.Vertex3(imageW, LowHori, 29);
-                GL.Vertex3(-1, LowHori, 29);
-            }
-            GL.End();
         }
     }
 }

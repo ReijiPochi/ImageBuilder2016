@@ -13,9 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using IBGUI;
+
 namespace IBApp.Views.ControlPanels
 {
-    public class PropertiesCP : IBControlPanel
+    public class PropertiesCP : IBControlPanelBase
     {
         static PropertiesCP()
         {

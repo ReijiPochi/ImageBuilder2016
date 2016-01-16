@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using IBFramework.Project;
+using IBFramework.Timeline;
 using Wintab;
 
 namespace IBFramework.Image.Pixel
@@ -12,9 +13,17 @@ namespace IBFramework.Image.Pixel
     {
         private double last_t = 0;
 
-        public override void Draw(IBCoord coord, PixelData color)
+        public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
-            base.Draw(coord, color);
+            base.Set(canvas, trg, coord);
+
+            if (trg == null) return;
+            actionSummary = "Pen Tool / " + trg.Name;
+        }
+
+        public override void Draw(IBCoord coord)
+        {
+            base.Draw(coord);
 
             if (trgLayer == null) return;
             double radius = 10.0;
@@ -22,7 +31,7 @@ namespace IBFramework.Image.Pixel
             switch (trgLayer.LayerType)
             {
                 case ImageTypes.LineDrawing:
-                    DrawToLineDrawingImage(trgLayer, radius, color);
+                    DrawToLineDrawingImage(trgLayer, radius, Color);
                     break;
 
                 default:
@@ -33,12 +42,12 @@ namespace IBFramework.Image.Pixel
         private void DrawToLineDrawingImage(IBImage trg, double r, PixelData color)
         {
             double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
-            if (_x < 0 || _y < 0 || _x >= trg.imageData.size.Width || _y >= trg.imageData.size.Height) return;
+            if (_x < 0 || _y < 0 || _x >= trg.imageData.actualSize.Width || _y >= trg.imageData.actualSize.Height) return;
 
             double preX = histCoord[1].x - trg.Rect.OffsetX, preY = histCoord[1].y - trg.Rect.OffsetY, prePre = histPressure[1];
             double dx = curCoord.x - histCoord[1].x, dy = curCoord.y - histCoord[1].y, dp = curPressure - prePre;
             double length = Math.Sqrt(dx * dx + dy * dy);
-            if (length > 50) return;
+            if (length > 200) return;
             double interval = 0.1 / length;
             double t = last_t / length;
 
@@ -74,8 +83,8 @@ namespace IBFramework.Image.Pixel
         {
             if (r < 0.001) return;
 
-            int imageW = (int)trg.imageData.size.Width;
-            int imageH = (int)trg.imageData.size.Height;
+            int imageW = (int)trg.imageData.actualSize.Width;
+            int imageH = (int)trg.imageData.actualSize.Height;
             byte[] data = trg.imageData.data;
             int stride = imageW * 4;
 
@@ -89,7 +98,7 @@ namespace IBFramework.Image.Pixel
             if (xe >= imageW) xe = imageW - 1;
             if (ye >= imageH) ye = imageH - 1;
 
-            RecordArea(xs, ys, xe, ye);
+            RecordDrawArea(xs, ys, xe, ye);
 
             double r2 = r * r;
             double sample = 4.0;

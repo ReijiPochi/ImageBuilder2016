@@ -13,20 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using IBGUI;
-
-namespace IBApp.Views.ControlPanels
+namespace IBGUI
 {
-    public class DrawingToolsCP : IBControlPanelBase
+    public class IBTabItem2 : TabItem
     {
-        static DrawingToolsCP()
+        static IBTabItem2()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DrawingToolsCP), new FrameworkPropertyMetadata(typeof(DrawingToolsCP)));
-        }
-
-        public DrawingToolsCP()
-        {
-            DefaultHeight = 50;
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IBTabItem2), new FrameworkPropertyMetadata(typeof(IBTabItem2)));
         }
     }
 }

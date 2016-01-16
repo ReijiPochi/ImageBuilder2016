@@ -31,6 +31,9 @@ namespace IBFramework.RedoUndo
                 int count = History.Count - index;
                 for (int i = 0; i < count; i++)
                 {
+                    if (History[index] as IDisposable != null)
+                        ((IDisposable)History[index]).Dispose();
+
                     History.RemoveAt(index);
                 }
                 CanRedoOneStep = false;
@@ -124,6 +127,21 @@ namespace IBFramework.RedoUndo
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+
+
+        private string _Summary;
+        public string Summary
+        {
+            get
+            { return _Summary; }
+            set
+            {
+                if (_Summary == value)
+                    return;
+                _Summary = value;
+                RaisePropertyChanged("Summary");
+            }
+        }
 
         private bool _CanRedo;
         public bool CanRedo

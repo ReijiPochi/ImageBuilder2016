@@ -30,6 +30,8 @@ namespace IBFramework.Image
             }
         }
 
+        public static PixelData Color { get; set; } = new PixelData();
+
         protected static IBProjectElement trgImage;
         protected static IBImage trgLayer;
         protected IBCoord[] histCoord = new IBCoord[2];
@@ -37,15 +39,17 @@ namespace IBFramework.Image
         protected double[] histPressure = new double[2];
         protected double curPressure = 0;
 
-        protected static int drawCount = 0;
+        protected static int count = 0;
         protected static bool drawing;
         protected static bool penUp = true;
-        protected static byte[] beforeData = new byte[3000 * 4 * 2000];
+        protected static byte[] beforeData = new byte[5000 * 4 * 3000];
         protected static int beforeDataStride;
+
         protected static int drawAreaXS;
         protected static int drawAreaYS;
         protected static int drawAreaXE;
         protected static int drawAreaYE;
+        protected static string actionSummary = "";
 
         private static DispatcherTimer Clock = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 10) };
         private static BGRA32FormattedImage waitingImage;
@@ -56,49 +60,53 @@ namespace IBFramework.Image
         {
             if (drawing && penUp)
             {
-                if (drawCount > 5)
+                if (count > 5)
                 {
-                    if (drawAreaXS == 3000 || drawAreaYS == 2000)
+                    if (drawAreaXS == 5000 || drawAreaYS == 3000)
                         return;
                     RUDraw action = new RUDraw(beforeData, trgLayer);
+                    action.Summary = actionSummary;
                     RedoUndoManager.Current.Record(action);
+
                     ResetDrawArea();
                     drawing = false;
-                    drawCount = 0;
+                    count = 0;
                 }
-                drawCount++;
+                count++;
             }
 
-            if (waitingImage == null) return;
+            if (waitingImage != null)
+            {
+                waitingImage.TextureUpdate();
+                waitingImage = null;
 
-            waitingImage.TextureUpdate();
-            waitingImage = null;
-
-            if (currentCanvas != null)
-                currentCanvas.glControl.Refresh();
+                if (currentCanvas != null)
+                    currentCanvas.glControl.Refresh();
+            }
         }
 
-        public void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public virtual void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
             currentCanvas = canvas;
             trgImage = trg;
             trgLayer = GetSelectedLayer();
-            if (trgLayer == null) return;
+            if (trgLayer == null || !trgLayer.imageData.CanDraw) return;
 
             if (!drawing)
             {
-                beforeDataStride = (int)trgLayer.imageData.size.Width * 4;
+                beforeDataStride = (int)trgLayer.imageData.actualSize.Width * 4;
                 RecordBeforeData();
             }
 
             penUp = false;
             drawing = true;
-            drawCount = 0;
+            count = 0;
 
             for (int i = 0; i < histPressure.Length; i++)
             {
                 histPressure[i] = WintabUtility.Pressure;
             }
+
             foreach(IBCoord c in histCoord)
             {
                 c.x = coord.x;
@@ -106,10 +114,11 @@ namespace IBFramework.Image
             }
         }
 
-        public virtual void Draw(IBCoord coord, PixelData color)
+        public virtual void Draw(IBCoord coord)
         {
-            drawing = true;
-            drawCount = 0;
+            if (!drawing) return;
+
+            count = 0;
 
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
@@ -130,6 +139,7 @@ namespace IBFramework.Image
                 histCoord[i].x = histCoord[i - 1].x;
                 histCoord[i].y = histCoord[i - 1].y;
             }
+
             for (int i = histPressure.Length - 1; i > 0; i--)
             {
                 histPressure[i] = histPressure[i - 1];
@@ -173,25 +183,25 @@ namespace IBFramework.Image
 
         protected static void ResetDrawArea()
         {
-            drawAreaXS = 3000;
+            drawAreaXS = 5000;
             drawAreaXE = 0;
-            drawAreaYS = 2000;
+            drawAreaYS = 3000;
             drawAreaYE = 0;
         }
 
-        protected static void RecordArea(int xs, int ys,int xe, int ye)
+        protected static void RecordDrawArea(int xs, int ys,int xe, int ye)
         {
             if (xs < drawAreaXS) drawAreaXS = xs;
             if (ys < drawAreaYS) drawAreaYS = ys;
             if (xe >= drawAreaXE) drawAreaXE = xe + 1;
-            if (ye >= drawAreaYE) drawAreaYE = ye;
+            if (ye >= drawAreaYE) drawAreaYE = ye + 1;
         }
 
         protected static void RecordBeforeData()
         {
             byte[] original = trgLayer.imageData.data;
 
-            Parallel.For(0, (int)trgLayer.imageData.size.Height, y =>
+            Parallel.For(0, (int)trgLayer.imageData.actualSize.Height, y =>
             {
                 int offset = y * beforeDataStride;
                 for(int x = 0; x < beforeDataStride; x++)
@@ -213,38 +223,40 @@ namespace IBFramework.Image
                 offsetX = drawAreaXS;
                 offsetY = drawAreaYS;
 
-                BeforData = new byte[(height + 1) * (stride + 1)];
-                NewData = new byte[(height + 1) * (stride + 1)];
-                int layerStride = (int)layer.imageData.size.Width * 4;
+                BeforeData = new byte[height * stride];
+                NewData = new byte[height * stride];
+                int layerStride = (int)layer.imageData.actualSize.Width * 4;
                 int _offsetx = offsetX * 4;
 
-                for (int y = 0; y <= height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     int offset = (drawAreaYS + y) * layerStride;
-                    for (int x= 0; x <= stride; x++)
+                    for (int x= 0; x < stride; x++)
                     {
-                        BeforData[y * stride + x] = _beforData[offset + _offsetx + x];
+                        BeforeData[y * stride + x] = _beforData[offset + _offsetx + x];
                         NewData[y * stride + x] = _newData[offset + _offsetx + x];
                     }
                 }
             }
-            byte[] BeforData;
+
+            byte[] BeforeData;
             byte[] NewData;
             int stride;
             int height;
             int offsetX, offsetY;
             IBImage trg;
+
             public override void Redo()
             {
                 base.Redo();
 
                 byte[] trgData = trg.imageData.data;
-                int layerStride = (int)trg.imageData.size.Width * 4;
+                int layerStride = (int)trg.imageData.actualSize.Width * 4;
                 int _offsetx = offsetX * 4;
-                for (int y = 0; y <= height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     int offset = (offsetY + y) * layerStride;
-                    for (int x = 0; x <= stride; x++)
+                    for (int x = 0; x < stride; x++)
                     {
                         trgData[offset + _offsetx + x] = NewData[y * stride + x];
                     }
@@ -253,19 +265,20 @@ namespace IBFramework.Image
                 trg.imageData.TextureUpdate();
                 IBCanvas.RefreshAll();
             }
+
             public override void Undo()
             {
                 base.Undo();
 
                 byte[] trgData = trg.imageData.data;
-                int layerStride = (int)trg.imageData.size.Width * 4;
+                int layerStride = (int)trg.imageData.actualSize.Width * 4;
                 int _offsetx = offsetX * 4;
-                for (int y = 0; y <= height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     int offset = (offsetY + y) * layerStride;
-                    for (int x = 0; x <= stride; x++)
+                    for (int x = 0; x < stride; x++)
                     {
-                        trgData[offset + _offsetx + x] = BeforData[y * stride + x];
+                        trgData[offset + _offsetx + x] = BeforeData[y * stride + x];
                     }
                 }
 
@@ -275,7 +288,7 @@ namespace IBFramework.Image
 
             public void Dispose()
             {
-                beforeData = null;
+                BeforeData = null;
                 NewData = null;
             }
         }

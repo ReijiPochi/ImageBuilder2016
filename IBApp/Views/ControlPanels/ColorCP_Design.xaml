@@ -1,0 +1,87 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
+                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels"
+                    xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI">
+
+
+    <vm:ColorVM x:Key="ColorVM"/>
+    
+    <ControlTemplate x:Key="PenMode" TargetType="{x:Type local:ColorCP}">
+        <Grid Background="{TemplateBinding Background}">
+            <UniformGrid Rows="1">
+                <ibgui:IBButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            VerticalAlignment="Top" Height="30" Margin="6,6,0,6" Background="Black" ToolTip="Black"/>
+                <Border VerticalAlignment="Top" Height="30" Margin="0,6">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <LinearGradientBrush.RelativeTransform>
+                                <TransformGroup>
+                                    <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                    <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                    <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </LinearGradientBrush.RelativeTransform>
+                            <GradientStop Color="Black" Offset="1"/>
+                            <GradientStop Color="White" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <ibgui:IBButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            VerticalAlignment="Top" Height="30" Margin="0,6,6,6" Background="White" ToolTip="White"/>
+            </UniformGrid>
+            <Border VerticalAlignment="Top" Height="24" Margin="30,9" Background="{Binding SelectedDrawingColor,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    CornerRadius="10" ToolTip="Current DrawingColor"/>
+
+            <ibgui:IBTabControl2 Margin="6,40,6,6">
+                <ibgui:IBTabItem2 Header="Swatch">
+                    <Grid>
+                        <UniformGrid Rows="3" Columns="4">
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFF7F7F7" ToolTip="White"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFFFF52D" ToolTip="Yellow"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFF38930" ToolTip="Orange"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFB3FF58" ToolTip="Yellow-Green"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FF22DE22" ToolTip="Green"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FF5CD2FF" ToolTip="Water"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FF3F3FEE" ToolTip="Ai"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FF931BE6" ToolTip="Violet"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFFCB4FF" ToolTip="Peach"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFFD3723" ToolTip="Red"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FF913B28" ToolTip="Brown"/>
+                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="Black" ToolTip="Black"/>
+                        </UniformGrid>
+                    </Grid>
+                </ibgui:IBTabItem2>
+                <ibgui:IBTabItem2 Header="RGB">
+                    <Grid>
+                    </Grid>
+                </ibgui:IBTabItem2>
+            </ibgui:IBTabControl2>
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type local:ColorCP}">
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+        <Setter Property="DataContext" Value="{StaticResource ColorVM}"/>
+        <Setter Property="Mode" Value="{Binding Mode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+        <Style.Triggers>
+            <Trigger Property="Mode" Value="Pen">
+                <Setter Property="Template" Value="{StaticResource PenMode}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+</ResourceDictionary>

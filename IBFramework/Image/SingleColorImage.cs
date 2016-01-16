@@ -27,7 +27,9 @@ namespace IBFramework.Image
             };
 
             Color = color;
-            imageData = new BGRA32FormattedImage(1, 1, Color);
+            imageData = new BGRA32FormattedImage(1, 1);
+            imageData.ClearData(Color);
+            imageData.TextureUpdate();
         }
 
         private PixelData _Color;

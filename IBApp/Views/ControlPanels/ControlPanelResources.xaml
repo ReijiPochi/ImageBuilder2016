@@ -30,4 +30,8 @@
         <cp:LayersViewCP/>
     </ibgui:IBTabItem>
 
+    <ibgui:IBTabItem x:Key="Color" Header="{DynamicResource ControlPanel_Color_Name}">
+        <cp:ColorCP/>
+    </ibgui:IBTabItem>
+
 </ResourceDictionary>

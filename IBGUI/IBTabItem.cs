@@ -204,7 +204,14 @@ namespace IBGUI
                 IsActivePanel = true;
                 FrameworkElement child = Content as FrameworkElement;
                 if (child != null)
+                {
                     child.Focus();
+
+                    if(child as IBControlPanelBase != null)
+                    {
+                        ((IBControlPanelBase)child).IsActivePanel = true;
+                    }
+                }
             }
 
             RaiseEvent(new PanelActivatedEventArgs(PanelActivatedEvent));

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IBFramework.Image
 {
-    public struct PixelData
+    public class PixelData
     {
         public byte b;
         public byte g;

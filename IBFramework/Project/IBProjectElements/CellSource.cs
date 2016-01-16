@@ -82,5 +82,23 @@ namespace IBFramework.Project.IBProjectElements
 
             Layers.Insert(0, pi);
         }
+
+        public void SetDrawingModeLayers()
+        {
+            foreach(IBImage l in Layers)
+            {
+                if (l.LayerType != ImageTypes.SingleColor)
+                    l.imageData.SetDrawingMode();
+            }
+        }
+
+        public void EndDrawingModeLayers()
+        {
+            foreach (IBImage l in Layers)
+            {
+                if (l.LayerType != ImageTypes.SingleColor)
+                    l.imageData.EndDrawingMode();
+            }
+        }
     }
 }

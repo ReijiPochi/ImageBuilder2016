@@ -22,8 +22,25 @@ namespace IBFramework.OpenGL
             {
                 GL.Begin(PrimitiveType.Quads);
                 {
-                    double offsetX = i.Rect.OffsetX * zoom, offsetY = i.Rect.OffsetY * zoom;
-                    double w = i.Rect.Width * zoom, h = i.Rect.Height * zoom;
+                    double offsetX;
+                    double offsetY;
+                    double w , h;
+
+                    if(i.LayerType != ImageTypes.SingleColor)
+                    {
+                        offsetX = (i.Rect.OffsetX + i.imageData.actualSize.OffsetX) * zoom;
+                        offsetY = (i.Rect.OffsetY +(i.Rect.Height- i.imageData.actualSize.OffsetY - i.imageData.actualSize.Height)) * zoom;
+                        w = i.imageData.actualSize.Width * zoom;
+                        h = i.imageData.actualSize.Height * zoom;
+                    }
+                    else
+                    {
+                        offsetX = i.Rect.OffsetX * zoom;
+                        offsetY = i.Rect.OffsetY * zoom;
+                        w = i.Rect.Width * zoom;
+                        h = i.Rect.Height * zoom;
+                    }
+
                     double texMin = 0, texMax = 1.0;
 
                     if (i.LayerType == ImageTypes.SingleColor)

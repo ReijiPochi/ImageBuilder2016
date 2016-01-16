@@ -18,7 +18,7 @@ using IBFramework.Project;
 
 namespace IBApp.Views.ControlPanels
 {
-    public class IBProjectViewCP : Control
+    public class IBProjectViewCP : IBControlPanelBase
     {
         static IBProjectViewCP()
         {

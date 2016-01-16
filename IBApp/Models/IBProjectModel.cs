@@ -197,6 +197,24 @@ namespace IBApp.Models
         }
         #endregion
 
+        #region SelectedDrawingColor変更通知プロパティ
+        private PixelData _SelectedDrawingColor;
+
+        public PixelData SelectedDrawingColor
+        {
+            get
+            { return _SelectedDrawingColor; }
+            set
+            { 
+                if (_SelectedDrawingColor == value)
+                    return;
+                _SelectedDrawingColor = value;
+                IBBrush.Color = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// IBProjectModel.ActiveTargetElementの子に新規フォルダを追加
