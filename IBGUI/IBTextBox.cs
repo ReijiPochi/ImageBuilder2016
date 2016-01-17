@@ -27,7 +27,26 @@ namespace IBGUI
             base.OnApplyTemplate();
 
             KeyDown += IBTextBox_KeyDown;
+            GotFocus += IBTextBox_GotFocus;
+            LostFocus += IBTextBox_LostFocus;
         }
+
+        private void IBTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.InputBindings.CopyTo(temp, 0);
+            Application.Current.MainWindow.InputBindings.Clear();
+        }
+
+        private void IBTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (InputBinding ib in temp)
+            {
+                if (ib == null) return;
+                Application.Current.MainWindow.InputBindings.Add(ib);
+            }
+        }
+
+        static InputBinding[] temp = new InputBinding[100];
 
         private void IBTextBox_KeyDown(object sender, KeyEventArgs e)
         {
