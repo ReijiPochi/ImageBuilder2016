@@ -23,6 +23,7 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (IBProjectModel.Current == null) return;
             IBProjectModel.Current.PropertyChanged += IBProjectModel_PropertyChanged;
+            SetColor();
             SetMode();
         }
 
@@ -34,11 +35,7 @@ namespace IBApp.ViewModels.ControlPanels
             }
             else if(e.PropertyName == "SelectedDrawingColor")
             {
-                SelectedDrawingColor = new SolidColorBrush(Color.FromArgb(
-                    IBProjectModel.Current.SelectedDrawingColor.a,
-                    IBProjectModel.Current.SelectedDrawingColor.r,
-                    IBProjectModel.Current.SelectedDrawingColor.g,
-                    IBProjectModel.Current.SelectedDrawingColor.b));
+                SetColor();
             }
         }
 
@@ -53,12 +50,30 @@ namespace IBApp.ViewModels.ControlPanels
                     break;
 
                 case "Eraser":
-                    Mode = ColorCPMode.NULL;
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private void SetColor()
+        {
+            if (IBProjectModel.Current.SelectedDrawingColor == null) return;
+
+            SelectedDrawingColor = new SolidColorBrush(Color.FromArgb(
+                IBProjectModel.Current.SelectedDrawingColor.a,
+                IBProjectModel.Current.SelectedDrawingColor.r,
+                IBProjectModel.Current.SelectedDrawingColor.g,
+                IBProjectModel.Current.SelectedDrawingColor.b));
+
+            _SelectedDrawingColor_B = SelectedDrawingColor.Color.B;
+            _SelectedDrawingColor_G = SelectedDrawingColor.Color.G;
+            _SelectedDrawingColor_R = SelectedDrawingColor.Color.R;
+
+            RaisePropertyChanged("SelectedDrawingColor_R");
+            RaisePropertyChanged("SelectedDrawingColor_G");
+            RaisePropertyChanged("SelectedDrawingColor_B");
         }
 
 
@@ -75,6 +90,75 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _Mode = value;
                 RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region SelectedDrawingColor_R変更通知プロパティ
+        private int _SelectedDrawingColor_R;
+
+        public int SelectedDrawingColor_R
+        {
+            get
+            { return _SelectedDrawingColor_R; }
+            set
+            { 
+                if (_SelectedDrawingColor_R == value)
+                    return;
+                _SelectedDrawingColor_R = value;
+                RaisePropertyChanged();
+
+                SetColor(new SolidColorBrush(Color.FromArgb(
+                    255,
+                    (byte)SelectedDrawingColor_R,
+                    (byte)SelectedDrawingColor_G,
+                    (byte)SelectedDrawingColor_B)));
+            }
+        }
+        #endregion
+
+        #region SelectedDrawingColor_G変更通知プロパティ
+        private int _SelectedDrawingColor_G;
+
+        public int SelectedDrawingColor_G
+        {
+            get
+            { return _SelectedDrawingColor_G; }
+            set
+            { 
+                if (_SelectedDrawingColor_G == value)
+                    return;
+                _SelectedDrawingColor_G = value;
+                RaisePropertyChanged();
+
+                SetColor(new SolidColorBrush(Color.FromArgb(
+                    255,
+                    (byte)SelectedDrawingColor_R,
+                    (byte)SelectedDrawingColor_G,
+                    (byte)SelectedDrawingColor_B)));
+            }
+        }
+        #endregion
+
+        #region SelectedDrawingColor_B変更通知プロパティ
+        private int _SelectedDrawingColor_B;
+
+        public int SelectedDrawingColor_B
+        {
+            get
+            { return _SelectedDrawingColor_B; }
+            set
+            { 
+                if (_SelectedDrawingColor_B == value)
+                    return;
+                _SelectedDrawingColor_B = value;
+                RaisePropertyChanged();
+
+                SetColor(new SolidColorBrush(Color.FromArgb(
+                    255,
+                    (byte)SelectedDrawingColor_R,
+                    (byte)SelectedDrawingColor_G,
+                    (byte)SelectedDrawingColor_B)));
             }
         }
         #endregion
@@ -98,18 +182,18 @@ namespace IBApp.ViewModels.ControlPanels
 
 
 
-        #region SetColorCommand
-        private ListenerCommand<SolidColorBrush> _SetColorCommand;
+        #region SetDrawingColorCommand
+        private ListenerCommand<SolidColorBrush> _SetDrawingColorCommand;
 
-        public ListenerCommand<SolidColorBrush> SetColorCommand
+        public ListenerCommand<SolidColorBrush> SetDrawingColorCommand
         {
             get
             {
-                if (_SetColorCommand == null)
+                if (_SetDrawingColorCommand == null)
                 {
-                    _SetColorCommand = new ListenerCommand<SolidColorBrush>(SetColor);
+                    _SetDrawingColorCommand = new ListenerCommand<SolidColorBrush>(SetColor);
                 }
-                return _SetColorCommand;
+                return _SetDrawingColorCommand;
             }
         }
 

@@ -45,9 +45,12 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <ibgui:IBTreeView.ItemTemplate>
-
+                                
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                     <StackPanel Orientation="Horizontal">
+                                        <i:Interaction.Behaviors>
+                                            <local:IBProjectViewItemsBehavier/>
+                                        </i:Interaction.Behaviors>
                                         <TextBlock Text="{Binding Name}"/>
                                     </StackPanel>
                                 </HierarchicalDataTemplate>

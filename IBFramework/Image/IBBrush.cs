@@ -212,7 +212,7 @@ namespace IBFramework.Image
             });
         }
 
-        private class RUDraw : RedoUndoAction, IDisposable
+        public class RUDraw : RedoUndoAction, IDisposable
         {
             public RUDraw(byte[] _beforData, IBImage layer)
             {
@@ -250,6 +250,11 @@ namespace IBFramework.Image
             {
                 base.Redo();
 
+                bool wasCanDraw = trg.imageData.CanDraw;
+
+                if (!wasCanDraw)
+                    trg.imageData.SetDrawingMode();
+
                 byte[] trgData = trg.imageData.data;
                 int layerStride = (int)trg.imageData.actualSize.Width * 4;
                 int _offsetx = offsetX * 4;
@@ -262,6 +267,9 @@ namespace IBFramework.Image
                     }
                 }
 
+                if (!wasCanDraw)
+                    trg.imageData.EndDrawingMode();
+
                 trg.imageData.TextureUpdate();
                 IBCanvas.RefreshAll();
             }
@@ -269,6 +277,11 @@ namespace IBFramework.Image
             public override void Undo()
             {
                 base.Undo();
+
+                bool wasCanDraw = trg.imageData.CanDraw;
+
+                if (!wasCanDraw)
+                    trg.imageData.SetDrawingMode();
 
                 byte[] trgData = trg.imageData.data;
                 int layerStride = (int)trg.imageData.actualSize.Width * 4;
@@ -281,6 +294,9 @@ namespace IBFramework.Image
                         trgData[offset + _offsetx + x] = BeforeData[y * stride + x];
                     }
                 }
+
+                if (!wasCanDraw)
+                    trg.imageData.EndDrawingMode();
 
                 trg.imageData.TextureUpdate();
                 IBCanvas.RefreshAll();

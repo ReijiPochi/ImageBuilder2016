@@ -6,11 +6,11 @@
 
 
     <vm:ColorVM x:Key="ColorVM"/>
-    
-    <ControlTemplate x:Key="PenMode" TargetType="{x:Type local:ColorCP}">
-        <Grid Background="{TemplateBinding Background}">
+
+    <ControlTemplate x:Key="Moniter" TargetType="Control">
+        <Grid>
             <UniformGrid Rows="1">
-                <ibgui:IBButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                <ibgui:IBButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             VerticalAlignment="Top" Height="30" Margin="6,6,0,6" Background="Black" ToolTip="Black"/>
                 <Border VerticalAlignment="Top" Height="30" Margin="0,6">
                     <Border.Background>
@@ -28,45 +28,116 @@
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
-                <ibgui:IBButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                <ibgui:IBButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             VerticalAlignment="Top" Height="30" Margin="0,6,6,6" Background="White" ToolTip="White"/>
             </UniformGrid>
-            <Border VerticalAlignment="Top" Height="24" Margin="30,9" Background="{Binding SelectedDrawingColor,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                    CornerRadius="10" ToolTip="Current DrawingColor"/>
+            <Border VerticalAlignment="Top" Height="20" Margin="30,11" Background="{Binding SelectedDrawingColor,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    CornerRadius="12" ToolTip="Current DrawingColor"/>
+        </Grid>
+    </ControlTemplate>
 
+    <ControlTemplate x:Key="RGBSlider" TargetType="Control">
+        <Grid>
+            <ibgui:IBSlider x:Name="R" Maximum="255" VerticalAlignment="Top" Margin="0,6,35,0"
+                            Value="{Binding SelectedDrawingColor_R,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <ibgui:IBSlider.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="Red" Offset="0"/>
+                        <GradientStop Color="Black" Offset="1"/>
+                    </LinearGradientBrush>
+                </ibgui:IBSlider.Background>
+            </ibgui:IBSlider>
+            <ibgui:IBSlider x:Name="G" Maximum="255" VerticalAlignment="Top" Margin="0,26,35,0"
+                            Value="{Binding SelectedDrawingColor_G,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <ibgui:IBSlider.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="Lime" Offset="0"/>
+                        <GradientStop Color="Black" Offset="1"/>
+                    </LinearGradientBrush>
+                </ibgui:IBSlider.Background>
+            </ibgui:IBSlider>
+            <ibgui:IBSlider x:Name="B" Maximum="255" VerticalAlignment="Top" Margin="0,46,35,0"
+                            Value="{Binding SelectedDrawingColor_B,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <ibgui:IBSlider.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="Blue" Offset="0"/>
+                        <GradientStop Color="Black" Offset="1"/>
+                    </LinearGradientBrush>
+                </ibgui:IBSlider.Background>
+            </ibgui:IBSlider>
+
+            <ibgui:IBIntBox Margin="0,6,0,0" HorizontalAlignment="Right" Width="30" Height="20" VerticalAlignment="Top"
+                             IntValue="{Binding Value,ElementName=R,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" Maximum="255"/>
+            <ibgui:IBIntBox Margin="0,26,0,0" HorizontalAlignment="Right" Width="30" Height="20" VerticalAlignment="Top"
+                             IntValue="{Binding Value,ElementName=G,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" Maximum="255"/>
+            <ibgui:IBIntBox Margin="0,46,0,0" HorizontalAlignment="Right" Width="30" Height="20" VerticalAlignment="Top"
+                             IntValue="{Binding Value,ElementName=B,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" Maximum="255"/>
+        </Grid>
+    </ControlTemplate>
+    
+    <ControlTemplate x:Key="PenMode" TargetType="{x:Type local:ColorCP}">
+        <Grid Background="{TemplateBinding Background}">
+
+            <Control Template="{StaticResource Moniter}" VerticalAlignment="Top"/>
+            
             <ibgui:IBTabControl2 Margin="6,40,6,6">
                 <ibgui:IBTabItem2 Header="Swatch">
                     <Grid>
                         <UniformGrid Rows="3" Columns="4">
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FFF7F7F7" ToolTip="White"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FFFFF52D" ToolTip="Yellow"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
-                            Background="#FFF38930" ToolTip="Orange"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            Background="#FFFF8D2D" ToolTip="Orange"/>
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FFB3FF58" ToolTip="Yellow-Green"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FF22DE22" ToolTip="Green"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FF5CD2FF" ToolTip="Water"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FF3F3FEE" ToolTip="Ai"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FF931BE6" ToolTip="Violet"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FFFCB4FF" ToolTip="Peach"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FFFD3723" ToolTip="Red"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="#FF913B28" ToolTip="Brown"/>
-                            <ibgui:IBColorButton Command="{Binding SetColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
+                            <ibgui:IBColorButton Command="{Binding SetDrawingColorCommand,Mode=OneWay}" CommandParameter="{Binding Background, RelativeSource={RelativeSource Self}}"
                             Background="Black" ToolTip="Black"/>
                         </UniformGrid>
                     </Grid>
                 </ibgui:IBTabItem2>
                 <ibgui:IBTabItem2 Header="RGB">
                     <Grid>
+                        <Control Template="{StaticResource RGBSlider}"/>
                     </Grid>
                 </ibgui:IBTabItem2>
             </ibgui:IBTabControl2>

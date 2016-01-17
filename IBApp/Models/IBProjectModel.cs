@@ -271,6 +271,7 @@ namespace IBApp.Models
             BG.LayerName = "BG";
             newCellSource.Layers.Add(BG);
             newCellSource.AddNewLayer();
+            newCellSource.AddNewLayer();
 
             if (ActiveTargetElement != null)
             {
@@ -310,9 +311,9 @@ namespace IBApp.Models
                 RedoUndoManager.Current.Record(new RUAddNewElement(null, newCellSource));
             }
 
-            Cell newc = new Cell(newCellSource, 1920, 1080);
-            newc.Name = "new Cell";
-            IBProject.Current.IBProjectElements.Add(newc);
+            //Cell newc = new Cell(newCellSource, 1920, 1080);
+            //newc.Name = "new Cell";
+            //IBProject.Current.IBProjectElements.Add(newc);
 
             RaisePropertyChanged("IBProject_Elements");
         }

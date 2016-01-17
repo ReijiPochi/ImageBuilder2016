@@ -6,3 +6,4 @@
                 <ResourceDictionary Source="pack://application:,,,/IBFramework;component/ResourceDictionaries.xaml" />
             </ResourceDictionary.MergedDictionaries>
    を追加
+3. RedoUndoManager.Current = new RedoUndoManager();

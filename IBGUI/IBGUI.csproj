@@ -83,6 +83,7 @@
     <Compile Include="IBColorButton.cs" />
     <Compile Include="IBControlPanelBase.cs" />
     <Compile Include="IBFocusableBG.cs" />
+    <Compile Include="IBIntBox.cs" />
     <Compile Include="IBLabel.cs" />
     <Compile Include="IBMenuItem.cs" />
     <Compile Include="IBMenuSeparator.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="IBPanel.cs" />
     <Compile Include="IBPanelSplitter.cs" />
     <Compile Include="IBScrollViewer.cs" />
+    <Compile Include="IBSlider.cs" />
     <Compile Include="IBTabControl.cs" />
     <Compile Include="IBTabControl2.cs" />
     <Compile Include="IBTabItem.cs" />
