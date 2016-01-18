@@ -84,22 +84,12 @@ namespace IBApp.Views.ControlPanels
 
             IBProjectElement preParent = from.Parent;
             int preIndex;
-            if (preParent != null)
-                preIndex = preParent.Children.IndexOf(from);
-            else
-                preIndex = IBProject.Current.IBProjectElements.IndexOf(from);
 
-            if (from.Parent != null)
-            {
-                from.Parent.Children.Remove(from);
-            }
-            else
-            {
-                IBProject.Current.IBProjectElements.Remove(from);
-            }
+            preIndex = preParent.Children.IndexOf(from);
 
-            IBProject.Current.IBProjectElements.Add(from);
-            from.Parent = null;
+            from.Parent.RemoveChild(from);
+
+            IBProject.Current.ElementsRoot.AddChild(from);
 
             RedoUndoManager.Current.Record(new RUMoveProjectElement(from, preParent, preIndex));
         }
@@ -139,14 +129,8 @@ namespace IBApp.Views.ControlPanels
             preParent = _preParent;
             preIndex = _preIndex;
             newParent = trg.Parent;
-            if(newParent != null)
-            {
-                newIndex = newParent.Children.IndexOf(trg);
-            }
-            else
-            {
-                newIndex = IBProject.Current.IBProjectElements.IndexOf(trg);
-            }
+
+            newIndex = newParent.Children.IndexOf(trg);
         }
 
         private IBProjectElement trg;
@@ -161,50 +145,20 @@ namespace IBApp.Views.ControlPanels
         {
             base.Redo();
 
-            if (preParent != null)
-            {
-                preParent.Children.Remove(trg);
-            }
-            else
-            {
-                IBProject.Current.IBProjectElements.Remove(trg);
-            }
+            preParent.RemoveChild(trg);
 
-            if (newParent != null)
-            {
-                newParent.Children.Insert(newIndex, trg);
-                trg.Parent = newParent;
-            }
-            else
-            {
-                IBProject.Current.IBProjectElements.Insert(newIndex, trg);
-                trg.Parent = null;
-            }
+            newParent.Children.Insert(newIndex, trg);
+            trg.Parent = newParent;
         }
 
         public override void Undo()
         {
             base.Undo();
 
-            if (newParent != null)
-            {
-                newParent.Children.Remove(trg);
-            }
-            else
-            {
-                IBProject.Current.IBProjectElements.Remove(trg);
-            }
+            newParent.RemoveChild(trg);
 
-            if (preParent != null)
-            {
-                preParent.Children.Insert(preIndex, trg);
-                trg.Parent = preParent;
-            }
-            else
-            {
-                IBProject.Current.IBProjectElements.Insert(preIndex, trg);
-                trg.Parent = null;
-            }
+            preParent.Children.Insert(preIndex, trg);
+            trg.Parent = preParent;
         }
     }
 
@@ -283,50 +237,27 @@ namespace IBApp.Views.ControlPanels
             int trgIndex, fromIndex;
             IBProjectElement preParent = from.Parent;
 
-            if (from.Parent != null)
-            {
-                fromIndex = from.Parent.Children.IndexOf(from);
-                from.Parent.Children.Remove(from);
-            }
-            else
-            {
-                fromIndex = IBProject.Current.IBProjectElements.IndexOf(from);
-                IBProject.Current.IBProjectElements.Remove(from);
-            }
+            fromIndex = from.Parent.Children.IndexOf(from);
+            from.Parent.RemoveChild(from);
 
             if (trgElement.Type == IBProjectElementTypes.Folder)
             {
                 IBProjectElement parent = trgElement;
-                from.Parent = parent;
-                trgElement.Children.Add(from);
+                trgElement.AddChild(from);
 
                 from.IsSelected = true;
             }
             else
             {
-                if (trgElement.Parent != null)
-                {
-                    trgIndex = trgElement.Parent.Children.IndexOf(trgElement);
+                trgIndex = trgElement.Parent.Children.IndexOf(trgElement);
 
-                    IBProjectElement parent = trgElement.Parent;
-                    from.Parent = parent;
+                IBProjectElement parent = trgElement.Parent;
+                from.Parent = parent;
 
-                    if (trgIndex >= fromIndex)
-                        trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement) + 1, from);
-                    else
-                        trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement), from);
-                }
+                if (trgIndex >= fromIndex)
+                    trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement) + 1, from);
                 else
-                {
-                    trgIndex = IBProject.Current.IBProjectElements.IndexOf(trgElement);
-
-                    from.Parent = null;
-
-                    if (trgIndex >= fromIndex)
-                        IBProject.Current.IBProjectElements.Insert(IBProject.Current.IBProjectElements.IndexOf(trgElement) + 1, from);
-                    else
-                        IBProject.Current.IBProjectElements.Insert(IBProject.Current.IBProjectElements.IndexOf(trgElement), from);
-                }
+                    trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement), from);
 
                 from.IsSelected = true;
             }

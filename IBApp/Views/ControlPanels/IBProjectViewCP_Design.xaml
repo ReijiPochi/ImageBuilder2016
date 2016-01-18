@@ -37,7 +37,7 @@
                                         Command="{Binding AddNewCellSourceCommand, Mode=OneWay}"/>
                         </StackPanel>
 
-                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProject.IBProjectElements, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProject.ElementsRoot.Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           ItemContainerStyle="{DynamicResource IBProjectTreeViewItemStyle}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">

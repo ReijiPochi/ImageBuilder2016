@@ -90,6 +90,7 @@
     <Compile Include="Image\Blend\Normal.cs" />
     <Compile Include="Image\IBBrush.cs" />
     <Compile Include="Project\IBProjectElement.cs" />
+    <Compile Include="Project\IBProjectElements\Root.cs" />
     <Compile Include="Project\IBProjectPP.cs" />
     <Compile Include="RedoUndo\RedoUndoAction.cs" />
     <Compile Include="Timeline\IBCanvas_utilities.cs" />

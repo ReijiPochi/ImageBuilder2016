@@ -47,21 +47,6 @@ namespace IBApp.Models
         }
         #endregion
 
-        #region IBProject_Elements変更通知プロパティ
-        public ObservableCollection<IBProjectElement> IBProject_Elements
-        {
-            get
-            { return IBProject.Current.IBProjectElements; }
-            set
-            { 
-                if (IBProject.Current.IBProjectElements == value)
-                    return;
-                IBProject.Current.IBProjectElements = value;
-                RaisePropertyChanged();
-            }
-        }
-        #endregion
-
         #region SelectedPropertyItem変更通知プロパティ
         private IProperty _SelectedPropertyItem;
         /// <summary>
@@ -231,17 +216,15 @@ namespace IBApp.Models
             if (ActiveTargetElement != null)
             {
                 IBProjectElement parent = ActiveTargetElement;
-                if (ActiveTargetElement.Type != IBProjectElementTypes.Folder) return;
+                if (ActiveTargetElement.Type != IBProjectElementTypes.Folder && parent.Type != IBProjectElementTypes.Root) return;
 
-                parent.Children.Add(newFolder);
-                newFolder.Parent = parent;
+                parent.AddChild(newFolder);
                 RedoUndoManager.Current.Record(new RUAddNewElement(parent, newFolder));
             }
             else
             {
-                IBProject.Current.IBProjectElements.Add(newFolder);
-                newFolder.Parent = null;
-                RedoUndoManager.Current.Record(new RUAddNewElement(null, newFolder));
+                IBProject.Current.ElementsRoot.AddChild(newFolder);
+                RedoUndoManager.Current.Record(new RUAddNewElement(IBProject.Current.ElementsRoot, newFolder));
             }
 
             RaisePropertyChanged("IBProject_Elements");
@@ -282,33 +265,29 @@ namespace IBApp.Models
                     if (ActiveTargetElement.Parent != null)
                     {
                         IBProjectElement parent = ActiveTargetElement.Parent;
-                        if (parent.Type != IBProjectElementTypes.Folder) return;
+                        if (parent.Type != IBProjectElementTypes.Folder && parent.Type != IBProjectElementTypes.Root) return;
 
-                        parent.Children.Add(newCellSource);
-                        newCellSource.Parent = parent;
+                        parent.AddChild(newCellSource);
                         RedoUndoManager.Current.Record(new RUAddNewElement(parent, newCellSource));
                     }
                     else
                     {
-                        IBProject.Current.IBProjectElements.Add(newCellSource);
-                        newCellSource.Parent = null;
-                        RedoUndoManager.Current.Record(new RUAddNewElement(null, newCellSource));
+                        IBProject.Current.ElementsRoot.AddChild(newCellSource);
+                        RedoUndoManager.Current.Record(new RUAddNewElement(IBProject.Current.ElementsRoot, newCellSource));
                     }
                 }
                 else
                 {
                     IBProjectElement parent = ActiveTargetElement;
 
-                    parent.Children.Add(newCellSource);
-                    newCellSource.Parent = parent;
+                    parent.AddChild(newCellSource);
                     RedoUndoManager.Current.Record(new RUAddNewElement(parent, newCellSource));
                 }
             }
             else
             {
-                IBProject.Current.IBProjectElements.Add(newCellSource);
-                newCellSource.Parent = null;
-                RedoUndoManager.Current.Record(new RUAddNewElement(null, newCellSource));
+                IBProject.Current.ElementsRoot.AddChild(newCellSource);
+                RedoUndoManager.Current.Record(new RUAddNewElement(IBProject.Current.ElementsRoot, newCellSource));
             }
 
             //Cell newc = new Cell(newCellSource, 1920, 1080);
@@ -331,10 +310,7 @@ namespace IBApp.Models
             {
                 base.Redo();
 
-                if (_parent != null)
-                    _parent.Children.Add(_newElement);
-                else if (IBProject.Current != null)
-                    IBProject.Current.IBProjectElements.Add(_newElement);
+                _parent.AddChild(_newElement);
             }
 
             public override void Undo()

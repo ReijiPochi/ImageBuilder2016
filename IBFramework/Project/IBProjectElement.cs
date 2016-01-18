@@ -11,6 +11,7 @@ namespace IBFramework.Project
     public enum IBProjectElementTypes
     {
         Null,
+        Root,
         Folder,
         Cell,
         CellSource
@@ -29,7 +30,12 @@ namespace IBFramework.Project
     {
         public IBProjectElement()
         {
-            if(IBProject.Current != null)
+            OnInitializing();
+        }
+
+        protected virtual void OnInitializing()
+        {
+            if (IBProject.Current != null)
             {
                 ID = IBProject.Current.GenNewID();
             }
@@ -153,9 +159,6 @@ namespace IBFramework.Project
         }
 
         private IBProjectElement _Parent;
-        /// <summary>
-        /// nullの場合、親は現在のプロジェクト
-        /// </summary>
         public IBProjectElement Parent
         {
             get
@@ -211,16 +214,23 @@ namespace IBFramework.Project
             }
         }
 
+        public void RemoveChild(IBProjectElement child)
+        {
+            Children.Remove(child);
+            child.Parent = null;
+        }
+
+        public void AddChild(IBProjectElement child)
+        {
+            if (child.Parent != null) throw new Exception("IBProjectElement.Parent プロパティが null でありません");
+
+            Children.Add(child);
+            child.Parent = this;
+        }
+
         public virtual void Remove()
         {
-            if(Parent != null)
-            {
-                Parent.Children.Remove(this);
-            }
-            else if (IBProject.Current != null)
-            {
-                IBProject.Current.IBProjectElements.Remove(this);
-            }
+            Parent.RemoveChild(this);
 
             DELETE = true;
         }

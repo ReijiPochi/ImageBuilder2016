@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
-using IBFramework;
+using IBFramework.Project.IBProjectElements;
 using System.Windows.Controls;
 using System.ComponentModel;
 
@@ -13,12 +13,19 @@ namespace IBFramework.Project
 {
     public class IBProject : INotifyPropertyChanged, IProperty
     {
+        public IBProject()
+        {
+            ElementsRoot = new Root();
+        }
+
         /// <summary>
         /// 現在開かれているプロジェクト
         /// </summary>
         public static IBProject Current { get; set; }
 
-        public ObservableCollection<IBProjectElement> IBProjectElements { get; set; } = new ObservableCollection<IBProjectElement>();
+        //public ObservableCollection<IBProjectElement> IBProjectElements { get; set; } = new ObservableCollection<IBProjectElement>();
+
+        public Root ElementsRoot { get; private set; }
 
         private int IDCount { get; set; } = 0;
 
