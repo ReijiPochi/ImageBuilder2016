@@ -25,7 +25,11 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord);
 
+            double dist = IBCoord.GetDistance(histCoord[0], coord);
+            if (dist < 0.1) return;
+
             if (trgLayer == null) return;
+
             double radius = 10.0;
 
             switch (trgLayer.LayerType)

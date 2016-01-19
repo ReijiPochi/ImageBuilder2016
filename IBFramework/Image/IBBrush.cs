@@ -120,9 +120,6 @@ namespace IBFramework.Image
 
             count = 0;
 
-            double dist = IBCoord.GetDistance(histCoord[0], coord);
-            if (dist < 0.1) return;
-
             double x = coord.x, y = coord.y;
 
             for(int i = 0; i < 2; i++)

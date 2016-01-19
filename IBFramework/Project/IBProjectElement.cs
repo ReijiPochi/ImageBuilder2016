@@ -226,6 +226,8 @@ namespace IBFramework.Project
 
             Children.Add(child);
             child.Parent = this;
+
+            DELETE = false;
         }
 
         public virtual void Remove()

@@ -198,12 +198,16 @@ namespace IBApp.Views.ControlPanels
         }
 
         TreeViewItem trg;
+        const double HEIGHT = 22;
         IBProjectElement trgElement;
+        IBProjectElement from_temp;
 
         private void AssociatedObject_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (trg != null)
                 trg.IsSelected = true;
+
+            e.Handled = true;
         }
 
         private void Trg_MouseLeave(object sender, MouseEventArgs e)
@@ -215,14 +219,12 @@ namespace IBApp.Views.ControlPanels
                 DragDrop.DoDragDrop(trg, selectedItem, DragDropEffects.Move);
             }
 
-            trg.BorderThickness = new Thickness(0);
-            trg.BorderBrush = null;
+            EndDrag();
         }
 
         private void Trg_Drop(object sender, DragEventArgs e)
         {
-            trg.BorderThickness = new Thickness(0);
-            trg.BorderBrush = null;
+            EndDrag();
 
             e.Handled = true;
 
@@ -232,7 +234,7 @@ namespace IBApp.Views.ControlPanels
             IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
             if (from == null) return;
 
-            if (from == trgElement) return;
+            if (trgElement == null || from == trgElement) return;
 
             int trgIndex, fromIndex;
             IBProjectElement preParent = from.Parent;
@@ -267,8 +269,7 @@ namespace IBApp.Views.ControlPanels
 
         private void Trg_DragLeave(object sender, DragEventArgs e)
         {
-            trg.BorderThickness = new Thickness(0);
-            trg.BorderBrush = null;
+            EndDrag();
         }
 
         private void Trg_DragEnter(object sender, DragEventArgs e)
@@ -276,30 +277,58 @@ namespace IBApp.Views.ControlPanels
             string[] formats = e.Data.GetFormats();
             if (formats.Length == 0) return;
 
-            IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
-
-            if (from != null)
+            from_temp = e.Data.GetData(formats[0]) as IBProjectElement;
+            if (from_temp != null)
             {
                 trg.IsSelected = true;
                 trgElement = IBProjectViewCP.GetSelectedElement();
                 if (trgElement == null) return;
 
-                if(trgElement.Type == IBProjectElementTypes.Folder)
-                {
-                    trg.BorderThickness = new Thickness(2);
-                    trg.BorderBrush = Application.Current.FindResource("IBFocusBorderBrush") as SolidColorBrush;
-                }
-                else
-                {
-                    trg.BorderThickness = new Thickness(1);
-                    trg.BorderBrush = Application.Current.FindResource("IBFocusBrush2_T") as SolidColorBrush;
-                }
+                trg.BorderBrush = Application.Current.FindResource("IBFocusBorderBrush") as SolidColorBrush;
             }
         }
 
         private void Trg_DragOver(object sender, DragEventArgs e)
         {
-            
+            if (trg != null && from_temp != null)
+            {
+                if(trgElement.Type == IBProjectElementTypes.Folder)
+                {
+                    trg.BorderBrush = Application.Current.FindResource("IBFocusBorderBrush") as SolidColorBrush;
+
+                    if (e.GetPosition(trg).Y < HEIGHT / 4)
+                    {
+                        trg.BorderThickness = new Thickness(0, 3, 0, 0);
+                    }
+                    else if (e.GetPosition(trg).Y > HEIGHT * 3 / 4 && e.GetPosition(trg).Y < HEIGHT)
+                    {
+                        trg.BorderThickness = new Thickness(0, 0, 0, 3);
+                    }
+                    else
+                    {
+                        trg.BorderBrush = Application.Current.FindResource("IBSelectedBrush") as SolidColorBrush;
+                        trg.BorderThickness = new Thickness(2);
+                    }
+                }
+                else
+                {
+                    if (e.GetPosition(trg).Y < HEIGHT / 2)
+                    {
+                        trg.BorderThickness = new Thickness(0, 3, 0, 0);
+                    }
+                    else
+                    {
+                        trg.BorderThickness = new Thickness(0, 0, 0, 3);
+                    }
+                }
+            }
+        }
+
+        private void EndDrag()
+        {
+            trg.BorderThickness = new Thickness(0);
+            trg.BorderBrush = null;
+            from_temp = null;
         }
 
     }

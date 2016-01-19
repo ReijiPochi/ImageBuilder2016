@@ -26,16 +26,17 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord);
 
+            double dist = IBCoord.GetDistance(histCoord[0], coord);
+            if (dist < 0.1) return;
 
-            IBImage trg = GetSelectedLayer();
-            if (trg == null) return;
+            if (trgLayer == null) return;
 
             double radius = 10.0;
 
-            switch (trg.LayerType)
+            switch (trgLayer.LayerType)
             {
                 case ImageTypes.LineDrawing:
-                    EraseLineDrawingImage(trg, radius);
+                    EraseLineDrawingImage(trgLayer, radius);
                     break;
 
                 default:
