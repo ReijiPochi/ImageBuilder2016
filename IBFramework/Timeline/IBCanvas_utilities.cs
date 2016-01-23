@@ -16,10 +16,12 @@ namespace IBFramework.Timeline
     {
         public static IBCoord GetImageCoord(IBCanvas source, Point mousePos, double zoom)
         {
-            if (source.ShowingElement == null) return new IBCoord();
-
+            if (source.TargetLayer == null) return new IBCoord();
+            
             double resultX = (source.camX - (source.glControl.Width / 2 - mousePos.X)) / zoom;
-            double resultY = (source.ShowingElement.Height * zoom - source.camY - (source.glControl.Height / 2 - mousePos.Y)) / zoom;
+            double resultY = (source.TargetLayer.imageData.actualSize.Height * zoom - source.camY - (source.glControl.Height / 2 - mousePos.Y)) / zoom;
+
+            resultY += source.TargetLayer.Rect.OffsetY * 2.0;
 
             return new IBCoord(resultX, resultY);
         }

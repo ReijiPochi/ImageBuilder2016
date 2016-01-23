@@ -37,6 +37,9 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (e.PropertyName == "SelectedBrush")
                 ActiveBrush = IBProjectModel.Current.SelectedBrush;
+
+            if (e.PropertyName == "ActiveTargetLayer")
+                TargetLayer = IBProjectModel.Current.ActiveTargetLayer;
         }
 
         #region Itemsプロパティ
@@ -88,6 +91,23 @@ namespace IBApp.ViewModels.ControlPanels
                 if (_ActiveBrush == value)
                     return;
                 _ActiveBrush = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region TargetLayer変更通知プロパティ
+        private IBImage _TargetLayer;
+
+        public IBImage TargetLayer
+        {
+            get
+            { return _TargetLayer; }
+            set
+            { 
+                if (_TargetLayer == value)
+                    return;
+                _TargetLayer = value;
                 RaisePropertyChanged();
             }
         }

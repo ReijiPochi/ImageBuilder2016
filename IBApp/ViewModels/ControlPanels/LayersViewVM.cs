@@ -13,6 +13,7 @@ using Livet.Messaging.Windows;
 
 using IBApp.Models;
 using IBFramework.Project.IBProjectElements;
+using IBFramework.Image;
 
 namespace IBApp.ViewModels.ControlPanels
 {
@@ -51,6 +52,35 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _CurrentCell = value;
                 RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region SetTargetLayerCommand
+        private ViewModelCommand _SetTargetLayerCommand;
+
+        public ViewModelCommand SetTargetLayerCommand
+        {
+            get
+            {
+                if (_SetTargetLayerCommand == null)
+                {
+                    _SetTargetLayerCommand = new ViewModelCommand(SetTargetLayer);
+                }
+                return _SetTargetLayerCommand;
+            }
+        }
+
+        public void SetTargetLayer()
+        {
+            if (CurrentCell == null) return;
+
+            foreach(IBImage i in CurrentCell.Layers)
+            {
+                if (i.IsSelectedLayer)
+                {
+                    IBProjectModel.Current.ActiveTargetLayer = i;
+                }
             }
         }
         #endregion

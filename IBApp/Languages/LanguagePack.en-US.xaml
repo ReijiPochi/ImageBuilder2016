@@ -32,5 +32,6 @@
     <system:String x:Key="ControlPanel_IBProjectView_Name">IBProject View</system:String>
     <system:String x:Key="ControlPanel_LayarsView_Name">Layars</system:String>
     <system:String x:Key="ControlPanel_Color_Name">Color</system:String>
+    <system:String x:Key="ControlPanel_Brush_Name">Brush</system:String>
 
 </ResourceDictionary>

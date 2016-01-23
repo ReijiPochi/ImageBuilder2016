@@ -40,32 +40,6 @@ namespace IBFramework.Project.IBProjectElements
             }
         }
 
-        private string _PropertyHeaderName;
-        public string PropertyHeaderName
-        {
-            get { return _PropertyHeaderName; }
-            set
-            {
-                if (_PropertyHeaderName == value)
-                    return;
-                _PropertyHeaderName = value;
-                RaisePropertyChanged("PropertyHeaderName");
-            }
-        }
-
-        private bool _IsLocked;
-        public bool IsLocked
-        {
-            get { return _IsLocked; }
-            set
-            {
-                if (_IsLocked == value)
-                    return;
-                _IsLocked = value;
-                RaisePropertyChanged("IsLocked");
-            }
-        }
-
         public Control GetPP()
         {
             return new CellSourcePP() { DataContext = this };

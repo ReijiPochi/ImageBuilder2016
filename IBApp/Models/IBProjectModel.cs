@@ -106,6 +106,23 @@ namespace IBApp.Models
         }
         #endregion
 
+        #region ActiveTargetLayer変更通知プロパティ
+        private IBImage _ActiveTargetLayer;
+
+        public IBImage ActiveTargetLayer
+        {
+            get
+            { return _ActiveTargetLayer; }
+            set
+            { 
+                if (_ActiveTargetLayer == value)
+                    return;
+                _ActiveTargetLayer = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
         #region ActiveCanvasItems変更通知プロパティ
         private ObservableCollection<IBProjectElement> _ActiveCanvasItems;
         /// <summary>
@@ -253,7 +270,6 @@ namespace IBApp.Models
             BG.Rect = new IBRectangle(1920 + 300, 1080 + 300, -150, -150);
             BG.LayerName = "BG";
             newCellSource.Layers.Add(BG);
-            newCellSource.AddNewLayer();
             newCellSource.AddNewLayer();
 
             if (ActiveTargetElement != null)

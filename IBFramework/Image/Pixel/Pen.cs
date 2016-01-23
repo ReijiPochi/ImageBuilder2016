@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using IBFramework.Project;
 using IBFramework.Timeline;
 using Wintab;
@@ -12,6 +13,11 @@ namespace IBFramework.Image.Pixel
     public class Pen : IBBrush
     {
         private double last_t = 0;
+
+        public override Control GetBP()
+        {
+            return new PenBP() { DataContext = this };
+        }
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {

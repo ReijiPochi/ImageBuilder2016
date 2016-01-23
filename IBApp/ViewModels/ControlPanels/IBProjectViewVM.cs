@@ -188,7 +188,8 @@ namespace IBApp.ViewModels.ControlPanels
         {
             if (SelectedIBProjectElement == null) return false;
 
-            if (SelectedIBProjectElement.Type != IBProjectElementTypes.Folder)
+            if (SelectedIBProjectElement.Type != IBProjectElementTypes.Folder
+                || SelectedIBProjectElement.IsShowing)
                 return true;
 
             return false;

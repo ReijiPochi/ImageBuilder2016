@@ -3,31 +3,24 @@
                     xmlns:local="clr-namespace:IBFramework.Project.IBProjectElements"
                     xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI">
 
-
-    <Style TargetType="{x:Type local:CellSourcePP}">
+    
+    <Style TargetType="{x:Type local:FolderPP}">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:CellSourcePP}">
+                <ControlTemplate TargetType="{x:Type local:FolderPP}">
                     <Grid MinWidth="150" Margin="10,10,10,0">
                         <StackPanel x:Name="Names" Width="100" HorizontalAlignment="Left">
                             <ibgui:IBLabel Content="Name"/>
                             <ibgui:IBLabel Content="ID"/>
-                            <ibgui:IBLabel Content="UseCount"/>
                             <ibgui:IBLabel Content="Comment"/>
-                            <Rectangle Height="80"/>
-                            <ibgui:IBLabel Content="Width"/>
-                            <ibgui:IBLabel Content="Height"/>
                         </StackPanel>
                         <StackPanel x:Name="Values" Margin="100,0,0,0">
                             <ibgui:IBTextBox Text="{Binding Name}" Height="20" Padding="0" Margin="0,1,0,1"/>
                             <ibgui:IBLabel Content="{Binding ID}" IsEnabled="False"/>
-                            <ibgui:IBLabel Content="{Binding UseCount}" IsEnabled="False"/>
                             <ibgui:IBTextBox Text="{Binding Comment}" Background="{DynamicResource IBEditableAreaBruah}"
                                              Padding="0" Margin="0,1,0,1" Height="100" VerticalAlignment="Top" VerticalContentAlignment="Top"
                                              TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
-                            <ibgui:IBIntBox Text="{Binding Width}" Height="20" Padding="0" Margin="0,1,0,1"/>
-                            <ibgui:IBIntBox Text="{Binding Height}" Height="20" Padding="0" Margin="0,1,0,1"/>
                         </StackPanel>
                     </Grid>
                 </ControlTemplate>

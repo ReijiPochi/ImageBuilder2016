@@ -53,7 +53,7 @@ namespace IBGUI
         {
             if (e.Key == Key.Enter)
             {
-                MoveFocus(new TraversalRequest(FocusNavigationDirection.Previous));
+                MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
         }
     }

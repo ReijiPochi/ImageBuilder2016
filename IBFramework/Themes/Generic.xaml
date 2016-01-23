@@ -10,6 +10,10 @@
         <ResourceDictionary Source="/IBFramework;component/Timeline/TimelineElements/CellPP_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Project/IBProjectElements/CellSourcePP_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Project/IBProjectPP_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/Project/IBProjectElements/FolderPP_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/Image/Pixel/PenBP_Design.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    
+
+
+
 </ResourceDictionary>

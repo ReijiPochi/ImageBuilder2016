@@ -131,6 +131,15 @@ namespace IBFramework.Timeline
         public static readonly DependencyProperty ShowingElementProperty =
             DependencyProperty.Register("ShowingElement", typeof(IBProjectElement), typeof(IBCanvas), new PropertyMetadata(null));
 
+        [Description("描画対象のレイヤー"), Category("IBFramework")]
+        public IBImage TargetLayer
+        {
+            get { return (IBImage)GetValue(TargetLayerProperty); }
+            set { SetValue(TargetLayerProperty, value); }
+        }
+        public static readonly DependencyProperty TargetLayerProperty =
+            DependencyProperty.Register("TargetLayer", typeof(IBImage), typeof(IBCanvas), new PropertyMetadata(null));
+
         [Description("ズーム"), Category("IBFramework")]
         public double ZoomPerCent
         {
@@ -222,6 +231,11 @@ namespace IBFramework.Timeline
             }
 
             glControl.SwapBuffers();
+        }
+
+        private void ShowingElement_GraphicsUpdated(object sender, GraphicsUpdatedEventArgs e)
+        {
+            glControl.Refresh();
         }
 
         private void GlControlHost_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -328,8 +342,11 @@ namespace IBFramework.Timeline
 
             if (Tabs.SelectedItem != null)
             {
+                if (ShowingElement != null) ShowingElement.GraphicsUpdated -= ShowingElement_GraphicsUpdated;
                 ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
-                if(ShowingElement != null && ShowingElement.Type == IBProjectElementTypes.CellSource)
+                if (ShowingElement != null) ShowingElement.GraphicsUpdated += ShowingElement_GraphicsUpdated;
+
+                if (ShowingElement != null && ShowingElement.Type == IBProjectElementTypes.CellSource)
                 {
                     ((CellSource)ShowingElement).SetDrawingModeLayers();
                 }

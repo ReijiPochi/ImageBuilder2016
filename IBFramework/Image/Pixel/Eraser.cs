@@ -7,12 +7,18 @@ using System.Threading.Tasks;
 using IBFramework.Timeline;
 using IBFramework.Project;
 using Wintab;
+using System.Windows.Controls;
 
 namespace IBFramework.Image.Pixel
 {
     public class Eraser : IBBrush
     {
         private double last_t = 0;
+
+        public override Control GetBP()
+        {
+            return null;
+        }
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 using IBFramework.Timeline;
 using IBFramework.Project;
@@ -54,6 +55,10 @@ namespace IBFramework.Image
         private static DispatcherTimer Clock = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 10) };
         private static BGRA32FormattedImage waitingImage;
         private static IBCanvas currentCanvas;
+
+        public abstract Control GetBP();
+
+
 
 
         private static void Clock_Tick(object sender, EventArgs e)

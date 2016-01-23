@@ -197,10 +197,19 @@ namespace IBApp.Views.ControlPanels
             }
         }
 
+        private enum DropTo
+        {
+            None,
+            Child,
+            Top,
+            Bottom
+        }
+
         TreeViewItem trg;
         const double HEIGHT = 22;
         IBProjectElement trgElement;
         IBProjectElement from_temp;
+        DropTo fromDropTo;
 
         private void AssociatedObject_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -224,9 +233,12 @@ namespace IBApp.Views.ControlPanels
 
         private void Trg_Drop(object sender, DragEventArgs e)
         {
-            EndDrag();
-
             e.Handled = true;
+            if (fromDropTo == DropTo.None)
+            {
+                EndDrag();
+                return;
+            }
 
             string[] formats = e.Data.GetFormats();
             if (formats.Length == 0) return;
@@ -242,27 +254,30 @@ namespace IBApp.Views.ControlPanels
             fromIndex = from.Parent.Children.IndexOf(from);
             from.Parent.RemoveChild(from);
 
-            if (trgElement.Type == IBProjectElementTypes.Folder)
+            switch (fromDropTo)
             {
-                IBProjectElement parent = trgElement;
-                trgElement.AddChild(from);
+                case DropTo.Child:
+                    trgElement.AddChild(from);
+                    break;
 
-                from.IsSelected = true;
-            }
-            else
-            {
-                trgIndex = trgElement.Parent.Children.IndexOf(trgElement);
-
-                IBProjectElement parent = trgElement.Parent;
-                from.Parent = parent;
-
-                if (trgIndex >= fromIndex)
-                    trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement) + 1, from);
-                else
+                case DropTo.Top:
+                    trgIndex = trgElement.Parent.Children.IndexOf(trgElement);
+                    from.Parent = trgElement.Parent;
                     trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement), from);
+                    break;
 
-                from.IsSelected = true;
+                case DropTo.Bottom:
+                    trgIndex = trgElement.Parent.Children.IndexOf(trgElement);
+                    from.Parent = trgElement.Parent;
+                    trgElement.Parent.Children.Insert(trgElement.Parent.Children.IndexOf(trgElement) + 1, from);
+                    break;
+
+                default:
+                    break;
             }
+
+            from.IsSelected = true;
+            EndDrag();
 
             RedoUndoManager.Current.Record(new RUMoveProjectElement(from, preParent, fromIndex));
         }
@@ -294,20 +309,20 @@ namespace IBApp.Views.ControlPanels
             {
                 if(trgElement.Type == IBProjectElementTypes.Folder)
                 {
-                    trg.BorderBrush = Application.Current.FindResource("IBFocusBorderBrush") as SolidColorBrush;
-
                     if (e.GetPosition(trg).Y < HEIGHT / 4)
                     {
                         trg.BorderThickness = new Thickness(0, 3, 0, 0);
+                        fromDropTo = DropTo.Top;
                     }
                     else if (e.GetPosition(trg).Y > HEIGHT * 3 / 4 && e.GetPosition(trg).Y < HEIGHT)
                     {
                         trg.BorderThickness = new Thickness(0, 0, 0, 3);
+                        fromDropTo = DropTo.Bottom;
                     }
                     else
                     {
-                        trg.BorderBrush = Application.Current.FindResource("IBSelectedBrush") as SolidColorBrush;
                         trg.BorderThickness = new Thickness(2);
+                        fromDropTo = DropTo.Child;
                     }
                 }
                 else
@@ -315,10 +330,12 @@ namespace IBApp.Views.ControlPanels
                     if (e.GetPosition(trg).Y < HEIGHT / 2)
                     {
                         trg.BorderThickness = new Thickness(0, 3, 0, 0);
+                        fromDropTo = DropTo.Top;
                     }
                     else
                     {
                         trg.BorderThickness = new Thickness(0, 0, 0, 3);
+                        fromDropTo = DropTo.Bottom;
                     }
                 }
             }
@@ -329,6 +346,7 @@ namespace IBApp.Views.ControlPanels
             trg.BorderThickness = new Thickness(0);
             trg.BorderBrush = null;
             from_temp = null;
+            fromDropTo = DropTo.None;
         }
 
     }

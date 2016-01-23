@@ -29,7 +29,10 @@ namespace IBApp.ViewModels.ControlPanels
         private void IBAppModelCurrent_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "SelectedPropertyItem")
+            {
                 CurrentPropertyItem = IBProjectModel.Current.SelectedPropertyItem;
+                RaisePropertyChanged("CurrentPP");
+            }
         }
 
 
@@ -64,7 +67,6 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _CurrentPropertyItem = value;
                 RaisePropertyChanged();
-                RaisePropertyChanged("CurrentPP");
             }
         }
         #endregion

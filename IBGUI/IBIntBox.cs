@@ -50,6 +50,11 @@ namespace IBGUI
                 if (value > Maximum) value = Maximum;
                 IntValue = value;
             }
+            else
+            {
+                Text = IntValue.ToString();
+                Select(Text.Length, 0);
+            }
         }
 
         public int IntValue

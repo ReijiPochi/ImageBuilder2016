@@ -34,4 +34,8 @@
         <cp:ColorCP/>
     </ibgui:IBTabItem>
 
+    <ibgui:IBTabItem x:Key="Brush" Header="{DynamicResource ControlPanel_Brush_Name}">
+        <cp:BrushCP/>
+    </ibgui:IBTabItem>
+
 </ResourceDictionary>

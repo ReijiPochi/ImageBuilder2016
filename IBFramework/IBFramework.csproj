@@ -73,6 +73,7 @@
     <Compile Include="IBCoord.cs" />
     <Compile Include="Image\ImageTypes.cs" />
     <Compile Include="Image\Pixel\Eraser.cs" />
+    <Compile Include="Image\Pixel\PenBP.cs" />
     <Compile Include="OpenCL\CLImageProcessing.cs" />
     <Compile Include="OpenCL\CLUtilities.cs" />
     <Compile Include="OpenGL\Render.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Image\Blend\Normal.cs" />
     <Compile Include="Image\IBBrush.cs" />
     <Compile Include="Project\IBProjectElement.cs" />
+    <Compile Include="Project\IBProjectElements\FolderPP.cs" />
     <Compile Include="Project\IBProjectElements\Root.cs" />
     <Compile Include="Project\IBProjectPP.cs" />
     <Compile Include="RedoUndo\RedoUndoAction.cs" />
@@ -137,11 +139,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Image\Pixel\PenBP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Project\FlagButton_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Project\IBProjectElements\CellSourcePP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Project\IBProjectElements\FolderPP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

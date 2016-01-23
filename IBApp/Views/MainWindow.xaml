@@ -125,6 +125,7 @@
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_CanvasView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource CanvasView}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_LayarsView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource LayarsView}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Color_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Color}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Brush_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Brush}"/>
             </ibgui:IBMenuItem>
             <ibgui:IBMenuItem Header="{DynamicResource Menu_Workspace}">
                 <ibgui:IBMenuItem.DataContext>

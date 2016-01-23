@@ -26,6 +26,10 @@ namespace IBFramework.Project
         Advice
     }
 
+    public class GraphicsUpdatedEventArgs : EventArgs
+    {
+    }
+
     public abstract class IBProjectElement : INotifyPropertyChanged
     {
         public IBProjectElement()
@@ -57,6 +61,19 @@ namespace IBFramework.Project
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+
+        #region GraphicsUpdatedイベント
+        public delegate void GraphicsUpdatedEventHandler(object sender, GraphicsUpdatedEventArgs e);
+        public event GraphicsUpdatedEventHandler GraphicsUpdated;
+        public virtual void OnGraphicsUpdated(GraphicsUpdatedEventArgs e)
+        {
+            if (GraphicsUpdated != null)
+            {
+                GraphicsUpdated(this, e);
+            }
+        }
+        #endregion
+
         private int _ID;
         public int ID
         {
@@ -68,6 +85,23 @@ namespace IBFramework.Project
                     return;
                 _ID = value;
                 RaisePropertyChanged("ID");
+            }
+        }
+
+        /// <summary>
+        /// プロパティの変更を禁止するかどうか
+        /// </summary>
+        private bool _IsLocked;
+        public bool IsLocked
+        {
+            get
+            { return _IsLocked; }
+            set
+            {
+                if (_IsLocked == value)
+                    return;
+                _IsLocked = value;
+                RaisePropertyChanged("IsLocked");
             }
         }
 
@@ -85,6 +119,19 @@ namespace IBFramework.Project
             }
         }
 
+        private string _PropertyHeaderName;
+        public string PropertyHeaderName
+        {
+            get { return _PropertyHeaderName; }
+            set
+            {
+                if (_PropertyHeaderName == value)
+                    return;
+                _PropertyHeaderName = value;
+                RaisePropertyChanged("PropertyHeaderName");
+            }
+        }
+
         private int _Width;
         public int Width
         {
@@ -96,6 +143,7 @@ namespace IBFramework.Project
                     return;
                 _Width = value;
                 RaisePropertyChanged("Width");
+                OnGraphicsUpdated(new GraphicsUpdatedEventArgs());
             }
         }
 
@@ -110,6 +158,7 @@ namespace IBFramework.Project
                     return;
                 _Height = value;
                 RaisePropertyChanged("Height");
+                OnGraphicsUpdated(new GraphicsUpdatedEventArgs());
             }
         }
 

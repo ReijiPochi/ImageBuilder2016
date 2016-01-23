@@ -9,9 +9,12 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/DrawingToolsCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/PropertiesCP_Design.xaml"/>
-        <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/CanvasView_Design.xaml"/>
+        <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/CanvasViewCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/IBProjectViewCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/LayersViewCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/ColorCP_Design.xaml" />
+        <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/BrushCP_Design.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+
 </ResourceDictionary>

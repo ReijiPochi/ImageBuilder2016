@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using IBGUI;
+using Livet;
 
 namespace IBApp.Views.ControlPanels
 {
@@ -23,5 +24,38 @@ namespace IBApp.Views.ControlPanels
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LayersViewCP), new FrameworkPropertyMetadata(typeof(LayersViewCP)));
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            view = GetTemplateChild("View") as ListView;
+            view.SelectionChanged += View_SelectionChanged;
+        }
+
+        private void View_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SetTargetLayerCommand != null)
+            {
+                if (SetTargetLayerCommand.CanExecute(null))
+                {
+                    SetTargetLayerCommand.Execute(null);
+                }
+            }
+        }
+
+
+
+        public ICommand SetTargetLayerCommand
+        {
+            get { return (ICommand)GetValue(SetTargetLayerCommandProperty); }
+            set { SetValue(SetTargetLayerCommandProperty, value); }
+        }
+        public static readonly DependencyProperty SetTargetLayerCommandProperty =
+            DependencyProperty.Register("SetTargetLayerCommand", typeof(ICommand), typeof(LayersViewCP), new PropertyMetadata(null));
+
+
+
+        ListView view;
     }
 }

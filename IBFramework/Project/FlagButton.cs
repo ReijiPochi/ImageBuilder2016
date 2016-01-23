@@ -32,7 +32,7 @@ namespace IBFramework.Project
         }
         public static readonly DependencyProperty FlagProperty =
             DependencyProperty.Register("Flag", typeof(IBProjectElementFlags), typeof(FlagButton), new PropertyMetadata(IBProjectElementFlags.Non));
-
-
     }
+
+
 }

@@ -538,6 +538,7 @@
     <Style TargetType="{x:Type local:IBToggleButton}">
         <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
+        <Setter Property="ClickMode" Value="Press"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IBToggleButton}">
