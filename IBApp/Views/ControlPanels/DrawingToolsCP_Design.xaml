@@ -13,6 +13,12 @@
                 <ControlTemplate TargetType="{x:Type local:DrawingToolsCP}">
                     <Grid DataContext="{StaticResource DrawingToolsVM}" Background="{DynamicResource IBBackGroundBrush}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ibgui:IBToggleButton x:Name="SelectionTool" Width="30" Height="30" Margin="2" Content="S"
+								ButtonON="{Binding SelectionToolON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <!--<ibgui:IBToggleButton.Content>
+                                    
+                                </ibgui:IBToggleButton.Content>-->
+                            </ibgui:IBToggleButton>
                             <ibgui:IBToggleButton x:Name="Pencil" Width="30" Height="30" Margin="2"
 								ButtonON="{Binding PencilON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ibgui:IBToggleButton.Content>

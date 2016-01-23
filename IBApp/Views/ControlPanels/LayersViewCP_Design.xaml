@@ -17,7 +17,7 @@
                 <ControlTemplate TargetType="{x:Type local:LayersViewCP}">
                     <Grid>
 
-                        <ListView x:Name="View" ItemsSource="{Binding CurrentCell.Layers}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyle}">
+                        <ListView x:Name="View" ItemsSource="{Binding CurrentCell.Layers}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyleForLayer}">
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{DynamicResource GridViewColumnHeaderStyle}">
                                     <GridViewColumn Header="" Width="30"/>

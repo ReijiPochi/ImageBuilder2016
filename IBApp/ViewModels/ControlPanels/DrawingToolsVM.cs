@@ -56,9 +56,8 @@ namespace IBApp.ViewModels.ControlPanels
                 _PencilON = true;
                 _PenON = false;
                 _EraserON = false;
-                RaisePropertyChanged("PencilON");
-                RaisePropertyChanged("PenON");
-                RaisePropertyChanged("EraserON");
+                _SelectionToolON = false;
+                StateChange();
             }
         }
         #endregion
@@ -75,9 +74,8 @@ namespace IBApp.ViewModels.ControlPanels
                 _PenON = true;
                 _PencilON = false;
                 _EraserON = false;
-                RaisePropertyChanged("PencilON");
-                RaisePropertyChanged("PenON");
-                RaisePropertyChanged("EraserON");
+                _SelectionToolON = false;
+                StateChange();
 
                 IBBrushModel.SetToProjectPen();
             }
@@ -96,14 +94,42 @@ namespace IBApp.ViewModels.ControlPanels
                 _EraserON = true;
                 _PencilON = false;
                 _PenON = false;
-                RaisePropertyChanged("PencilON");
-                RaisePropertyChanged("PenON");
-                RaisePropertyChanged("EraserON");
+                _SelectionToolON = false;
+                StateChange();
 
                 IBBrushModel.SetToProjectEraser();
             }
         }
         #endregion
+
+        #region SelectionToolON変更通知プロパティ
+        private bool _SelectionToolON;
+
+        public bool SelectionToolON
+        {
+            get
+            { return _SelectionToolON; }
+            set
+            {
+                _EraserON = false;
+                _PencilON = false;
+                _PenON = false;
+                _SelectionToolON = true;
+                StateChange();
+
+                IBBrushModel.SetToProjectSelectionTool();
+            }
+        }
+        #endregion
+
+
+        private void StateChange()
+        {
+            RaisePropertyChanged("PencilON");
+            RaisePropertyChanged("PenON");
+            RaisePropertyChanged("EraserON");
+            RaisePropertyChanged("SelectionToolON");
+        }
 
 
         #region OnPenCommand

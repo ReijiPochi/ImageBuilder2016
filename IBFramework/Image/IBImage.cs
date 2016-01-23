@@ -34,6 +34,20 @@ namespace IBFramework.Image
             }
         }
 
+        private bool _IsNotSelectersLayer = true;
+        public bool IsNotSelectersLayer
+        {
+            get
+            { return _IsNotSelectersLayer; }
+            set
+            {
+                if (_IsNotSelectersLayer == value)
+                    return;
+                _IsNotSelectersLayer = value;
+                RaisePropertyChanged("IsNotSelectersLayer");
+            }
+        }
+
         private ImageTypes _LayerType;
         public ImageTypes LayerType
         {

@@ -65,24 +65,18 @@ namespace IBGUI
         
         private void CalcValue(Point p)
         {
-            double result = (p.X / ValueArea.ActualWidth) * Maximum;
-
-            if (result < Minimum) result = Minimum;
-            else if (result > Maximum) result = Maximum;
+            double result = (p.X * Maximum) / ValueArea.ActualWidth;
 
             string temp = result.ToString("f" + FloatDigit.ToString("d"));
-            Value = double.Parse(temp);
+            TempValue = double.Parse(temp);
         }
 
         private void CalcValue(double delta)
         {
-            double result = Value + (delta / ValueArea.ActualWidth) * Maximum;
-
-            if (result < Minimum) result = Minimum;
-            else if (result > Maximum) result = Maximum;
+            double result = TempValue + delta * Maximum / ValueArea.ActualWidth;
 
             string temp = result.ToString("f" + FloatDigit.ToString("d"));
-            Value = double.Parse(temp);
+            TempValue = double.Parse(temp);
         }
 
         private void IBSetValue()
@@ -91,12 +85,29 @@ namespace IBGUI
             else if (Value > Maximum) Value = Maximum;
 
             if (Meter == null || ValueArea == null) return;
-            Meter.Margin = new Thickness(ValueArea.ActualWidth * ((double)Value / (double)Maximum) - 2.0, 0, 0, 0);
+            Meter.Margin = new Thickness(ValueArea.ActualWidth * Value / Maximum - 2.0, 0, 0, 0);
         }
 
         private void IBSlider_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             IBSetValue();
+        }
+
+        private double _TempValue;
+        private double TempValue
+        {
+            get { return _TempValue; }
+            set
+            {
+                _TempValue = value;
+
+                if (Math.Abs(Value - value) < 0.000001) return;
+
+                double result = value;
+                if (result < 0) result = 0;
+                else if (result > Maximum) result = Maximum;
+                Value = result;
+            }
         }
 
         public double Value
@@ -135,7 +146,5 @@ namespace IBGUI
         }
         public static readonly DependencyProperty FloatDigitProperty =
             DependencyProperty.Register("FloatDigit", typeof(int), typeof(IBDoubleSlider), new PropertyMetadata(1));
-
-
     }
 }

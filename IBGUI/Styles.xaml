@@ -4,7 +4,7 @@
                     xmlns:local="clr-namespace:IBGUI">
 
     <local:Bool_BrushConverter x:Key="Bool_BrushConverter"/>
-
+    <local:Bool_VisibilityConverter x:Key="Bool_VisibilityConverter"/>
 
     <Style x:Key="IBWindowStyle" TargetType="Window">
         <Setter Property="UseLayoutRounding" Value="True"/>
@@ -321,12 +321,13 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+    <Style x:Key="ListViewItemStyleForLayer" TargetType="ListViewItem">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
         <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="IsSelected" Value="{Binding IsSelectedLayer}"/>
+        <Setter Property="Visibility" Value="{Binding IsNotSelectersLayer,Converter={StaticResource Bool_VisibilityConverter}}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">

@@ -11,7 +11,7 @@
                     <Grid MinWidth="150" Margin="10,10,10,0">
                         <ibgui:IBLabel Content="Radius" Width="70" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top"/>
                         <ibgui:IBDoubleBox DoubleValue="{Binding Size,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="100,0,0,0"/>
-                        <ibgui:IBDoubleSlider Value="{Binding Size,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Minimum="0.1"
+                        <ibgui:IBDoubleSlider Value="{Binding Size,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Minimum="0.1" Maximum="100.0"
                                               VerticalAlignment="Top" Margin="0,20,0,0" Background="{DynamicResource IBEditableAreaBruah}"/>
                     </Grid>
                 </ControlTemplate>

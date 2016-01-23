@@ -74,6 +74,7 @@
     <Compile Include="Image\ImageTypes.cs" />
     <Compile Include="Image\Pixel\Eraser.cs" />
     <Compile Include="Image\Pixel\PenBP.cs" />
+    <Compile Include="Image\Pixel\SelectionTool.cs" />
     <Compile Include="OpenCL\CLImageProcessing.cs" />
     <Compile Include="OpenCL\CLUtilities.cs" />
     <Compile Include="OpenGL\Render.cs" />

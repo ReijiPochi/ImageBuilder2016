@@ -36,8 +36,9 @@ namespace IBFramework.Image
 
         protected static IBProjectElement trgImage;
         protected static IBImage trgLayer;
-        protected IBCoord[] histCoord = new IBCoord[2];
-        protected IBCoord curCoord = new IBCoord();
+        protected static IBBrush ActiveBrush;
+        protected static IBCoord[] histCoord = new IBCoord[2];
+        protected static IBCoord curCoord = new IBCoord();
         protected double[] histPressure = new double[2];
         protected double curPressure = 0;
 
@@ -88,12 +89,11 @@ namespace IBFramework.Image
             {
                 if (count > 5)
                 {
-                    if (drawAreaXS == 5000 || drawAreaYS == 3000)
-                        return;
-                    RUDraw action = new RUDraw(beforeData, trgLayer);
-                    action.Summary = actionSummary;
-                    RedoUndoManager.Current.Record(action);
+                    //if (drawAreaXS == 5000 || drawAreaYS == 3000)
+                    //    return;
 
+                    ActiveBrush.End();
+                    
                     ResetDrawArea();
                     drawing = false;
                     count = 0;
@@ -174,6 +174,13 @@ namespace IBFramework.Image
             curPressure = histPressure[0];
         }
 
+        public virtual void End()
+        {
+            RUDraw action = new RUDraw(beforeData, trgLayer);
+            action.Summary = actionSummary;
+            RedoUndoManager.Current.Record(action);
+        }
+
         public void EndRequest()
         {
             penUp = true;
@@ -220,7 +227,7 @@ namespace IBFramework.Image
             if (ye >= drawAreaYE) drawAreaYE = ye + 1;
         }
 
-        protected static void RecordBeforeData()
+        protected virtual void RecordBeforeData()
         {
             byte[] original = trgLayer.imageData.data;
 

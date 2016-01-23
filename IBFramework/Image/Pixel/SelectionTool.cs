@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using IBFramework.Timeline;
-using IBFramework.Project;
-using Wintab;
 using System.Windows.Controls;
+using IBFramework.Project;
+using IBFramework.Timeline;
+using IBFramework.Project.IBProjectElements;
 
 namespace IBFramework.Image.Pixel
 {
-    public class Eraser : IBBrush
+    public class SelectionTool : IBBrush
     {
-        private double last_t = 0;
-
         public override Control GetBP()
         {
             return null;
         }
+
+        private PixcelImage SelectedArea = new PixcelImage(1920 + 300, 1080 + 300, -150, -150) { IsNotSelectersLayer = false };
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
@@ -26,7 +25,18 @@ namespace IBFramework.Image.Pixel
 
             ActiveBrush = this;
 
-            actionSummary = "Eraser Tool / " + trg.Name;
+            actionSummary = "Selection Tool / " + trg.Name;
+
+            if (trgImage as CellSource == null || trgLayer == null) return;
+
+            SelectedArea.Rect.Width = trgLayer.imageData.actualSize.Width;
+            SelectedArea.Rect.Height = trgLayer.imageData.actualSize.Height;
+            SelectedArea.Rect.OffsetX = trgLayer.Rect.OffsetX;
+            SelectedArea.Rect.OffsetY = trgLayer.Rect.OffsetY;
+
+            ((CellSource)trgImage).Layers.Remove(SelectedArea);
+            ((CellSource)trgImage).Layers.Insert(0, SelectedArea);
+            SelectedArea.imageData.SetDrawingMode();
         }
 
         public override void Draw(IBCoord coord)
@@ -36,22 +46,30 @@ namespace IBFramework.Image.Pixel
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
 
-            if (trgLayer == null) return;
-
-            double radius = 10.0;
-
-            switch (trgLayer.LayerType)
-            {
-                case ImageTypes.LineDrawing:
-                    EraseLineDrawingImage(trgLayer, radius);
-                    break;
-
-                default:
-                    return;
-            }
+            DrawToLineDrawingImage(SelectedArea, Size, new PixelData() { r = 255, g = 50, b = 150, a = 100});
         }
 
-        private void EraseLineDrawingImage(IBImage trg, double r)
+        public override void End()
+        {
+            //base.End();
+            //((CellSource)trgImage).Layers.Remove(SelectedArea);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private double last_t = 0;
+        private void DrawToLineDrawingImage(IBImage trg, double r, PixelData color)
         {
             double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
             if (_x < 0 || _y < 0 || _x >= trg.imageData.actualSize.Width || _y >= trg.imageData.actualSize.Height) return;
@@ -70,9 +88,9 @@ namespace IBFramework.Image.Pixel
 
                 double p = prePre + dp * t;
                 double _r = r;
-                if (p != 0.0) _r *= p;
+                if (p != 0.0) _r *= PenTouch(p);
 
-                EraseCircle(trg, x, y, _r);
+                DrawCircle(trg, x, y, _r, color);
 
                 t += r * interval;
             }
@@ -83,7 +101,14 @@ namespace IBFramework.Image.Pixel
             EntryTexUpdate(trg.imageData);
         }
 
-        private void EraseCircle(IBImage trg, double x, double y, double r)
+        private double PenTouch(double inValue)
+        {
+            const double PI2 = Math.PI / 2.5;
+
+            return 1.0 - Math.Sin((1 - inValue * inValue) * PI2);
+        }
+
+        private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
         {
             if (r < 0.001) return;
 
@@ -131,13 +156,12 @@ namespace IBFramework.Image.Pixel
 
                     if (c != 0)
                     {
-                        //data[offset + xp] = color.b;
-                        //data[offset + xp + 1] = color.g;
-                        //data[offset + xp + 2] = color.r;
+                        data[offset + xp] = color.b;
+                        data[offset + xp + 1] = color.g;
+                        data[offset + xp + 2] = color.r;
 
-                        int a = data[offset + xp + 3] - ((255 * c) >> 4);
-                        if (a < 0) a = 0;
-                        data[offset + xp + 3] = a < data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
+                        int a = (color.a * c) >> 4;
+                        data[offset + xp + 3] = a > data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
                     }
 
                     xp += 4;

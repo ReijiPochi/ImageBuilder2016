@@ -67,18 +67,12 @@ namespace IBGUI
         {
             double result = (p.X / ValueArea.ActualWidth) * Maximum;
 
-            if (result < 0) result = 0;
-            else if (result > Maximum) result = Maximum;
-
             DoubleValue = result;
         }
 
         private void CalcValue(double delta)
         {
             double result = DoubleValue + (delta / ValueArea.ActualWidth) * Maximum;
-
-            if (result < 0) result = 0;
-            else if (result > Maximum) result = Maximum;
 
             DoubleValue = result;
         }
@@ -97,19 +91,22 @@ namespace IBGUI
             IBSetValue();
         }
 
+        private double _DoubleValue;
         public double DoubleValue
         {
-            get { return (double)GetValue(DoubleValueProperty); }
+            get { return _DoubleValue; }
             set
             {
-                SetValue(DoubleValueProperty, value);
+                _DoubleValue = value;
 
                 if (Value == (int)value) return;
-                Value = (int)value;
+
+                double result = value;
+                if (result < 0) result = 0;
+                else if (result > Maximum) result = Maximum;
+                Value = (int)result;
             }
         }
-        public static readonly DependencyProperty DoubleValueProperty =
-            DependencyProperty.Register("DoubleValue", typeof(double), typeof(IBIntSlider), new PropertyMetadata(0.0));
 
         public int Value
         {

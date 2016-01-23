@@ -12,6 +12,7 @@ namespace IBApp.Models
     {
         private static Pen PenBrush = new Pen();
         private static Eraser EraserBrush = new Eraser();
+        private static SelectionTool SelectionToolBrush = new SelectionTool();
 
         public static void SetToProjectPen()
         {
@@ -21,6 +22,11 @@ namespace IBApp.Models
         public static void SetToProjectEraser()
         {
             IBProjectModel.Current.SelectedBrush = EraserBrush;
+        }
+
+        public static void SetToProjectSelectionTool()
+        {
+            IBProjectModel.Current.SelectedBrush = SelectionToolBrush;
         }
     }
 }

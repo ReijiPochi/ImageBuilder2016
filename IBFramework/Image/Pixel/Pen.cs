@@ -23,7 +23,8 @@ namespace IBFramework.Image.Pixel
         {
             base.Set(canvas, trg, coord);
 
-            if (trg == null) return;
+            ActiveBrush = this;
+
             actionSummary = "Pen Tool / " + trg.Name;
         }
 
@@ -84,7 +85,6 @@ namespace IBFramework.Image.Pixel
             const double PI2 = Math.PI / 2.5;
 
             return 1.0 - Math.Sin((1 - inValue * inValue) * PI2);
-            //return inValue;
         }
 
         private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
