@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 using IBFramework.Timeline;
 using IBFramework.Project;
@@ -58,6 +59,26 @@ namespace IBFramework.Image
 
         public abstract Control GetBP();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private double _Size = 5.0;
+        public double Size
+        {
+            get
+            { return _Size; }
+            set
+            {
+                if (_Size == value)
+                    return;
+                _Size = value;
+                RaisePropertyChanged("Size");
+            }
+        }
 
 
 

@@ -38,9 +38,9 @@
 
     <ControlTemplate x:Key="RGBSlider" TargetType="Control">
         <Grid>
-            <ibgui:IBSlider x:Name="R" Maximum="255" VerticalAlignment="Top" Margin="0,6,35,0"
+            <ibgui:IBIntSlider x:Name="R" Maximum="255" VerticalAlignment="Top" Margin="0,6,35,0"
                             Value="{Binding SelectedDrawingColor_R,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                <ibgui:IBSlider.Background>
+                <ibgui:IBIntSlider.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <LinearGradientBrush.RelativeTransform>
                             <TransformGroup>
@@ -53,11 +53,11 @@
                         <GradientStop Color="Red" Offset="0"/>
                         <GradientStop Color="Black" Offset="1"/>
                     </LinearGradientBrush>
-                </ibgui:IBSlider.Background>
-            </ibgui:IBSlider>
-            <ibgui:IBSlider x:Name="G" Maximum="255" VerticalAlignment="Top" Margin="0,26,35,0"
+                </ibgui:IBIntSlider.Background>
+            </ibgui:IBIntSlider>
+            <ibgui:IBIntSlider x:Name="G" Maximum="255" VerticalAlignment="Top" Margin="0,26,35,0"
                             Value="{Binding SelectedDrawingColor_G,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                <ibgui:IBSlider.Background>
+                <ibgui:IBIntSlider.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <LinearGradientBrush.RelativeTransform>
                             <TransformGroup>
@@ -70,11 +70,11 @@
                         <GradientStop Color="Lime" Offset="0"/>
                         <GradientStop Color="Black" Offset="1"/>
                     </LinearGradientBrush>
-                </ibgui:IBSlider.Background>
-            </ibgui:IBSlider>
-            <ibgui:IBSlider x:Name="B" Maximum="255" VerticalAlignment="Top" Margin="0,46,35,0"
+                </ibgui:IBIntSlider.Background>
+            </ibgui:IBIntSlider>
+            <ibgui:IBIntSlider x:Name="B" Maximum="255" VerticalAlignment="Top" Margin="0,46,35,0"
                             Value="{Binding SelectedDrawingColor_B,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                <ibgui:IBSlider.Background>
+                <ibgui:IBIntSlider.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <LinearGradientBrush.RelativeTransform>
                             <TransformGroup>
@@ -87,8 +87,8 @@
                         <GradientStop Color="Blue" Offset="0"/>
                         <GradientStop Color="Black" Offset="1"/>
                     </LinearGradientBrush>
-                </ibgui:IBSlider.Background>
-            </ibgui:IBSlider>
+                </ibgui:IBIntSlider.Background>
+            </ibgui:IBIntSlider>
 
             <ibgui:IBIntBox Margin="0,6,0,0" HorizontalAlignment="Right" Width="30" Height="20" VerticalAlignment="Top"
                              IntValue="{Binding Value,ElementName=R,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" Maximum="255"/>

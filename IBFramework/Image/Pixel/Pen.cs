@@ -36,12 +36,10 @@ namespace IBFramework.Image.Pixel
 
             if (trgLayer == null) return;
 
-            double radius = 10.0;
-
             switch (trgLayer.LayerType)
             {
                 case ImageTypes.LineDrawing:
-                    DrawToLineDrawingImage(trgLayer, radius, Color);
+                    DrawToLineDrawingImage(trgLayer, Size, Color);
                     break;
 
                 default:

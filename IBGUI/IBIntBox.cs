@@ -48,6 +48,7 @@ namespace IBGUI
             if(int.TryParse(Text, out value))
             {
                 if (value > Maximum) value = Maximum;
+                else if (value < 0) value = 0;
                 IntValue = value;
             }
             else
@@ -68,7 +69,8 @@ namespace IBGUI
         private static void OnIntValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             IBIntBox trg = (IBIntBox)d;
-            if ((int)e.NewValue > trg.Maximum) return;
+            if ((int)e.NewValue > trg.Maximum) trg.IntValue = trg.Maximum;
+            else if ((int)e.NewValue < 0) trg.IntValue = 0;
             trg.Text = ((int)e.NewValue).ToString();
         }
 
