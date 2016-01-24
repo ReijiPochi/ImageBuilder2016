@@ -136,6 +136,10 @@ namespace IBGUI
             ownerPrePosL = owner.Left;
             ownerPrePosT = owner.Top;
 
+            PresentationSource source = PresentationSource.FromVisual(owner);
+            double dpiX = source.CompositionTarget.TransformToDevice.M11;
+            double dpiY = source.CompositionTarget.TransformToDevice.M22;
+
             Point p = PointToScreen(Mouse.GetPosition(this));
             System.Drawing.Point point = new System.Drawing.Point { X = (int)p.X, Y = (int)p.Y };
             System.Drawing.Rectangle workspace = System.Windows.Forms.Screen.GetWorkingArea(point);
@@ -143,10 +147,12 @@ namespace IBGUI
             if (scr.Primary && workspace.Height == scr.Bounds.Height)
                 workspace.Height -= 1;  // タスクバーが隠れてしまうのを防ぐため
 
-            owner.Left = workspace.Left;
-            owner.Top = workspace.Top - 7;
-            owner.Height = workspace.Height + 7;
-            owner.Width = workspace.Width;
+            System.Drawing.Rectangle test = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+
+            owner.Left = workspace.Left / dpiX;
+            owner.Top = workspace.Top / dpiY - 7;
+            owner.Height = workspace.Height / dpiY + 7;
+            owner.Width = workspace.Width / dpiX;
         }
 
         private void WindowRestore()
