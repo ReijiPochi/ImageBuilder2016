@@ -18,6 +18,7 @@ namespace IBFramework.Image.Pixel
         }
 
         private PixcelImage SelectedArea;
+        private IBCoord start = new IBCoord();
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
@@ -30,7 +31,10 @@ namespace IBFramework.Image.Pixel
             if (trgImage as CellSource == null || trgLayer == null) return;
 
             if (SelectedArea != null)
+            {
                 ((CellSource)trgImage).Layers.Remove(SelectedArea);
+                SelectedArea.imageData.data = null;
+            }
 
             SelectedArea = new PixcelImage(
                 (int)trgLayer.imageData.actualSize.Width,
@@ -39,14 +43,11 @@ namespace IBFramework.Image.Pixel
                 (int)trgLayer.Rect.OffsetY);
             SelectedArea.IsNotSelectersLayer = false;
 
-            //SelectedArea.Rect.Width = trgLayer.imageData.actualSize.Width;
-            //SelectedArea.Rect.Height = trgLayer.imageData.actualSize.Height;
-            //SelectedArea.Rect.OffsetX = trgLayer.Rect.OffsetX;
-            //SelectedArea.Rect.OffsetY = trgLayer.Rect.OffsetY;
-
-
             ((CellSource)trgImage).Layers.Insert(0, SelectedArea);
             SelectedArea.imageData.SetDrawingMode();
+
+            start.x = histCoord[0].x;
+            start.y = histCoord[0].y;
         }
 
         public override void Draw(IBCoord coord)
@@ -56,36 +57,27 @@ namespace IBFramework.Image.Pixel
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
 
-            DrawToLineDrawingImage(SelectedArea, 1, new PixelData() { r = 255, g = 50, b = 150, a = 100});
+            Draw(SelectedArea);
         }
 
         public override void End()
         {
             //base.End();
-            //((CellSource)trgImage).Layers.Remove(SelectedArea);
+
+            EndDrawing(SelectedArea);
+            Fill(SelectedArea);
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         private double last_t = 0;
-        private void DrawToLineDrawingImage(IBImage trg, double r, PixelData color)
+        private void Draw(IBImage trg)
         {
-            double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
-            if (_x < 0 || _y < 0 || _x >= trg.imageData.actualSize.Width || _y >= trg.imageData.actualSize.Height) return;
+            if (trg == null) return;
 
-            double preX = histCoord[1].x - trg.Rect.OffsetX, preY = histCoord[1].y - trg.Rect.OffsetY, prePre = histPressure[1];
-            double dx = curCoord.x - histCoord[1].x, dy = curCoord.y - histCoord[1].y, dp = curPressure - prePre;
+            double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
+
+            double preX = histCoord[1].x - trg.Rect.OffsetX, preY = histCoord[1].y - trg.Rect.OffsetY;
+            double dx = curCoord.x - histCoord[1].x, dy = curCoord.y - histCoord[1].y;
             double length = Math.Sqrt(dx * dx + dy * dy);
             if (length > 200) return;
             double interval = 0.1 / length;
@@ -96,13 +88,14 @@ namespace IBFramework.Image.Pixel
                 double x = preX + dx * t;
                 double y = preY + dy * t;
 
-                double p = prePre + dp * t;
-                double _r = r;
-                if (p != 0.0) _r *= PenTouch(p);
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x >= trg.imageData.actualSize.Width) x = trg.imageData.actualSize.Width - 1;
+                if (y >= trg.imageData.actualSize.Height) y = trg.imageData.actualSize.Height - 1;
 
-                DrawCircle(trg, x, y, _r, color);
+                DrawCircle(trg, x, y, 0.5);
 
-                t += r * interval;
+                t += 0.5 * interval;
             }
 
             last_t = length * (t - 1.0);
@@ -111,14 +104,43 @@ namespace IBFramework.Image.Pixel
             EntryTexUpdate(trg.imageData);
         }
 
-        private double PenTouch(double inValue)
+        private void EndDrawing(IBImage trg)
         {
-            const double PI2 = Math.PI / 2.5;
+            double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
 
-            return 1.0 - Math.Sin((1 - inValue * inValue) * PI2);
+            double preX = start.x - trg.Rect.OffsetX, preY = start.y - trg.Rect.OffsetY;
+            double dx = curCoord.x - start.x, dy = curCoord.y - start.y;
+            double length = Math.Sqrt(dx * dx + dy * dy);
+            double interval = 0.1 / length;
+            double t = last_t / length;
+
+            while (t < 1.0)
+            {
+                double x = preX + dx * t;
+                double y = preY + dy * t;
+
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x >= trg.imageData.actualSize.Width) x = trg.imageData.actualSize.Width - 1;
+                if (y >= trg.imageData.actualSize.Height) y = trg.imageData.actualSize.Height - 1;
+
+                DrawCircle(trg, x, y, 0.5);
+
+                t += 0.5 * interval;
+            }
+
+            last_t = length * (t - 1.0);
+
+
+            EntryTexUpdate(trg.imageData);
         }
 
-        private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
+        private void Fill(IBImage trg)
+        {
+            
+        }
+
+        private void DrawCircle(IBImage trg, double x, double y, double r)
         {
             if (r < 0.001) return;
 
@@ -166,11 +188,10 @@ namespace IBFramework.Image.Pixel
 
                     if (c != 0)
                     {
-                        data[offset + xp] = color.b;
-                        data[offset + xp + 1] = color.g;
-                        data[offset + xp + 2] = color.r;
-
-                        int a = (color.a * c) >> 4;
+                        data[offset + xp + 0] = 255;
+                        data[offset + xp + 1] = 100;
+                        data[offset + xp + 2] = 0;
+                        int a = (255 * c) >> 4;
                         data[offset + xp + 3] = a > data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
                     }
 

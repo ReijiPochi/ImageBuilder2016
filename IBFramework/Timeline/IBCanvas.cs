@@ -257,7 +257,7 @@ namespace IBFramework.Timeline
         {
             preX = e.X;
             preY = e.Y;
-            if (Brush != null)
+            if (Brush != null && e.Button == System.Windows.Forms.MouseButtons.Left)
                 Brush.Set(this, ShowingElement, GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
         }
 

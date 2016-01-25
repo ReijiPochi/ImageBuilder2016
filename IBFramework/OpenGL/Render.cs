@@ -8,6 +8,7 @@ using IBFramework.Image;
 using IBFramework.Timeline.TimelineElements;
 using IBFramework.Project.IBProjectElements;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace IBFramework.OpenGL
@@ -18,37 +19,43 @@ namespace IBFramework.OpenGL
         {
             double zoom = zoomPerCent / 100.0;
 
+            double offsetX;
+            double offsetY;
+            double w, h;
+
+            if (i.LayerType != ImageTypes.SingleColor)
+            {
+                offsetX = (i.Rect.OffsetX + i.imageData.actualSize.OffsetX) * zoom;
+                offsetY = (i.Rect.OffsetY + (i.Rect.Height - i.imageData.actualSize.OffsetY - i.imageData.actualSize.Height)) * zoom;
+                w = i.imageData.actualSize.Width * zoom;
+                h = i.imageData.actualSize.Height * zoom;
+            }
+            else
+            {
+                offsetX = i.Rect.OffsetX * zoom;
+                offsetY = i.Rect.OffsetY * zoom;
+                w = i.Rect.Width * zoom;
+                h = i.Rect.Height * zoom;
+            }
+
+            double texMin = 0, texMax = 1.0;
+
+            if (i.LayerType == ImageTypes.SingleColor)
+            {
+                texMin = 0.5;
+                texMax = 0.5;
+            }
+
+            if (!i.IsNotSelectersLayer)
+            {
+                GL.BlendEquation(BlendEquationMode.FuncReverseSubtract);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            }
+
             IBFramework.OpenGL.Texture.BindTexture(i.imageData.textureNumber);
             {
                 GL.Begin(PrimitiveType.Quads);
                 {
-                    double offsetX;
-                    double offsetY;
-                    double w , h;
-
-                    if(i.LayerType != ImageTypes.SingleColor)
-                    {
-                        offsetX = (i.Rect.OffsetX + i.imageData.actualSize.OffsetX) * zoom;
-                        offsetY = (i.Rect.OffsetY +(i.Rect.Height- i.imageData.actualSize.OffsetY - i.imageData.actualSize.Height)) * zoom;
-                        w = i.imageData.actualSize.Width * zoom;
-                        h = i.imageData.actualSize.Height * zoom;
-                    }
-                    else
-                    {
-                        offsetX = i.Rect.OffsetX * zoom;
-                        offsetY = i.Rect.OffsetY * zoom;
-                        w = i.Rect.Width * zoom;
-                        h = i.Rect.Height * zoom;
-                    }
-
-                    double texMin = 0, texMax = 1.0;
-
-                    if (i.LayerType == ImageTypes.SingleColor)
-                    {
-                        texMin = 0.5;
-                        texMax = 0.5;
-                    }
-
                     GL.TexCoord2(texMax, texMin);
                     GL.Vertex3(offsetX + w, offsetY + h, layer);
                     GL.TexCoord2(texMin, texMin);
@@ -62,6 +69,12 @@ namespace IBFramework.OpenGL
                 layer += 0.01;
             }
             //IBFramework.OpenGL.Texture.BindTexture(0);
+
+            if (!i.IsNotSelectersLayer)
+            {
+                GL.BlendEquation(BlendEquationMode.FuncAdd);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            }
         }
 
         public static void RenderCellSource(CellSource c, double zoomPerCent, ref double layer)
