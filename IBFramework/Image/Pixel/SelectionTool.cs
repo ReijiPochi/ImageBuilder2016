@@ -17,7 +17,7 @@ namespace IBFramework.Image.Pixel
             return null;
         }
 
-        private PixcelImage SelectedArea = new PixcelImage(1920 + 300, 1080 + 300, -150, -150) { IsNotSelectersLayer = false };
+        private PixcelImage SelectedArea;
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
@@ -29,12 +29,22 @@ namespace IBFramework.Image.Pixel
 
             if (trgImage as CellSource == null || trgLayer == null) return;
 
-            SelectedArea.Rect.Width = trgLayer.imageData.actualSize.Width;
-            SelectedArea.Rect.Height = trgLayer.imageData.actualSize.Height;
-            SelectedArea.Rect.OffsetX = trgLayer.Rect.OffsetX;
-            SelectedArea.Rect.OffsetY = trgLayer.Rect.OffsetY;
+            if (SelectedArea != null)
+                ((CellSource)trgImage).Layers.Remove(SelectedArea);
 
-            ((CellSource)trgImage).Layers.Remove(SelectedArea);
+            SelectedArea = new PixcelImage(
+                (int)trgLayer.imageData.actualSize.Width,
+                (int)trgLayer.imageData.actualSize.Height,
+                (int)trgLayer.Rect.OffsetX,
+                (int)trgLayer.Rect.OffsetY);
+            SelectedArea.IsNotSelectersLayer = false;
+
+            //SelectedArea.Rect.Width = trgLayer.imageData.actualSize.Width;
+            //SelectedArea.Rect.Height = trgLayer.imageData.actualSize.Height;
+            //SelectedArea.Rect.OffsetX = trgLayer.Rect.OffsetX;
+            //SelectedArea.Rect.OffsetY = trgLayer.Rect.OffsetY;
+
+
             ((CellSource)trgImage).Layers.Insert(0, SelectedArea);
             SelectedArea.imageData.SetDrawingMode();
         }
@@ -46,7 +56,7 @@ namespace IBFramework.Image.Pixel
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
 
-            DrawToLineDrawingImage(SelectedArea, Size, new PixelData() { r = 255, g = 50, b = 150, a = 100});
+            DrawToLineDrawingImage(SelectedArea, 1, new PixelData() { r = 255, g = 50, b = 150, a = 100});
         }
 
         public override void End()
