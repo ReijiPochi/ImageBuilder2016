@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Controls;
 using IBFramework.Project;
 using IBFramework.Timeline;
 using IBFramework.Project.IBProjectElements;
+using IBFramework.OpenGL;
 
 namespace IBFramework.Image.Pixel
 {
@@ -19,6 +20,7 @@ namespace IBFramework.Image.Pixel
 
         private PixcelImage SelectedArea;
         private IBCoord start = new IBCoord();
+        public bool IsSelecting { get; private set; }
 
         public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
@@ -27,14 +29,31 @@ namespace IBFramework.Image.Pixel
             ActiveBrush = this;
 
             actionSummary = "Selection Tool / " + trg.Name;
-
-            if (trgImage as CellSource == null || trgLayer == null) return;
+            Render.OverrayColor[0] = 0;
+            Render.OverrayColor[1] = 0;
+            Render.OverrayColor[2] = 0;
 
             if (SelectedArea != null)
             {
-                ((CellSource)trgImage).Layers.Remove(SelectedArea);
-                SelectedArea.imageData.data = null;
+                if (IsSelecting)
+                {
+                    IsSelecting = false;
+                    SelectersLayerMode = false;
+                    EntryTexUpdate(SelectedArea.imageData);
+                }
+
+                for (int a = ((CellSource)trgImage).Layers.Count - 1; a >= 0; a--)
+                {
+                    IBImage i = ((CellSource)trgImage).Layers[a];
+                    if (!i.IsNotSelectersLayer)
+                    {
+                        ((CellSource)trgImage).Layers.Remove(i);
+                        i.imageData.data = null;
+                    }
+                }
             }
+
+            if (trgImage as CellSource == null || trgLayer == null) return;
 
             SelectedArea = new PixcelImage(
                 (int)trgLayer.imageData.actualSize.Width,
@@ -54,6 +73,9 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord);
 
+            IsSelecting = true;
+            SelectersLayerMode = true;
+
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
 
@@ -64,8 +86,14 @@ namespace IBFramework.Image.Pixel
         {
             //base.End();
 
-            EndDrawing(SelectedArea);
-            Fill(SelectedArea);
+            if (IsSelecting)
+            {
+                EndDrawing(SelectedArea);
+                Thread fill = new Thread(new ThreadStart(Fill), 500000000);
+                fill.Start();
+                fill.Join();
+                Reverse();
+            }
         }
 
 
@@ -93,7 +121,7 @@ namespace IBFramework.Image.Pixel
                 if (x >= trg.imageData.actualSize.Width) x = trg.imageData.actualSize.Width - 1;
                 if (y >= trg.imageData.actualSize.Height) y = trg.imageData.actualSize.Height - 1;
 
-                DrawCircle(trg, x, y, 0.5);
+                DrawPoint(trg, x, y);
 
                 t += 0.5 * interval;
             }
@@ -124,9 +152,9 @@ namespace IBFramework.Image.Pixel
                 if (x >= trg.imageData.actualSize.Width) x = trg.imageData.actualSize.Width - 1;
                 if (y >= trg.imageData.actualSize.Height) y = trg.imageData.actualSize.Height - 1;
 
-                DrawCircle(trg, x, y, 0.5);
+                DrawPoint(trg, x, y);
 
-                t += 0.5 * interval;
+                t += interval;
             }
 
             last_t = length * (t - 1.0);
@@ -135,69 +163,105 @@ namespace IBFramework.Image.Pixel
             EntryTexUpdate(trg.imageData);
         }
 
-        private void Fill(IBImage trg)
+        private void Fill()
         {
-            
+            stride = (drawAreaXE - drawAreaXS) * 4;
+            height = drawAreaYE - drawAreaYS;
+            width = drawAreaXE - drawAreaXS;
+
+            SelectedArea.imageData.drawingAreaSize.OffsetX = drawAreaXS;
+            SelectedArea.imageData.drawingAreaSize.OffsetY = drawAreaYS;
+            SelectedArea.imageData.drawingAreaSize.Width = width;
+            SelectedArea.imageData.drawingAreaSize.Height = height;
+
+            _fill(- 1, - 1);
         }
 
-        private void DrawCircle(IBImage trg, double x, double y, double r)
-        {
-            if (r < 0.001) return;
+        private int stride, height, width;
 
+        private void _fill(int x, int y)
+        {
+            int index = (drawAreaYS + y) * (int)SelectedArea.imageData.actualSize.Width * 4 + (drawAreaXS + x) * 4;
+            int stride = (int)SelectedArea.imageData.actualSize.Width;
+            int length = SelectedArea.imageData.data.Length;
+
+            if (index >= 0 && index < length)
+            {
+                SelectedArea.imageData.data[index] = 255;
+                SelectedArea.imageData.data[index + 3] = 255;
+            }
+
+            if (x >= -1 && y >= 0 && x <= width && y <= height)
+            {
+                int i = ((drawAreaYS + y - 1) * stride + (drawAreaXS + x)) * 4;
+                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x, y - 1);
+            }
+            if (x >= 0 && y >= -1 && x <= width && y <= height)
+            {
+                int i = ((drawAreaYS + y) * stride + (drawAreaXS + x - 1)) * 4;
+                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x - 1, y);
+            }
+            if (x >= -1 && y >= -1 && x <= width && y <= height - 1)
+            {
+                int i = ((drawAreaYS + y + 1) * stride + (drawAreaXS + x)) * 4;
+                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x, y + 1);
+            }
+            if (x >= -1 && y >= -1 && x <= width - 1 && y <= height)
+            {
+                int i = ((drawAreaYS + y) * stride + (drawAreaXS + x + 1)) * 4;
+                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x + 1, y);
+            }
+        }
+
+        private void Reverse()
+        {
+            stride = (drawAreaXE - drawAreaXS) * 4;
+            int height = drawAreaYE - drawAreaYS;
+            int width = drawAreaXE - drawAreaXS;
+
+            int layerStride = (int)SelectedArea.imageData.actualSize.Width * 4;
+            int _offsetx = drawAreaXS * 4;
+
+            for (int y = drawAreaYS - 1; y <= drawAreaYE; y++)
+            {
+                int offset = y * layerStride;
+                for (int x = drawAreaXS - 1; x <= drawAreaXE; x++)
+                {
+                    int index = offset + x * 4;
+                    if (index < 0 || index >= SelectedArea.imageData.data.Length) break;
+
+                    if (SelectedArea.imageData.data[index] == 255)
+                    {
+                        SelectedArea.imageData.data[index] = 0;
+                        SelectedArea.imageData.data[index + 1] = 0;
+                        SelectedArea.imageData.data[index + 2] = 0;
+                        SelectedArea.imageData.data[index + 3] = 0;
+                    }
+                    else
+                    {
+                        SelectedArea.imageData.data[index] = 0;
+                        SelectedArea.imageData.data[index + 1] = 0;
+                        SelectedArea.imageData.data[index + 2] = 0;
+                        SelectedArea.imageData.data[index + 3] = 255;
+                    }
+                }
+            }
+        }
+
+        private void DrawPoint(IBImage trg, double x, double y)
+        {
             int imageW = (int)trg.imageData.actualSize.Width;
             int imageH = (int)trg.imageData.actualSize.Height;
             byte[] data = trg.imageData.data;
             int stride = imageW * 4;
 
-            int xs = (int)Math.Floor(x - r);
-            int xe = (int)Math.Floor(x + r);
-            int ys = (int)Math.Floor(y - r);
-            int ye = (int)Math.Floor(y + r);
+            RecordDrawArea((int)x, (int)y, (int)x, (int)y);
 
-            if (xs < 0) xs = 0;
-            if (ys < 0) ys = 0;
-            if (xe >= imageW) xe = imageW - 1;
-            if (ye >= imageH) ye = imageH - 1;
+            int offset = (int)y * stride;
+            int xp = (int)x * 4;
 
-            RecordDrawArea(xs, ys, xe, ye);
-
-            double r2 = r * r;
-            double sample = 4.0;
-
-            for (int yi = ys; yi <= ye; yi++)
-            {
-                int offset = yi * stride;
-                int xp = xs * 4;
-
-                for (int xi = xs; xi <= xe; xi++)
-                {
-                    int c = 0;
-
-                    for (int _yi = 0; _yi < sample; _yi++)
-                    {
-                        double yy = yi - y + _yi / sample;
-
-                        for (int _xi = 0; _xi < sample; _xi++)
-                        {
-                            double xx = xi - x + _xi / sample;
-
-                            if (xx * xx + yy * yy < r2)
-                                c++;
-                        }
-                    }
-
-                    if (c != 0)
-                    {
-                        data[offset + xp + 0] = 255;
-                        data[offset + xp + 1] = 100;
-                        data[offset + xp + 2] = 0;
-                        int a = (255 * c) >> 4;
-                        data[offset + xp + 3] = a > data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
-                    }
-
-                    xp += 4;
-                }
-            }
+            data[offset + xp + 2] = 255;
+            data[offset + xp + 3] = 255;
         }
     }
 }

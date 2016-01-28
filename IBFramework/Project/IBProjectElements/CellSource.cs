@@ -61,7 +61,7 @@ namespace IBFramework.Project.IBProjectElements
         {
             foreach(IBImage l in Layers)
             {
-                if (l.LayerType != ImageTypes.SingleColor)
+                if (l.LayerType != ImageTypes.SingleColor && l.IsNotSelectersLayer)
                     l.imageData.SetDrawingMode();
             }
         }
@@ -70,7 +70,7 @@ namespace IBFramework.Project.IBProjectElements
         {
             foreach (IBImage l in Layers)
             {
-                if (l.LayerType != ImageTypes.SingleColor)
+                if (l.LayerType != ImageTypes.SingleColor && l.IsNotSelectersLayer)
                     l.imageData.EndDrawingMode();
             }
         }

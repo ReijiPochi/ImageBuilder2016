@@ -15,6 +15,8 @@ namespace IBFramework.OpenGL
 {
     public class Render
     {
+        public static float[] OverrayColor { get; set; } = new float[] { 0.0f, 0.0f, 0.0f, 0.5f };
+
         public static void DrawOneImage(IBImage i, double zoomPerCent, ref double layer)
         {
             double zoom = zoomPerCent / 100.0;
@@ -48,8 +50,18 @@ namespace IBFramework.OpenGL
 
             if (!i.IsNotSelectersLayer)
             {
-                GL.BlendEquation(BlendEquationMode.FuncReverseSubtract);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, OverrayColor);
+
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Replace);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Source0Rgb, (int)TextureEnvModeSource.Constant);
+
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineAlpha, (int)TextureEnvModeCombine.Modulate);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src0Alpha, (int)TextureEnvModeSource.Constant);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src1Alpha, (int)TextureEnvModeSource.Texture);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand1Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
             }
 
             IBFramework.OpenGL.Texture.BindTexture(i.imageData.textureNumber);
@@ -72,8 +84,7 @@ namespace IBFramework.OpenGL
 
             if (!i.IsNotSelectersLayer)
             {
-                GL.BlendEquation(BlendEquationMode.FuncAdd);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
             }
         }
 

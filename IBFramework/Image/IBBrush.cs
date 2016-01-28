@@ -11,6 +11,7 @@ using IBFramework.Timeline;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.RedoUndo;
+using IBFramework.OpenGL;
 using Wintab;
 
 namespace IBFramework.Image
@@ -58,6 +59,11 @@ namespace IBFramework.Image
         private static BGRA32FormattedImage waitingImage;
         private static IBCanvas currentCanvas;
 
+        public static bool SelectersLayerMode { get; protected set; }
+        private static PixelData color1 = new PixelData() { r = 255, g = 20, b = 200};
+        private static PixelData color2 = new PixelData() { r = 100, g = 210, b = 255};
+
+
         public abstract Control GetBP();
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -82,7 +88,8 @@ namespace IBFramework.Image
         }
 
 
-
+        private static bool colorState = false;
+        private static double colorBalance = 0.0;
         private static void Clock_Tick(object sender, EventArgs e)
         {
             if (drawing && penUp)
@@ -101,6 +108,28 @@ namespace IBFramework.Image
                 count++;
             }
 
+            if (!drawing && SelectersLayerMode)
+            {
+                if(colorState)
+                {
+                    colorBalance += 0.02;
+                    if (colorBalance >= 1.0) colorState = false;
+                }
+                else
+                {
+                    colorBalance -= 0.02;
+                    if (colorBalance <= 0.0) colorState = true;
+                }
+
+                Render.OverrayColor[0] = (float)(color1.r * colorBalance + color2.r * (1.0 - colorBalance)) / 255.0f;
+                Render.OverrayColor[1] = (float)(color1.g * colorBalance + color2.g * (1.0 - colorBalance)) / 255.0f;
+                Render.OverrayColor[2] = (float)(color1.b * colorBalance + color2.b * (1.0 - colorBalance)) / 255.0f;
+                Render.OverrayColor[3] = 0.6f;
+
+                if (currentCanvas != null)
+                    currentCanvas.glControl.Refresh();
+            }
+
             if (waitingImage != null)
             {
                 waitingImage.TextureUpdate();
@@ -116,7 +145,7 @@ namespace IBFramework.Image
             currentCanvas = canvas;
             trgImage = trg;
             trgLayer = GetSelectedLayer();
-            if (trgLayer == null || !trgLayer.imageData.CanDraw) return;
+            if (trgImage == null || trgLayer == null || !trgLayer.imageData.CanDraw) return;
 
             if (!drawing)
             {
