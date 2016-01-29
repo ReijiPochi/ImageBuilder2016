@@ -20,13 +20,15 @@ namespace IBFramework.Image.Pixel
             return null;
         }
 
-        public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public override bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
-            base.Set(canvas, trg, coord);
+            if (!base.Set(canvas, trg, coord)) return false;
 
             ActiveBrush = this;
 
             actionSummary = "Eraser Tool / " + trg.Name;
+
+            return true;
         }
 
         public override void Draw(IBCoord coord)

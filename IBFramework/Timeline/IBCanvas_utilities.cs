@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,12 +15,16 @@ namespace IBFramework.Timeline
 {
     public partial class IBCanvas
     {
-        public static IBCoord GetImageCoord(IBCanvas source, Point mousePos, double zoom)
+        public static IBCoord GetImageCoord(IBCanvas source, System.Windows.Point mousePos, double zoom)
         {
             if (source.TargetLayer == null) return new IBCoord();
-            
-            double resultX = (source.camX - (source.glControl.Width / 2 - mousePos.X)) / zoom;
-            double resultY = (source.TargetLayer.imageData.actualSize.Height * zoom - source.camY - (source.glControl.Height / 2 - mousePos.Y)) / zoom;
+
+            PresentationSource s = PresentationSource.FromVisual(source);
+            double dpiX = s.CompositionTarget.TransformToDevice.M11;
+            double dpiY = s.CompositionTarget.TransformToDevice.M22;
+
+            double resultX = (source.camX - (source.glControl.Width / 2 - mousePos.X * dpiX)) / zoom;
+            double resultY = (source.TargetLayer.imageData.actualSize.Height * zoom - source.camY - (source.glControl.Height / 2 - mousePos.Y * dpiY)) / zoom;
 
             resultY += source.TargetLayer.Rect.OffsetY * 2.0;
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -17,6 +18,7 @@ using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Forms.Integration;
+using System.Windows.Threading;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -54,12 +56,8 @@ namespace IBFramework.Timeline
                 glControl.Load += GlControl_Load;
                 glControl.SizeChanged += GlControl_SizeChanged;
                 glControl.Paint += GlControl_Paint;
-                glControl.MouseEnter += GlControl_MouseEnter;
-                glControl.MouseDown += GlControl_MouseDown;
-                glControl.MouseMove += GlControl_MouseMove;
                 glControl.MouseWheel += GlControl_MouseWheel;
                 glControl.LostFocus += GlControl_LostFocus;
-                glControl.MouseLeave += GlControl_MouseLeave;
                 glControl.MouseUp += GlControl_MouseUp;
                 Application.Current.Exit += Current_Exit;
 
@@ -86,7 +84,9 @@ namespace IBFramework.Timeline
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            
+
+            SetOwner();
+
             glControlHost = GetTemplateChild("GLControlHost") as WindowsFormsHost;
             glControlHost.SizeChanged += GlControlHost_SizeChanged;
             glControlHost.Child = glControl;
@@ -96,12 +96,33 @@ namespace IBFramework.Timeline
             Tabs.SelectionChanged += Tabs_SelectionChanged;
             Tabs.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***" });
 
+            Overlay = new Window() { WindowStyle = WindowStyle.None, AllowsTransparency = true, Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)) };
+            InkCanvas canvas = new InkCanvas();
+            canvas.Background = new SolidColorBrush(Color.FromArgb(1, 127, 127, 127));
+            canvas.EditingMode = InkCanvasEditingMode.None;
+            Overlay.Content = canvas;
+
+            Overlay.Activated += Overlay_Activated;
+            canvas.PreviewMouseDown += Overlay_MouseDown;
+            canvas.MouseWheel += Overlay_MouseWheel;
+            canvas.PreviewStylusDown += Canvas_PreviewStylusDown;
+            canvas.PreviewStylusMove += Overlay_StylusMove;
+            canvas.PreviewMouseMove += Overlay_MouseMove;
+            canvas.PreviewMouseUp += Overlay_MouseUp;
+            canvas.StylusUp += Canvas_StylusUp;
+            canvas.StylusOutOfRange += Overlay_StylusOutOfRange;
+            canvas.StylusLeave += Canvas_StylusLeave;
+
+            Overlay.Show();
+
             OpenedElements.CollectionChanged += OpenedElements_CollectionChanged;
 
             glControl.Refresh();
         }
 
+        private Window owner;
         private WindowsFormsHost glControlHost;
+        private Window Overlay;
         internal GLControl glControl;
         private bool IsCurrentGLControl = false;
         private IBTabControl Tabs;
@@ -112,6 +133,7 @@ namespace IBFramework.Timeline
         private int offsetX = 0, offsetY = 0;
         internal int camX = 0, camY = 0;
 
+        public double StylusPressure { get; private set; }
 
         [Description("開かれているエレメント"), Category("IBFramework")]
         public ObservableCollection<IBProjectElement> OpenedElements
@@ -241,25 +263,221 @@ namespace IBFramework.Timeline
         private void GlControlHost_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             glControlHost.Child.Refresh();
+
+            if (owner != Window.GetWindow(this)) SetOwner();
+            SetOverlay();
         }
 
-        private void GlControl_MouseEnter(object sender, EventArgs e)
+        #region Owner WIndow
+        private void SetOwner()
         {
-            //glControl.Focus();
+            if (owner != null)
+            {
+                owner.LocationChanged -= Owner_LocationChanged;
+                owner.Activated -= Owner_Activated;
+                owner.Deactivated -= Owner_Deactivated;
+            }
+
+            owner = Window.GetWindow(this);
+            owner.LocationChanged += Owner_LocationChanged;
+            owner.Activated += Owner_Activated;
+            owner.Deactivated += Owner_Deactivated;
+            owner.Closing += Owner_Closing;
         }
 
-        private void GlControl_MouseLeave(object sender, EventArgs e)
+        private void Owner_LocationChanged(object sender, EventArgs e)
         {
-            //this.Focus();
+            SetOverlay();
         }
 
-        private void GlControl_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Owner_Activated(object sender, EventArgs e)
         {
-            preX = e.X;
-            preY = e.Y;
-            if (Brush != null && e.Button == System.Windows.Forms.MouseButtons.Left)
-                Brush.Set(this, ShowingElement, GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
+            Overlay.Topmost = true;
         }
+
+        private void Owner_Deactivated(object sender, EventArgs e)
+        {
+            Overlay.Topmost = false;
+        }
+
+        private void Owner_Closing(object sender, CancelEventArgs e)
+        {
+            Overlay.Close();
+        }
+        #endregion
+
+        #region Overlay Window
+        private void SetOverlay()
+        {
+            PresentationSource source = PresentationSource.FromVisual(owner);
+            double dpiX = source.CompositionTarget.TransformToDevice.M11;
+            double dpiY = source.CompositionTarget.TransformToDevice.M22;
+
+            Point location = glControlHost.PointToScreen(new Point(0.0, 0.0));
+            Overlay.Left = location.X / dpiX;
+            Overlay.Top = location.Y / dpiY;
+
+            Overlay.Width = glControlHost.ActualWidth;
+            Overlay.Height = glControlHost.ActualHeight;
+        }
+
+        private void Overlay_Activated(object sender, EventArgs e)
+        {
+            //owner.Activate();
+        }
+
+        private void Overlay_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (WintabUtility.PenUsing) return;
+
+            if (e.Delta > 0)
+            {
+                if (zoomListIndex + 1 < zoomList.Length)
+                    zoomListIndex++;
+            }
+            else
+            {
+                if (zoomListIndex > 1)
+                    zoomListIndex--;
+            }
+
+            ZoomPerCent = zoomList[zoomListIndex];
+            SetCam();
+            glControl.Refresh();
+        }
+
+        private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            preX = (int)e.GetPosition(null).X;
+            preY = (int)e.GetPosition(null).Y;
+            if (Brush != null && e.LeftButton == MouseButtonState.Pressed)
+                Brush.Set(this, ShowingElement, GetImageCoord(this, e.GetPosition(null), ZoomPerCent / 100.0));
+
+            e.Handled = true;
+        }
+
+        private void Canvas_PreviewStylusDown(object sender, StylusDownEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (Brush != null)
+                Brush.EndRequest();
+
+            e.Handled = true;
+        }
+
+        private void Canvas_StylusUp(object sender, StylusEventArgs e)
+        {
+            if (Brush != null)
+                Brush.EndRequest();
+        }
+
+        private bool StylusActive = false;
+
+        private void Overlay_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (StylusActive) return;
+
+            Point pos = e.GetPosition(glControlHost);
+
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                offsetX -= (int)pos.X - preX;
+                offsetY += (int)pos.Y - preY;
+                SetCam();
+                glControl.Refresh();
+
+                preX = (int)pos.X;
+                preY = (int)pos.Y;
+            }
+            else if (WintabUtility.PenButtonPressed)
+            {
+                if (!PenDraging)
+                {
+                    preX = (int)pos.X;
+                    preY = (int)pos.Y;
+                    PenDraging = true;
+                }
+                offsetX -= ((int)pos.X - preX) * 2;
+                offsetY += ((int)pos.Y - preY) * 2;
+                SetCam();
+                glControl.Refresh();
+
+                preX = (int)pos.X;
+                preY = (int)pos.Y;
+            }
+            else if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (Brush == null || ShowingElement == null) return;
+
+                Brush.Draw(GetImageCoord(this, e.GetPosition(null), ZoomPerCent / 100.0));
+            }
+            else
+            {
+                PenDraging = false;
+            }
+
+            e.Handled = true;
+        }
+
+        private void Overlay_StylusMove(object sender, StylusEventArgs e)
+        {
+            StylusActive = true;
+
+            Point pos = e.GetPosition(glControlHost);
+            StylusPressure = e.GetStylusPoints(null)[0].PressureFactor;
+
+            if (WintabUtility.PenButtonPressed)
+            {
+                if (!PenDraging)
+                {
+                    preX = (int)pos.X;
+                    preY = (int)pos.Y;
+                    PenDraging = true;
+                }
+                offsetX -= ((int)pos.X - preX) * 2;
+                offsetY += ((int)pos.Y - preY) * 2;
+                SetCam();
+                glControl.Refresh();
+
+                preX = (int)pos.X;
+                preY = (int)pos.Y;
+            }
+            else if (!e.InAir)
+            {
+                if (Brush == null || ShowingElement == null) return;
+
+                Brush.Draw(GetImageCoord(this, e.GetPosition(null), ZoomPerCent / 100.0));
+            }
+            else
+            {
+                PenDraging = false;
+            }
+
+            e.Handled = true;
+        }
+
+        private void Overlay_StylusOutOfRange(object sender, StylusEventArgs e)
+        {
+            StylusPressure = 0;
+            StylusActive = false;
+
+            if (Brush != null)
+                Brush.EndRequest();
+        }
+
+        private void Canvas_StylusLeave(object sender, StylusEventArgs e)
+        {
+            StylusPressure = 0;
+            StylusActive = false;
+
+            if (Brush != null)
+                Brush.EndRequest();
+        }
+        #endregion
 
         private void GlControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -279,46 +497,6 @@ namespace IBFramework.Timeline
             ZoomPerCent = zoomList[zoomListIndex];
             SetCam();
             glControl.Refresh();
-        }
-
-        private void GlControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-            {
-                offsetX -= e.X - preX;
-                offsetY += e.Y - preY;
-                SetCam();
-                glControl.Refresh();
-
-                preX = e.X;
-                preY = e.Y;
-            }
-            else if (WintabUtility.PenButtonPressed)
-            {
-                if (!PenDraging)
-                {
-                    preX = e.X;
-                    preY = e.Y;
-                    PenDraging = true;
-                }
-                offsetX -= (e.X - preX) * 2;
-                offsetY += (e.Y - preY) * 2;
-                SetCam();
-                glControl.Refresh();
-
-                preX = e.X;
-                preY = e.Y;
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                if (Brush == null || ShowingElement == null) return;
-
-                Brush.Draw(GetImageCoord(this, e.Location, ZoomPerCent / 100.0));
-            }
-            else
-            {
-                PenDraging = false;
-            }
         }
 
         private void GlControl_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -416,7 +594,7 @@ namespace IBFramework.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Tabs_ItemsChanged(object sender, ItemsChangedEventArgs e)
+        private void Tabs_ItemsChanged(object sender, IBGUI.ItemsChangedEventArgs e)
         {
             if (Tabs_ItemsChanged_LOCK) return;
 

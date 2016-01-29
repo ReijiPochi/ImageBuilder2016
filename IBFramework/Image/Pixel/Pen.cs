@@ -19,20 +19,22 @@ namespace IBFramework.Image.Pixel
             return new PenBP() { DataContext = this };
         }
 
-        public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public override bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
-            base.Set(canvas, trg, coord);
+            if (!base.Set(canvas, trg, coord)) return false;
 
             ActiveBrush = this;
 
             actionSummary = "Pen Tool / " + trg.Name;
+
+            return true;
         }
 
         public override void Draw(IBCoord coord)
         {
             base.Draw(coord);
 
-            double dist = IBCoord.GetDistance(histCoord[0], coord);
+            double dist = IBCoord.GetDistance(histCoord[1], curCoord);
             if (dist < 0.1) return;
 
             if (trgLayer == null) return;

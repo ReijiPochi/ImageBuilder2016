@@ -21,31 +21,38 @@ namespace Wintab
             if (WintabManager.IsWintabAvailable() == false || Application.Current.MainWindow == null)
                 return;
 
-            WintabLogContext context = WintabManager.GetDefaultSystemContext(ECTXOptionValues.CXO_SYSTEM);
-            context.lcName = "Wintab sample";
-
-            // ウインドウハンドルの取得
-            WindowInteropHelper helper = new WindowInteropHelper(Application.Current.MainWindow);
-            IntPtr hWnd = helper.Handle;
-
-            // Wintabハンドル
-            IntPtr m_hCtx = IntPtr.Zero;
-
-            // タブレットの受信開始
-            m_hCtx = WintabManager.Open(hWnd, context);
-            if (m_hCtx != IntPtr.Zero)
+            try
             {
-                // ウインドウプロシージャをフックする
-                HwndSource source = HwndSource.FromHwnd(helper.Handle);
-                source.AddHook(new HwndSourceHook(WndProc));
+                WintabLogContext context = WintabManager.GetDefaultSystemContext(ECTXOptionValues.CXO_SYSTEM);
+                context.lcName = "Wintab sample";
+
+                // ウインドウハンドルの取得
+                WindowInteropHelper helper = new WindowInteropHelper(Application.Current.MainWindow);
+                IntPtr hWnd = helper.Handle;
+
+                // Wintabハンドル
+                IntPtr m_hCtx = IntPtr.Zero;
+
+                // タブレットの受信開始
+                m_hCtx = WintabManager.Open(hWnd, context);
+                if (m_hCtx != IntPtr.Zero)
+                {
+                    // ウインドウプロシージャをフックする
+                    HwndSource source = HwndSource.FromHwnd(helper.Handle);
+                    source.AddHook(new HwndSourceHook(WndProc));
+                }
+
+                maxPressure = WintabManager.GetDeviceNPressure().axMax;
+                maxZ = WintabManager.GetTabletAxis(EAxisDimension.AXIS_Z).axMax;
+                Enable = WintabManager.IsWintabAvailable();
+
+                watchDogTimer.Tick += WatchDogTimer_Tick;
+                watchDogTimer.Start();
             }
+            catch(Exception ex)
+            {
 
-            maxPressure = WintabManager.GetDeviceNPressure().axMax;
-            maxZ = WintabManager.GetTabletAxis(EAxisDimension.AXIS_Z).axMax;
-            Enable = WintabManager.IsWintabAvailable();
-
-            watchDogTimer.Tick += WatchDogTimer_Tick;
-            watchDogTimer.Start();
+            }
         }
 
         private static void WatchDogTimer_Tick(object sender, EventArgs e)
@@ -119,7 +126,7 @@ namespace Wintab
         {
             get
             {
-                if (!Enable) return 0;
+                if (!Enable || maxPressure <= 0) return 0;
 
                 return packet.pkNormalPressure.pkAbsolutePressure / maxPressure;
             }

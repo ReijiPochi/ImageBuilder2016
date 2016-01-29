@@ -118,8 +118,11 @@ namespace IBGUI
                 owner.Width = ownerPreWidth;
                 owner.BorderThickness = new Thickness(1);
                 Point p = PointToScreen(e.GetPosition(this));
-                owner.Left = p.X - ownerPreWidth / 2;
-                owner.Top = p.Y - 15;
+                PresentationSource source = PresentationSource.FromVisual(owner);
+                double dpiX = source.CompositionTarget.TransformToDevice.M11;
+                double dpiY = source.CompositionTarget.TransformToDevice.M22;
+                owner.Left = (p.X - ownerPreWidth / 2) / dpiX;
+                owner.Top = (p.Y - 15) / dpiY;
                 owner.DragMove();
             }
 

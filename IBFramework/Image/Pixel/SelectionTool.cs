@@ -22,9 +22,9 @@ namespace IBFramework.Image.Pixel
         private IBCoord start = new IBCoord();
         public bool IsSelecting { get; private set; }
 
-        public override void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public override bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
-            base.Set(canvas, trg, coord);
+            if (!base.Set(canvas, trg, coord)) return false;
 
             ActiveBrush = this;
 
@@ -53,7 +53,7 @@ namespace IBFramework.Image.Pixel
                 }
             }
 
-            if (trgImage as CellSource == null || trgLayer == null) return;
+            if (trgImage as CellSource == null || trgLayer == null) return false;
 
             SelectedArea = new PixcelImage(
                 (int)trgLayer.imageData.actualSize.Width,
@@ -67,6 +67,8 @@ namespace IBFramework.Image.Pixel
 
             start.x = histCoord[0].x;
             start.y = histCoord[0].y;
+
+            return true;
         }
 
         public override void Draw(IBCoord coord)

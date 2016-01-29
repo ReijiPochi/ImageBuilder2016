@@ -13,7 +13,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         
-                        <Border BorderThickness="0,2,0,0" BorderBrush="{DynamicResource IBSelectedBrush}" Margin="-1,-1,-1,0" VerticalAlignment="Top" Background="{TemplateBinding Background}">
+                        <Border x:Name="Header" BorderThickness="0,2,0,0" BorderBrush="{DynamicResource IBSelectedBrush}" Margin="-1,-1,-1,0" VerticalAlignment="Top" Background="{TemplateBinding Background}">
                             <ibgui:IBTabControl x:Name="Tabs" BorderThickness="0" Margin="0" AllowDrop="False">
                             </ibgui:IBTabControl>
                         </Border>

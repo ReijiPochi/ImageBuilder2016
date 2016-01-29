@@ -87,6 +87,19 @@ namespace IBFramework.Image
             }
         }
 
+        private bool _AllowCorrection = true;
+        public bool AllowCorrection
+        {
+            get
+            { return _AllowCorrection; }
+            set
+            {
+                if (_AllowCorrection == value)
+                    return;
+                _AllowCorrection = value;
+                RaisePropertyChanged("AllowCorrection");
+            }
+        }
 
         private static bool colorState = false;
         private static double colorBalance = 0.0;
@@ -140,12 +153,12 @@ namespace IBFramework.Image
             }
         }
 
-        public virtual void Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public virtual bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
         {
             currentCanvas = canvas;
             trgImage = trg;
             trgLayer = GetSelectedLayer();
-            if (trgImage == null || trgLayer == null || !trgLayer.imageData.CanDraw) return;
+            if (trgImage == null || trgLayer == null || !trgLayer.imageData.CanDraw) return false;
 
             if (!drawing)
             {
@@ -159,7 +172,8 @@ namespace IBFramework.Image
 
             for (int i = 0; i < histPressure.Length; i++)
             {
-                histPressure[i] = WintabUtility.Pressure;
+                histPressure[i] = currentCanvas.StylusPressure;
+                if(WintabUtility.Pressure!=0) histPressure[i] = WintabUtility.Pressure;
             }
 
             foreach(IBCoord c in histCoord)
@@ -167,6 +181,8 @@ namespace IBFramework.Image
                 c.x = coord.x;
                 c.y = coord.y;
             }
+
+            return true;
         }
 
         public virtual void Draw(IBCoord coord)
@@ -177,14 +193,22 @@ namespace IBFramework.Image
 
             double x = coord.x, y = coord.y;
 
-            for(int i = 0; i < 2; i++)
+            if (AllowCorrection)
             {
-                x += histCoord[i].x * (0.75 - i * 0.5);
-                y += histCoord[i].y * (0.75 - i * 0.5);
-            }
+                for (int i = 0; i < 2; i++)
+                {
+                    x += histCoord[i].x * (0.75 - i * 0.5);
+                    y += histCoord[i].y * (0.75 - i * 0.5);
+                }
 
-            curCoord.x = x / 2.0;
-            curCoord.y = y / 2.0;
+                curCoord.x = x / 2.0;
+                curCoord.y = y / 2.0;
+            }
+            else
+            {
+                curCoord.x = x;
+                curCoord.y = y;
+            }
 
             for (int i = histCoord.Length - 1; i > 0; i--)
             {
@@ -199,7 +223,8 @@ namespace IBFramework.Image
 
             histCoord[0].x = curCoord.x;
             histCoord[0].y = curCoord.y;
-            histPressure[0] = WintabUtility.Pressure;
+            histPressure[0] = currentCanvas.StylusPressure;
+            if (WintabUtility.Pressure != 0) histPressure[0] = WintabUtility.Pressure;
             curPressure = histPressure[0];
         }
 

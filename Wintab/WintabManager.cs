@@ -93,12 +93,8 @@ namespace Wintab
                     (uint)EWTIDevicesIndex.DVC_NPRESSURE,
                     pAxis);
 
-                if (sz == 0)
-                {
-                    throw new Exception("GetDeviceName : Pressure is empty");
-                }
-
-                axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz);
+                if (sz != 0)
+                    axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz);
             }
             catch (Exception ex)
             {
@@ -130,12 +126,8 @@ namespace Wintab
                     (uint)EWTIDevicesIndex.DVC_ORIENTATION,
                     pAxis);
 
-                if (sz == 0)
-                {
-                    throw new Exception("GetDeviceName : Orientation is empty");
-                }
-
-                axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz, 3);
+                if (sz != 0)
+                    axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz, 3);
             }
             catch (Exception ex)
             {
@@ -215,7 +207,9 @@ namespace Wintab
                     (uint)EWTICategoryIndex.WTI_DEVICES,
                     (uint)dimention,
                     pAxis);
-                axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz);
+
+                if (sz != 0)
+                    axis = WintabMemoryUtility.MarshalUnmanagedBuffer<WintabAxis>(pAxis, sz);
             }
             catch (Exception ex)
             {
