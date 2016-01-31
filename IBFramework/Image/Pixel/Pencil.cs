@@ -65,10 +65,18 @@ namespace IBFramework.Image.Pixel
                 double y = preY + dy * t;
 
                 double p = prePre + dp * t;
-                double _r = r;
-                if (p != 0.0) _r *= PenTouch(p);
 
-                DrawCircle(trg, x, y, _r, color);
+                if (p == 0)
+                {
+                    DrawCircle(trg, x, y, r, color);
+                }
+                else if (p > 0.2)
+                {
+                    double _r = r;
+                    if (p != 0.0) _r *= PenTouch(p);
+
+                    DrawCircle(trg, x, y, _r, color);
+                }
 
                 t += r * interval;
             }
@@ -83,7 +91,7 @@ namespace IBFramework.Image.Pixel
         {
             const double PI2 = Math.PI / 2.5;
 
-            return (1.0 - Math.Sin((1 - inValue * inValue) * PI2)) * 0.5 + 0.5;
+            return (1.0 - Math.Sin((1 - inValue * inValue) * PI2)) * 0.6 + 0.4;
         }
 
         private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
