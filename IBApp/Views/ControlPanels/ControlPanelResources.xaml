@@ -38,4 +38,8 @@
         <cp:BrushCP/>
     </ibgui:IBTabItem>
 
+    <ibgui:IBTabItem x:Key="AppCommand" Header="{DynamicResource ControlPanel_AppCommand_Name}">
+        <cp:AppCommandCP/>
+    </ibgui:IBTabItem>
+
 </ResourceDictionary>

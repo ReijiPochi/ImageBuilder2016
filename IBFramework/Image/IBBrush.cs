@@ -7,7 +7,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.ComponentModel;
 
-using IBFramework.Timeline;
+using IBFramework.IBCanvas;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.RedoUndo;
@@ -57,7 +57,7 @@ namespace IBFramework.Image
 
         private static DispatcherTimer Clock = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 10) };
         private static BGRA32FormattedImage waitingImage;
-        private static IBCanvas currentCanvas;
+        protected static IBCanvasControl currentCanvas;
 
         public static bool SelectersLayerMode { get; protected set; }
         private static PixelData color1 = new PixelData() { r = 255, g = 20, b = 200};
@@ -109,13 +109,9 @@ namespace IBFramework.Image
             {
                 if (count > 5)
                 {
-                    //if (drawAreaXS == 5000 || drawAreaYS == 3000)
-                    //    return;
-
                     ActiveBrush.End();
                     
                     ResetDrawArea();
-                    drawing = false;
                     count = 0;
                 }
                 count++;
@@ -153,7 +149,17 @@ namespace IBFramework.Image
             }
         }
 
-        public virtual bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public virtual void Activate(IBCanvasControl canvas, IBProjectElement trg)
+        {
+            if (canvas != null) currentCanvas = canvas;
+            ActiveBrush = this;
+
+            if (trg == null) return;
+            trgImage = trg;
+            trgLayer = GetSelectedLayer();
+        }
+
+        public virtual bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {
             currentCanvas = canvas;
             trgImage = trg;
@@ -230,9 +236,20 @@ namespace IBFramework.Image
 
         public virtual void End()
         {
-            RUDraw action = new RUDraw(beforeData, trgLayer);
-            action.Summary = actionSummary;
-            RedoUndoManager.Current.Record(action);
+            if (drawing)
+            {
+                drawing = false;
+
+                if (drawAreaYS == 3000 || drawAreaXS == 5000) return;
+                RUDraw action = new RUDraw(beforeData, trgLayer);
+                action.Summary = actionSummary;
+                RedoUndoManager.Current.Record(action);
+            }
+        }
+
+        public virtual void Deacive()
+        {
+
         }
 
         public void EndRequest()
@@ -355,7 +372,7 @@ namespace IBFramework.Image
                     trg.imageData.EndDrawingMode();
 
                 trg.imageData.TextureUpdate();
-                IBCanvas.RefreshAll();
+                IBCanvasControl.RefreshAll();
             }
 
             public override void Undo()
@@ -383,7 +400,7 @@ namespace IBFramework.Image
                     trg.imageData.EndDrawingMode();
 
                 trg.imageData.TextureUpdate();
-                IBCanvas.RefreshAll();
+                IBCanvasControl.RefreshAll();
             }
 
             public void Dispose()

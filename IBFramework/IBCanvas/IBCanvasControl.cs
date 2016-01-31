@@ -32,23 +32,23 @@ using IBFramework.Project.IBProjectElements;
 using IBFramework.OpenGL;
 using Wintab;
 
-namespace IBFramework.Timeline
+namespace IBFramework.IBCanvas
 {
-    public partial class IBCanvas : Control
+    public partial class IBCanvasControl : Control
     {
-        static IBCanvas()
+        static IBCanvasControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(IBCanvas), new FrameworkPropertyMetadata(typeof(IBCanvas)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IBCanvasControl), new FrameworkPropertyMetadata(typeof(IBCanvasControl)));
         }
-        private static List<IBCanvas> all = new List<IBCanvas>();
+        private static List<IBCanvasControl> all = new List<IBCanvasControl>();
 
         public static void RefreshAll()
         {
-            foreach (IBCanvas c in all)
+            foreach (IBCanvasControl c in all)
                 c.glControl.Refresh();
         }
 
-        public IBCanvas()
+        public IBCanvasControl()
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
@@ -56,9 +56,7 @@ namespace IBFramework.Timeline
                 glControl.Load += GlControl_Load;
                 glControl.SizeChanged += GlControl_SizeChanged;
                 glControl.Paint += GlControl_Paint;
-                glControl.MouseWheel += GlControl_MouseWheel;
                 glControl.LostFocus += GlControl_LostFocus;
-                glControl.MouseUp += GlControl_MouseUp;
                 Application.Current.Exit += Current_Exit;
 
                 System.Drawing.Bitmap cur = new System.Drawing.Bitmap("cursorTest.png");
@@ -70,7 +68,7 @@ namespace IBFramework.Timeline
             }
         }
 
-        ~IBCanvas()
+        ~IBCanvasControl()
         {
             all.Remove(this);
         }
@@ -85,8 +83,6 @@ namespace IBFramework.Timeline
         {
             base.OnApplyTemplate();
 
-            SetOwner();
-
             glControlHost = GetTemplateChild("GLControlHost") as WindowsFormsHost;
             glControlHost.SizeChanged += GlControlHost_SizeChanged;
             glControlHost.Child = glControl;
@@ -97,32 +93,39 @@ namespace IBFramework.Timeline
             Tabs.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***" });
 
             Overlay = new Window() { WindowStyle = WindowStyle.None, AllowsTransparency = true, Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)) };
-            InkCanvas canvas = new InkCanvas();
+            canvas = new InkCanvas();
             canvas.Background = new SolidColorBrush(Color.FromArgb(1, 127, 127, 127));
             canvas.EditingMode = InkCanvasEditingMode.None;
-            Overlay.Content = canvas;
+            canvas.UseCustomCursor = true;
+            root = new Grid();
+            root.Children.Add(canvas);
+            overlayCanvas = new Canvas();
+            root.Children.Add(overlayCanvas);
+            Overlay.Content = root;
 
             Overlay.Activated += Overlay_Activated;
             canvas.PreviewMouseDown += Overlay_MouseDown;
             canvas.MouseWheel += Overlay_MouseWheel;
-            canvas.PreviewStylusDown += Canvas_PreviewStylusDown;
             canvas.PreviewStylusMove += Overlay_StylusMove;
             canvas.PreviewMouseMove += Overlay_MouseMove;
             canvas.PreviewMouseUp += Overlay_MouseUp;
             canvas.StylusUp += Canvas_StylusUp;
             canvas.StylusOutOfRange += Overlay_StylusOutOfRange;
             canvas.StylusLeave += Canvas_StylusLeave;
-
             Overlay.Show();
 
             OpenedElements.CollectionChanged += OpenedElements_CollectionChanged;
+            SetOwner();
 
             glControl.Refresh();
         }
 
         private Window owner;
         private WindowsFormsHost glControlHost;
+        public InkCanvas canvas;
         private Window Overlay;
+        private Grid root;
+        private Canvas overlayCanvas;
         internal GLControl glControl;
         private bool IsCurrentGLControl = false;
         private IBTabControl Tabs;
@@ -142,7 +145,7 @@ namespace IBFramework.Timeline
             set { SetValue(OpenedElementsProperty, value); }
         }
         public static readonly DependencyProperty OpenedElementsProperty =
-            DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<IBProjectElement>), typeof(IBCanvas), new PropertyMetadata(new ObservableCollection<IBProjectElement>()));
+            DependencyProperty.Register("OpenedElements", typeof(ObservableCollection<IBProjectElement>), typeof(IBCanvasControl), new PropertyMetadata(new ObservableCollection<IBProjectElement>()));
 
         [Description("表示している（選択されている）エレメント"), Category("IBFramework")]
         public IBProjectElement ShowingElement
@@ -151,7 +154,7 @@ namespace IBFramework.Timeline
             set { SetValue(ShowingElementProperty, value); }
         }
         public static readonly DependencyProperty ShowingElementProperty =
-            DependencyProperty.Register("ShowingElement", typeof(IBProjectElement), typeof(IBCanvas), new PropertyMetadata(null));
+            DependencyProperty.Register("ShowingElement", typeof(IBProjectElement), typeof(IBCanvasControl), new PropertyMetadata(null));
 
         [Description("描画対象のレイヤー"), Category("IBFramework")]
         public IBImage TargetLayer
@@ -160,7 +163,7 @@ namespace IBFramework.Timeline
             set { SetValue(TargetLayerProperty, value); }
         }
         public static readonly DependencyProperty TargetLayerProperty =
-            DependencyProperty.Register("TargetLayer", typeof(IBImage), typeof(IBCanvas), new PropertyMetadata(null));
+            DependencyProperty.Register("TargetLayer", typeof(IBImage), typeof(IBCanvasControl), new PropertyMetadata(null));
 
         [Description("ズーム"), Category("IBFramework")]
         public double ZoomPerCent
@@ -169,7 +172,7 @@ namespace IBFramework.Timeline
             set { SetValue(ZoomPerCentProperty, value); }
         }
         public static readonly DependencyProperty ZoomPerCentProperty =
-            DependencyProperty.Register("ZoomPerCent", typeof(double), typeof(IBCanvas), new PropertyMetadata(66.6));
+            DependencyProperty.Register("ZoomPerCent", typeof(double), typeof(IBCanvasControl), new PropertyMetadata(66.6));
 
         [Description("アクティブなブラシ"), Category("IBFramework")]
         public IBBrush Brush
@@ -178,7 +181,7 @@ namespace IBFramework.Timeline
             set { SetValue(BrushProperty, value); }
         }
         public static readonly DependencyProperty BrushProperty =
-            DependencyProperty.Register("Brush", typeof(IBBrush), typeof(IBCanvas), new PropertyMetadata(new Image.Pixel.Pen()));
+            DependencyProperty.Register("Brush", typeof(IBBrush), typeof(IBCanvasControl), new PropertyMetadata(null));
 
         [Description("ドローイングエリアの背景色"), Category("IBFramework")]
         public Color BackgroundColor
@@ -187,11 +190,11 @@ namespace IBFramework.Timeline
             set { SetValue(BackgroundColorProperty, value); }
         }
         public static readonly DependencyProperty BackgroundColorProperty =
-            DependencyProperty.Register("BackgroundColor", typeof(Color), typeof(IBCanvas), new PropertyMetadata(Color.FromArgb(255,50,50,50), new PropertyChangedCallback(OnBackgroundColorChanged)));
+            DependencyProperty.Register("BackgroundColor", typeof(Color), typeof(IBCanvasControl), new PropertyMetadata(Color.FromArgb(255,50,50,50), new PropertyChangedCallback(OnBackgroundColorChanged)));
 
         private static void OnBackgroundColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            IBCanvas sender = d as IBCanvas;
+            IBCanvasControl sender = d as IBCanvasControl;
             if (sender != null)
             {
                 sender.glControl.MakeCurrent();
@@ -224,6 +227,7 @@ namespace IBFramework.Timeline
             glControl.MakeCurrent();
 
             SetCam();
+            RefreshOverlay();
             glControl.Refresh();
         }
 
@@ -255,11 +259,6 @@ namespace IBFramework.Timeline
             glControl.SwapBuffers();
         }
 
-        private void ShowingElement_GraphicsUpdated(object sender, GraphicsUpdatedEventArgs e)
-        {
-            glControl.Refresh();
-        }
-
         private void GlControlHost_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             glControlHost.Child.Refresh();
@@ -283,6 +282,11 @@ namespace IBFramework.Timeline
             owner.Activated += Owner_Activated;
             owner.Deactivated += Owner_Deactivated;
             owner.Closing += Owner_Closing;
+
+            if (Overlay != null)
+            {
+                Overlay.InputBindings.AddRange(Application.Current.MainWindow.InputBindings);
+            }
         }
 
         private void Owner_LocationChanged(object sender, EventArgs e)
@@ -343,6 +347,7 @@ namespace IBFramework.Timeline
 
             ZoomPerCent = zoomList[zoomListIndex];
             SetCam();
+            RefreshOverlay();
             glControl.Refresh();
         }
 
@@ -352,21 +357,12 @@ namespace IBFramework.Timeline
             preY = (int)e.GetPosition(null).Y;
             if (Brush != null && e.LeftButton == MouseButtonState.Pressed)
                 Brush.Set(this, ShowingElement, GetImageCoord(this, e.GetPosition(null), ZoomPerCent / 100.0));
-
-            e.Handled = true;
-        }
-
-        private void Canvas_PreviewStylusDown(object sender, StylusDownEventArgs e)
-        {
-            e.Handled = true;
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (Brush != null)
                 Brush.EndRequest();
-
-            e.Handled = true;
         }
 
         private void Canvas_StylusUp(object sender, StylusEventArgs e)
@@ -388,6 +384,7 @@ namespace IBFramework.Timeline
                 offsetX -= (int)pos.X - preX;
                 offsetY += (int)pos.Y - preY;
                 SetCam();
+                RefreshOverlay();
                 glControl.Refresh();
 
                 preX = (int)pos.X;
@@ -404,6 +401,7 @@ namespace IBFramework.Timeline
                 offsetX -= ((int)pos.X - preX) * 2;
                 offsetY += ((int)pos.Y - preY) * 2;
                 SetCam();
+                RefreshOverlay();
                 glControl.Refresh();
 
                 preX = (int)pos.X;
@@ -419,8 +417,6 @@ namespace IBFramework.Timeline
             {
                 PenDraging = false;
             }
-
-            e.Handled = true;
         }
 
         private void Overlay_StylusMove(object sender, StylusEventArgs e)
@@ -441,6 +437,7 @@ namespace IBFramework.Timeline
                 offsetX -= ((int)pos.X - preX) * 2;
                 offsetY += ((int)pos.Y - preY) * 2;
                 SetCam();
+                RefreshOverlay();
                 glControl.Refresh();
 
                 preX = (int)pos.X;
@@ -456,8 +453,6 @@ namespace IBFramework.Timeline
             {
                 PenDraging = false;
             }
-
-            e.Handled = true;
         }
 
         private void Overlay_StylusOutOfRange(object sender, StylusEventArgs e)
@@ -479,32 +474,6 @@ namespace IBFramework.Timeline
         }
         #endregion
 
-        private void GlControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (WintabUtility.PenUsing) return;
-
-            if(e.Delta > 0)
-            {
-                if (zoomListIndex + 1 < zoomList.Length)
-                    zoomListIndex++;
-            }
-            else
-            {
-                if (zoomListIndex > 1)
-                    zoomListIndex--;
-            }
-
-            ZoomPerCent = zoomList[zoomListIndex];
-            SetCam();
-            glControl.Refresh();
-        }
-
-        private void GlControl_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (Brush != null)
-                Brush.EndRequest();
-        }
-
         private void OpenedElements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ResetTabs();
@@ -520,14 +489,14 @@ namespace IBFramework.Timeline
 
             if (Tabs.SelectedItem != null)
             {
-                if (ShowingElement != null) ShowingElement.GraphicsUpdated -= ShowingElement_GraphicsUpdated;
                 ShowingElement = ((SubTabItem)Tabs.SelectedItem).Element;
-                if (ShowingElement != null) ShowingElement.GraphicsUpdated += ShowingElement_GraphicsUpdated;
 
                 if (ShowingElement != null && ShowingElement.Type == IBProjectElementTypes.CellSource)
                 {
                     ((CellSource)ShowingElement).SetDrawingModeLayers();
                 }
+
+                if (Brush != null) Brush.Activate(this, ShowingElement);
             }
             else
                 ShowingElement = null;

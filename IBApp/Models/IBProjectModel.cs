@@ -306,9 +306,9 @@ namespace IBApp.Models
                 RedoUndoManager.Current.Record(new RUAddNewElement(IBProject.Current.ElementsRoot, newCellSource));
             }
 
-            //Cell newc = new Cell(newCellSource, 1920, 1080);
-            //newc.Name = "new Cell";
-            //IBProject.Current.IBProjectElements.Add(newc);
+            Cell newc = new Cell(newCellSource, 1920, 1080);
+            newc.Name = "new Cell";
+            IBProject.Current.ElementsRoot.Children.Add(newc);
 
             RaisePropertyChanged("IBProject_Elements");
         }

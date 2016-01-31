@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 
 using System.Drawing;
+using System.Windows.Controls;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-namespace IBFramework.Timeline
+namespace IBFramework.IBCanvas
 {
-    public partial class IBCanvas
+    public partial class IBCanvasControl
     {
-        public static IBCoord GetImageCoord(IBCanvas source, System.Windows.Point mousePos, double zoom)
+        public static IBCoord GetImageCoord(IBCanvasControl source, System.Windows.Point mousePos, double zoom)
         {
             if (source.TargetLayer == null) return new IBCoord();
 
@@ -118,6 +119,44 @@ namespace IBFramework.Timeline
                 GL.Vertex3(-1, LowHori, 29);
             }
             GL.End();
+        }
+
+        public void AddOverlayItem(FrameworkElement item)
+        {
+            if (item.Parent != null)
+            {
+                ((Canvas)item.Parent).Children.Remove(item);
+            }
+            
+            overlayCanvas.Children.Add(item);
+            RefreshOverlay();
+        }
+
+        public void RemoveOverlayItem(FrameworkElement item)
+        {
+            if (item.Parent != null)
+            {
+                ((Canvas)item.Parent).Children.Remove(item);
+            }
+
+            overlayCanvas.Children.Remove(item);
+            RefreshOverlay();
+        }
+
+        public void RefreshOverlay()
+        {
+            double zoom = ZoomPerCent / 100.0;
+
+            foreach (UIElement c in overlayCanvas.Children)
+            {
+                IOverlayItems item = c as IOverlayItems;
+                if(item != null)
+                {
+                    item.Zoom = zoom;
+                    item.CamOffsetX = glControl.Width / 2 - camX;
+                    item.CamOffsetY = camY + glControl.Height / 2;
+                }
+            }
         }
     }
 }

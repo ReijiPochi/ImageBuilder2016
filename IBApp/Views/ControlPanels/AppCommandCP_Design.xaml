@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:IBApp.Views.ControlPanels"
+                    xmlns:vm="clr-namespace:IBApp.ViewModels.ControlPanels"
+                    xmlns:ibgui="clr-namespace:IBGUI;assembly=IBGUI">
+
+    <Style TargetType="{x:Type local:AppCommandCP}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:AppCommandCP}">
+                    <Grid Background="{DynamicResource IBBackGroundBrush}">
+                        <Grid.DataContext>
+                            <vm:AppCommandVM/>
+                        </Grid.DataContext>
+
+                        <ibgui:IBFocusableBG/>
+
+                        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <ibgui:IBButton x:Name="Undo" Width="30" Height="30" Margin="2" ToolTip="Undo One Step"
+								Command="{Binding UndoCommand,Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
+                            <ibgui:IBButton x:Name="Redo" Width="30" Height="30" Margin="2" ToolTip="Redo One Step"
+								Command="{Binding RedoCommand,Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
+                        </WrapPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

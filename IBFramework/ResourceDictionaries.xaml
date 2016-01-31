@@ -4,6 +4,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Colors.dark.xaml"/>
+        <ResourceDictionary Source="ImageResources/ImageResourceDictionary.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

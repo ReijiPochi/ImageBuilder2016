@@ -38,6 +38,18 @@ namespace IBApp.ViewModels.ControlPanels
                         EraserON = true;
                         break;
 
+                    case "SelectionTool":
+                        SelectionToolON = true;
+                        break;
+
+                    case "Deformer":
+                        DeformerON = true;
+                        break;
+
+                    case "Pencil":
+                        PencilON = true;
+                        break;
+
                     default:
                         break;
                 }
@@ -57,7 +69,10 @@ namespace IBApp.ViewModels.ControlPanels
                 _PenON = false;
                 _EraserON = false;
                 _SelectionToolON = false;
+                _DeformerON = false;
                 StateChange();
+
+                IBBrushModel.SetToProjectPencil();
             }
         }
         #endregion
@@ -75,6 +90,7 @@ namespace IBApp.ViewModels.ControlPanels
                 _PencilON = false;
                 _EraserON = false;
                 _SelectionToolON = false;
+                _DeformerON = false;
                 StateChange();
 
                 IBBrushModel.SetToProjectPen();
@@ -95,6 +111,7 @@ namespace IBApp.ViewModels.ControlPanels
                 _PencilON = false;
                 _PenON = false;
                 _SelectionToolON = false;
+                _DeformerON = false;
                 StateChange();
 
                 IBBrushModel.SetToProjectEraser();
@@ -115,9 +132,31 @@ namespace IBApp.ViewModels.ControlPanels
                 _PencilON = false;
                 _PenON = false;
                 _SelectionToolON = true;
+                _DeformerON = false;
                 StateChange();
 
                 IBBrushModel.SetToProjectSelectionTool();
+            }
+        }
+        #endregion
+
+        #region DeformerON変更通知プロパティ
+        private bool _DeformerON;
+
+        public bool DeformerON
+        {
+            get
+            { return _DeformerON; }
+            set
+            {
+                _EraserON = false;
+                _PencilON = false;
+                _PenON = false;
+                _SelectionToolON = false;
+                _DeformerON = true;
+                StateChange();
+
+                IBBrushModel.SetToProjectDeformer();
             }
         }
         #endregion
@@ -129,6 +168,7 @@ namespace IBApp.ViewModels.ControlPanels
             RaisePropertyChanged("PenON");
             RaisePropertyChanged("EraserON");
             RaisePropertyChanged("SelectionToolON");
+            RaisePropertyChanged("DeformerON");
         }
 
 
@@ -171,6 +211,69 @@ namespace IBApp.ViewModels.ControlPanels
         public void OnEraser()
         {
             EraserON = true;
+        }
+        #endregion
+
+        #region OnSelectionToolCommand
+        private ViewModelCommand _OnSelectionToolCommand;
+
+        public ViewModelCommand OnSelectionToolCommand
+        {
+            get
+            {
+                if (_OnSelectionToolCommand == null)
+                {
+                    _OnSelectionToolCommand = new ViewModelCommand(OnSelectionTool);
+                }
+                return _OnSelectionToolCommand;
+            }
+        }
+
+        public void OnSelectionTool()
+        {
+            SelectionToolON = true;
+        }
+        #endregion
+
+        #region OnDeformerCommand
+        private ViewModelCommand _OnDeformerCommand;
+
+        public ViewModelCommand OnDeformerCommand
+        {
+            get
+            {
+                if (_OnDeformerCommand == null)
+                {
+                    _OnDeformerCommand = new ViewModelCommand(OnDeformer);
+                }
+                return _OnDeformerCommand;
+            }
+        }
+
+        public void OnDeformer()
+        {
+            DeformerON = true;
+        }
+        #endregion
+
+        #region OnPencilCommand
+        private ViewModelCommand _OnPencilCommand;
+
+        public ViewModelCommand OnPencilCommand
+        {
+            get
+            {
+                if (_OnPencilCommand == null)
+                {
+                    _OnPencilCommand = new ViewModelCommand(OnPencil);
+                }
+                return _OnPencilCommand;
+            }
+        }
+
+        public void OnPencil()
+        {
+            PencilON = true;
         }
         #endregion
 

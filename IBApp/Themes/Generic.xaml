@@ -14,7 +14,7 @@
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/LayersViewCP_Design.xaml"/>
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/ColorCP_Design.xaml" />
         <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/BrushCP_Design.xaml" />
+        <ResourceDictionary Source="/IBApp;component/Views/ControlPanels/AppCommandCP_Design.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
 
 </ResourceDictionary>

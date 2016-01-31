@@ -43,6 +43,9 @@
         <KeyBinding Command="{Binding RedoCommand, Mode=OneWay, Source={StaticResource EditVMResource}}" Gesture="Ctrl+Y"/>
         <KeyBinding Command="{Binding OnPenCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="P"/>
         <KeyBinding Command="{Binding OnEraserCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="E"/>
+        <KeyBinding Command="{Binding OnSelectionToolCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="S"/>
+        <KeyBinding Command="{Binding OnDeformerCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="D"/>
+        <KeyBinding Command="{Binding OnPencilCommand, Mode=OneWay, Source={StaticResource DrawingToolsVMResource}}" Key="B"/>
     </Window.InputBindings>
 
     <Grid>
@@ -126,6 +129,7 @@
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_LayarsView_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource LayarsView}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Color_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Color}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Brush_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Brush}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_AppCommand_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource AppCommand}"/>
             </ibgui:IBMenuItem>
             <ibgui:IBMenuItem Header="{DynamicResource Menu_Workspace}">
                 <ibgui:IBMenuItem.DataContext>

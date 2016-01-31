@@ -40,6 +40,10 @@ namespace IBFramework.Project.IBProjectElements
             }
         }
 
+        public PixcelImage PixcelSelectedArea;
+        public PixcelImage TempLayer;
+        public bool IsPixcelSelecting { get; set; }
+
         public Control GetPP()
         {
             return new CellSourcePP() { DataContext = this };

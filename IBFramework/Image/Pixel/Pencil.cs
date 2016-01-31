@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using IBFramework.IBCanvas;
-using IBFramework.Project;
-using Wintab;
 using System.Windows.Controls;
+using IBFramework.Project;
+using IBFramework.IBCanvas;
 
 namespace IBFramework.Image.Pixel
 {
-    public class Eraser : IBBrush
+    public class Pencil : IBBrush
     {
         private double last_t = 0;
 
         public override Control GetBP()
         {
-            return new EraserBP() { DataContext = this };
+            return null;
         }
 
         public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {
             if (!base.Set(canvas, trg, coord)) return false;
 
-            actionSummary = "Eraser Tool / " + trg.Name;
+            actionSummary = "PenCil Tool / " + trg.Name;
 
             return true;
         }
@@ -33,7 +31,7 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord);
 
-            double dist = IBCoord.GetDistance(histCoord[0], coord);
+            double dist = IBCoord.GetDistance(histCoord[1], curCoord);
             if (dist < 0.1) return;
 
             if (trgLayer == null) return;
@@ -41,7 +39,7 @@ namespace IBFramework.Image.Pixel
             switch (trgLayer.LayerType)
             {
                 case ImageTypes.LineDrawing:
-                    EraseLineDrawingImage(trgLayer, Size);
+                    DrawToLineDrawingImage(trgLayer, 1.5, Color);
                     break;
 
                 default:
@@ -49,7 +47,7 @@ namespace IBFramework.Image.Pixel
             }
         }
 
-        private void EraseLineDrawingImage(IBImage trg, double r)
+        private void DrawToLineDrawingImage(IBImage trg, double r, PixelData color)
         {
             double _x = curCoord.x - trg.Rect.OffsetX, _y = curCoord.y - trg.Rect.OffsetY;
             if (_x < 0 || _y < 0 || _x >= trg.imageData.actualSize.Width || _y >= trg.imageData.actualSize.Height) return;
@@ -68,9 +66,9 @@ namespace IBFramework.Image.Pixel
 
                 double p = prePre + dp * t;
                 double _r = r;
-                if (p != 0.0) _r *= p;
+                if (p != 0.0) _r *= PenTouch(p);
 
-                EraseCircle(trg, x, y, _r);
+                DrawCircle(trg, x, y, _r, color);
 
                 t += r * interval;
             }
@@ -81,7 +79,14 @@ namespace IBFramework.Image.Pixel
             EntryTexUpdate(trg.imageData);
         }
 
-        private void EraseCircle(IBImage trg, double x, double y, double r)
+        private double PenTouch(double inValue)
+        {
+            const double PI2 = Math.PI / 2.5;
+
+            return (1.0 - Math.Sin((1 - inValue * inValue) * PI2)) * 0.5 + 0.5;
+        }
+
+        private void DrawCircle(IBImage trg, double x, double y, double r, PixelData color)
         {
             if (r < 0.001) return;
 
@@ -129,13 +134,12 @@ namespace IBFramework.Image.Pixel
 
                     if (c != 0)
                     {
-                        //data[offset + xp] = color.b;
-                        //data[offset + xp + 1] = color.g;
-                        //data[offset + xp + 2] = color.r;
+                        data[offset + xp] = color.b;
+                        data[offset + xp + 1] = color.g;
+                        data[offset + xp + 2] = color.r;
 
-                        int a = data[offset + xp + 3] - ((255 * c) >> 4);
-                        if (a < 0) a = 0;
-                        data[offset + xp + 3] = a < data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
+                        int a = (color.a * c) >> 4;
+                        data[offset + xp + 3] = a > data[offset + xp + 3] ? (byte)a : data[offset + xp + 3];
                     }
 
                     xp += 4;

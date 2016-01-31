@@ -5,25 +5,40 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using IBFramework.Project;
-using IBFramework.Timeline;
-using Wintab;
+using IBFramework.IBCanvas;
+using System.Windows.Input;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace IBFramework.Image.Pixel
 {
     public class Pen : IBBrush
     {
         private double last_t = 0;
+        private Cursor penCursor;
 
         public override Control GetBP()
         {
             return new PenBP() { DataContext = this };
         }
 
-        public override bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public override void Activate(IBCanvasControl canvas, IBProjectElement trg)
+        {
+            base.Activate(canvas, trg);
+
+            if (penCursor == null)
+            {
+                penCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PenCursor") as BitmapImage, 0, 0);
+            }
+
+            if (currentCanvas != null && currentCanvas.canvas.Cursor != penCursor)
+                currentCanvas.canvas.Cursor = penCursor;
+        }
+
+        public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {
             if (!base.Set(canvas, trg, coord)) return false;
-
-            ActiveBrush = this;
 
             actionSummary = "Pen Tool / " + trg.Name;
 

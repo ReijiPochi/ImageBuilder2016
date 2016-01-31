@@ -12,14 +12,20 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DrawingToolsCP}">
                     <Grid DataContext="{StaticResource DrawingToolsVM}" Background="{DynamicResource IBBackGroundBrush}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ibgui:IBToggleButton x:Name="Deformer" Width="30" Height="30" Margin="2" Content="D"
+								ButtonON="{Binding DeformerON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <!--<ibgui:IBToggleButton.Content>
+                                    
+                                </ibgui:IBToggleButton.Content>-->
+                            </ibgui:IBToggleButton>
                             <ibgui:IBToggleButton x:Name="SelectionTool" Width="30" Height="30" Margin="2" Content="S"
 								ButtonON="{Binding SelectionToolON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <!--<ibgui:IBToggleButton.Content>
                                     
                                 </ibgui:IBToggleButton.Content>-->
                             </ibgui:IBToggleButton>
-                            <ibgui:IBToggleButton x:Name="Pencil" Width="30" Height="30" Margin="2"
+                            <ibgui:IBToggleButton x:Name="Pencil" Width="30" Height="30" Margin="2" ToolTip="Pencil"
 								ButtonON="{Binding PencilON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ibgui:IBToggleButton.Content>
                                     <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
@@ -37,7 +43,7 @@
                                     <Image Source="{DynamicResource EraserIcon}" Width="30" Height="30" />
                                 </ibgui:IBToggleButton.Content>
                             </ibgui:IBToggleButton>
-                        </StackPanel>
+                        </WrapPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

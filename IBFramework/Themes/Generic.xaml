@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:IBFramework">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/IBFramework;component/Timeline/IBCanvas_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/IBCanvas/IBCanvas_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/SubTabItem_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Project/FlagButton_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Timeline/TimelineElements/CellPP_Design.xaml"/>
@@ -12,8 +12,9 @@
         <ResourceDictionary Source="/IBFramework;component/Project/IBProjectPP_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Project/IBProjectElements/FolderPP_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Image/Pixel/PenBP_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/IBCanvas/OverlaySizeGrip_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/IBCanvas/OverlayThumb_Design.xaml" />
+        <ResourceDictionary Source="/IBFramework;component/Image/Pixel/EraserBP_Design.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-
 
 </ResourceDictionary>

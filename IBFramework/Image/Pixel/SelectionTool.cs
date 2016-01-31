@@ -8,6 +8,8 @@ using IBFramework.Project;
 using IBFramework.Timeline;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.OpenGL;
+using IBFramework.IBCanvas;
+using System.Windows.Media;
 
 namespace IBFramework.Image.Pixel
 {
@@ -18,52 +20,42 @@ namespace IBFramework.Image.Pixel
             return null;
         }
 
-        private PixcelImage SelectedArea;
+        CellSource trgCell;
         private IBCoord start = new IBCoord();
-        public bool IsSelecting { get; private set; }
 
-        public override bool Set(IBCanvas canvas, IBProjectElement trg, IBCoord coord)
+        public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {
             if (!base.Set(canvas, trg, coord)) return false;
 
-            ActiveBrush = this;
+            trgCell = trgImage as CellSource;
+            if (trgCell == null) return false;
+            if (trgLayer == null) return false;
 
             actionSummary = "Selection Tool / " + trg.Name;
             Render.OverrayColor[0] = 0;
             Render.OverrayColor[1] = 0;
             Render.OverrayColor[2] = 0;
 
-            if (SelectedArea != null)
+            if (trgCell.PixcelSelectedArea != null)
             {
-                if (IsSelecting)
+                if (trgCell.IsPixcelSelecting)
                 {
-                    IsSelecting = false;
+                    trgCell.IsPixcelSelecting = false;
                     SelectersLayerMode = false;
-                    EntryTexUpdate(SelectedArea.imageData);
-                }
-
-                for (int a = ((CellSource)trgImage).Layers.Count - 1; a >= 0; a--)
-                {
-                    IBImage i = ((CellSource)trgImage).Layers[a];
-                    if (!i.IsNotSelectersLayer)
-                    {
-                        ((CellSource)trgImage).Layers.Remove(i);
-                        i.imageData.data = null;
-                    }
+                    trgCell.PixcelSelectedArea.imageData = null;
+                    trgCell.PixcelSelectedArea = null;
+                    IBCanvasControl.RefreshAll();
                 }
             }
 
-            if (trgImage as CellSource == null || trgLayer == null) return false;
-
-            SelectedArea = new PixcelImage(
+            trgCell.PixcelSelectedArea = new PixcelImage(
                 (int)trgLayer.imageData.actualSize.Width,
                 (int)trgLayer.imageData.actualSize.Height,
                 (int)trgLayer.Rect.OffsetX,
                 (int)trgLayer.Rect.OffsetY);
-            SelectedArea.IsNotSelectersLayer = false;
+            trgCell.PixcelSelectedArea.IsNotSelectersLayer = false;
 
-            ((CellSource)trgImage).Layers.Insert(0, SelectedArea);
-            SelectedArea.imageData.SetDrawingMode();
+            trgCell.PixcelSelectedArea.imageData.SetDrawingMode();
 
             start.x = histCoord[0].x;
             start.y = histCoord[0].y;
@@ -75,26 +67,36 @@ namespace IBFramework.Image.Pixel
         {
             base.Draw(coord);
 
-            IsSelecting = true;
+            if (trgCell == null) return;
+
+            trgCell.IsPixcelSelecting = true;
             SelectersLayerMode = true;
 
             double dist = IBCoord.GetDistance(histCoord[0], coord);
             if (dist < 0.1) return;
 
-            Draw(SelectedArea);
+            Draw(trgCell.PixcelSelectedArea);
         }
 
         public override void End()
         {
             //base.End();
+            drawing = false;
 
-            if (IsSelecting)
+            if (trgCell == null) return;
+
+            if (trgCell.IsPixcelSelecting)
             {
-                EndDrawing(SelectedArea);
-                Thread fill = new Thread(new ThreadStart(Fill), 500000000);
+                EndDrawing(trgCell.PixcelSelectedArea);
+                Thread fill = new Thread(new ThreadStart(Fill), 200000000);
                 fill.Start();
                 fill.Join();
                 Reverse();
+
+                trgCell.PixcelSelectedArea.imageData.drawingAreaSize.OffsetX = drawAreaXS;
+                trgCell.PixcelSelectedArea.imageData.drawingAreaSize.OffsetY = drawAreaYS;
+                trgCell.PixcelSelectedArea.imageData.drawingAreaSize.Width = drawAreaXE - drawAreaXS;
+                trgCell.PixcelSelectedArea.imageData.drawingAreaSize.Height = drawAreaYE - drawAreaYS;
             }
         }
 
@@ -171,10 +173,10 @@ namespace IBFramework.Image.Pixel
             height = drawAreaYE - drawAreaYS;
             width = drawAreaXE - drawAreaXS;
 
-            SelectedArea.imageData.drawingAreaSize.OffsetX = drawAreaXS;
-            SelectedArea.imageData.drawingAreaSize.OffsetY = drawAreaYS;
-            SelectedArea.imageData.drawingAreaSize.Width = width;
-            SelectedArea.imageData.drawingAreaSize.Height = height;
+            trgCell.PixcelSelectedArea.imageData.drawingAreaSize.OffsetX = drawAreaXS;
+            trgCell.PixcelSelectedArea.imageData.drawingAreaSize.OffsetY = drawAreaYS;
+            trgCell.PixcelSelectedArea.imageData.drawingAreaSize.Width = width;
+            trgCell.PixcelSelectedArea.imageData.drawingAreaSize.Height = height;
 
             _fill(- 1, - 1);
         }
@@ -183,35 +185,35 @@ namespace IBFramework.Image.Pixel
 
         private void _fill(int x, int y)
         {
-            int index = (drawAreaYS + y) * (int)SelectedArea.imageData.actualSize.Width * 4 + (drawAreaXS + x) * 4;
-            int stride = (int)SelectedArea.imageData.actualSize.Width;
-            int length = SelectedArea.imageData.data.Length;
+            int index = (drawAreaYS + y) * (int)trgCell.PixcelSelectedArea.imageData.actualSize.Width * 4 + (drawAreaXS + x) * 4;
+            int stride = (int)trgCell.PixcelSelectedArea.imageData.actualSize.Width;
+            int length = trgCell.PixcelSelectedArea.imageData.data.Length;
 
             if (index >= 0 && index < length)
             {
-                SelectedArea.imageData.data[index] = 255;
-                SelectedArea.imageData.data[index + 3] = 255;
+                trgCell.PixcelSelectedArea.imageData.data[index] = 255;
+                trgCell.PixcelSelectedArea.imageData.data[index + 3] = 255;
             }
 
             if (x >= -1 && y >= 0 && x <= width && y <= height)
             {
                 int i = ((drawAreaYS + y - 1) * stride + (drawAreaXS + x)) * 4;
-                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x, y - 1);
+                if (i >= 0 && i < length && trgCell.PixcelSelectedArea.imageData.data[i] != 255 && trgCell.PixcelSelectedArea.imageData.data[i + 2] != 255) _fill(x, y - 1);
             }
             if (x >= 0 && y >= -1 && x <= width && y <= height)
             {
                 int i = ((drawAreaYS + y) * stride + (drawAreaXS + x - 1)) * 4;
-                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x - 1, y);
+                if (i >= 0 && i < length && trgCell.PixcelSelectedArea.imageData.data[i] != 255 && trgCell.PixcelSelectedArea.imageData.data[i + 2] != 255) _fill(x - 1, y);
             }
             if (x >= -1 && y >= -1 && x <= width && y <= height - 1)
             {
                 int i = ((drawAreaYS + y + 1) * stride + (drawAreaXS + x)) * 4;
-                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x, y + 1);
+                if (i >= 0 && i < length && trgCell.PixcelSelectedArea.imageData.data[i] != 255 && trgCell.PixcelSelectedArea.imageData.data[i + 2] != 255) _fill(x, y + 1);
             }
             if (x >= -1 && y >= -1 && x <= width - 1 && y <= height)
             {
                 int i = ((drawAreaYS + y) * stride + (drawAreaXS + x + 1)) * 4;
-                if (i >= 0 && i < length && SelectedArea.imageData.data[i] != 255 && SelectedArea.imageData.data[i + 2] != 255) _fill(x + 1, y);
+                if (i >= 0 && i < length && trgCell.PixcelSelectedArea.imageData.data[i] != 255 && trgCell.PixcelSelectedArea.imageData.data[i + 2] != 255) _fill(x + 1, y);
             }
         }
 
@@ -221,7 +223,7 @@ namespace IBFramework.Image.Pixel
             int height = drawAreaYE - drawAreaYS;
             int width = drawAreaXE - drawAreaXS;
 
-            int layerStride = (int)SelectedArea.imageData.actualSize.Width * 4;
+            int layerStride = (int)trgCell.PixcelSelectedArea.imageData.actualSize.Width * 4;
             int _offsetx = drawAreaXS * 4;
 
             for (int y = drawAreaYS - 1; y <= drawAreaYE; y++)
@@ -230,21 +232,21 @@ namespace IBFramework.Image.Pixel
                 for (int x = drawAreaXS - 1; x <= drawAreaXE; x++)
                 {
                     int index = offset + x * 4;
-                    if (index < 0 || index >= SelectedArea.imageData.data.Length) break;
+                    if (index < 0 || index >= trgCell.PixcelSelectedArea.imageData.data.Length) break;
 
-                    if (SelectedArea.imageData.data[index] == 255)
+                    if (trgCell.PixcelSelectedArea.imageData.data[index] == 255)
                     {
-                        SelectedArea.imageData.data[index] = 0;
-                        SelectedArea.imageData.data[index + 1] = 0;
-                        SelectedArea.imageData.data[index + 2] = 0;
-                        SelectedArea.imageData.data[index + 3] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 1] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 2] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 3] = 0;
                     }
                     else
                     {
-                        SelectedArea.imageData.data[index] = 0;
-                        SelectedArea.imageData.data[index + 1] = 0;
-                        SelectedArea.imageData.data[index + 2] = 0;
-                        SelectedArea.imageData.data[index + 3] = 255;
+                        trgCell.PixcelSelectedArea.imageData.data[index] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 1] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 2] = 0;
+                        trgCell.PixcelSelectedArea.imageData.data[index + 3] = 255;
                     }
                 }
             }

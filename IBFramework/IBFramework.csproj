@@ -69,11 +69,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBCanvas\IOverlayItems.cs" />
     <Compile Include="ElementToBrushConverter.cs" />
+    <Compile Include="IBCanvas\OverlaySizeGrip.cs" />
+    <Compile Include="IBCanvas\OverlayThumb.cs" />
     <Compile Include="IBCoord.cs" />
+    <Compile Include="IBCursor.cs" />
     <Compile Include="Image\ImageTypes.cs" />
+    <Compile Include="Image\Pixel\Deformer.cs" />
     <Compile Include="Image\Pixel\Eraser.cs" />
+    <Compile Include="Image\Pixel\EraserBP.cs" />
     <Compile Include="Image\Pixel\PenBP.cs" />
+    <Compile Include="Image\Pixel\Pencil.cs" />
     <Compile Include="Image\Pixel\SelectionTool.cs" />
     <Compile Include="OpenCL\CLImageProcessing.cs" />
     <Compile Include="OpenCL\CLUtilities.cs" />
@@ -96,9 +103,10 @@
     <Compile Include="Project\IBProjectElements\Root.cs" />
     <Compile Include="Project\IBProjectPP.cs" />
     <Compile Include="RedoUndo\RedoUndoAction.cs" />
-    <Compile Include="Timeline\IBCanvas_utilities.cs" />
+    <Compile Include="IBCanvas\IBCanvas_utilities.cs" />
+    <Compile Include="IBCanvas\OverlayBorder.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
-    <Compile Include="Timeline\IBCanvas.cs" />
+    <Compile Include="IBCanvas\IBCanvasControl.cs" />
     <Compile Include="Image\IBImage.cs" />
     <Compile Include="Image\PixelData.cs" />
     <Compile Include="Image\Pixel\Pen.cs" />
@@ -140,6 +148,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="IBCanvas\OverlaySizeGrip_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IBCanvas\OverlayThumb_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImageResources\ImageResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Image\Pixel\EraserBP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Image\Pixel\PenBP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,7 +188,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Timeline\IBCanvas_Design.xaml">
+    <Page Include="IBCanvas\IBCanvas_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,6 +213,9 @@
     <None Include="README_IBFramework.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\cursorTest.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

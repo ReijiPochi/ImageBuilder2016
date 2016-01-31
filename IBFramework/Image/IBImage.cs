@@ -108,6 +108,7 @@ namespace IBFramework.Image
         public virtual void CopyTo(IBImage i)
         {
             i.imageData = new BGRA32FormattedImage((int)imageData.actualSize.Width, (int)imageData.actualSize.Height);
+            i.imageData.SetDrawingMode();
             for(int c = 0; c < i.imageData.data.Length; c++)
             {
                 i.imageData.data[c] = imageData.data[c];
@@ -117,6 +118,7 @@ namespace IBFramework.Image
             i.LayerType = LayerType;
             i.PropertyChanged = PropertyChanged;
             i.Rect = new IBRectangle(Rect.Width, Rect.Height, Rect.OffsetX, Rect.OffsetY);
+            i.imageData.EndDrawingMode();
         }
     }
 }

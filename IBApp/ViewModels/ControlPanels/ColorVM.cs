@@ -46,13 +46,12 @@ namespace IBApp.ViewModels.ControlPanels
             switch (IBProjectModel.Current.SelectedBrush.GetType().Name)
             {
                 case "Pen":
+                case "Pencil":
                     Mode = ColorCPMode.Pen;
                     break;
 
-                case "Eraser":
-                    break;
-
                 default:
+                    Mode = ColorCPMode.NULL;
                     break;
             }
         }

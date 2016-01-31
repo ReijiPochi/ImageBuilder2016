@@ -109,6 +109,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ControlPanels\AppCommandCP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ControlPanels\BrushCP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +162,7 @@
     <Compile Include="Models\IBProjectModel.cs" />
     <Compile Include="Models\LayoutControlModel.cs" />
     <Compile Include="Models\RedoUndoModel.cs" />
+    <Compile Include="ViewModels\ControlPanels\AppCommandVM.cs" />
     <Compile Include="ViewModels\ControlPanels\BrushVM.cs" />
     <Compile Include="ViewModels\ControlPanels\CanvasViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\ColorVM.cs" />
@@ -165,6 +170,7 @@
     <Compile Include="ViewModels\ControlPanels\IBProjectViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\LayersViewVM.cs" />
     <Compile Include="ViewModels\ControlPanels\PropertiesVM.cs" />
+    <Compile Include="Views\ControlPanels\AppCommandCP.cs" />
     <Compile Include="Views\ControlPanels\BrushCP.cs" />
     <Compile Include="Views\ControlPanels\CanvasViewCP.cs" />
     <Compile Include="Views\ControlPanels\ColorCP.cs" />

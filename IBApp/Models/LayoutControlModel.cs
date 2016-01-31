@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 using Livet;
 
@@ -22,6 +23,7 @@ namespace IBApp.Models
             if (trg == null) return;
 
             IBWindow ibw = new IBWindow();
+            ibw.InputBindings.AddRange(Application.Current.MainWindow.InputBindings);
             ibw.SetIBTabItem(trg.CloneOrCopy());
             ibw.Show();
         }

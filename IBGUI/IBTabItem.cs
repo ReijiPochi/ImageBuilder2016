@@ -326,6 +326,7 @@ namespace IBGUI
                 throw new IBDisableCommandException("コマンドターゲットが不正、または取得できません");
 
             IBWindow ibw = new IBWindow();
+            ibw.InputBindings.AddRange(Application.Current.MainWindow.InputBindings);
             ibw.SetIBTabItem(trg);
             ibw.Show();
 

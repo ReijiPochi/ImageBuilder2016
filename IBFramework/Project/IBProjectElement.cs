@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using IBFramework.IBCanvas;
 
 namespace IBFramework.Project
 {
@@ -24,10 +25,6 @@ namespace IBFramework.Project
         Finished,
         Checked,
         Advice
-    }
-
-    public class GraphicsUpdatedEventArgs : EventArgs
-    {
     }
 
     public abstract class IBProjectElement : INotifyPropertyChanged
@@ -60,19 +57,6 @@ namespace IBFramework.Project
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
-        #region GraphicsUpdatedイベント
-        public delegate void GraphicsUpdatedEventHandler(object sender, GraphicsUpdatedEventArgs e);
-        public event GraphicsUpdatedEventHandler GraphicsUpdated;
-        public virtual void OnGraphicsUpdated(GraphicsUpdatedEventArgs e)
-        {
-            if (GraphicsUpdated != null)
-            {
-                GraphicsUpdated(this, e);
-            }
-        }
-        #endregion
 
         private int _ID;
         public int ID
@@ -143,7 +127,7 @@ namespace IBFramework.Project
                     return;
                 _Width = value;
                 RaisePropertyChanged("Width");
-                OnGraphicsUpdated(new GraphicsUpdatedEventArgs());
+                IBCanvasControl.RefreshAll();
             }
         }
 
@@ -158,7 +142,7 @@ namespace IBFramework.Project
                     return;
                 _Height = value;
                 RaisePropertyChanged("Height");
-                OnGraphicsUpdated(new GraphicsUpdatedEventArgs());
+                IBCanvasControl.RefreshAll();
             }
         }
 

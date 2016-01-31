@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using IBFramework.Image;
+using IBFramework.Image.Pixel;
 using IBFramework.Timeline.TimelineElements;
 using IBFramework.Project.IBProjectElements;
 using OpenTK;
@@ -48,21 +49,52 @@ namespace IBFramework.OpenGL
                 texMax = 0.5;
             }
 
-            if (!i.IsNotSelectersLayer)
+            IBFramework.OpenGL.Texture.BindTexture(i.imageData.textureNumber);
             {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, OverrayColor);
-
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Replace);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Source0Rgb, (int)TextureEnvModeSource.Constant);
-
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineAlpha, (int)TextureEnvModeCombine.Modulate);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src0Alpha, (int)TextureEnvModeSource.Constant);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src1Alpha, (int)TextureEnvModeSource.Texture);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand1Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
+                GL.Begin(PrimitiveType.Quads);
+                {
+                    GL.TexCoord2(texMax, texMin);
+                    GL.Vertex3(offsetX + w, offsetY + h, layer);
+                    GL.TexCoord2(texMin, texMin);
+                    GL.Vertex3(offsetX, offsetY + h, layer);
+                    GL.TexCoord2(texMin, texMax);
+                    GL.Vertex3(offsetX, offsetY, layer);
+                    GL.TexCoord2(texMax, texMax);
+                    GL.Vertex3(offsetX + w, offsetY, layer);
+                }
+                GL.End();
+                layer += 0.01;
             }
+            //IBFramework.OpenGL.Texture.BindTexture(0);
+        }
+
+        public static void DrawPixcelSelectedLayer(PixcelImage i, double zoomPerCent, ref double layer)
+        {
+            double zoom = zoomPerCent / 100.0;
+
+            double offsetX;
+            double offsetY;
+            double w, h;
+
+            offsetX = (i.Rect.OffsetX + i.imageData.actualSize.OffsetX) * zoom;
+            offsetY = (i.Rect.OffsetY + (i.Rect.Height - i.imageData.actualSize.OffsetY - i.imageData.actualSize.Height)) * zoom;
+            w = i.imageData.actualSize.Width * zoom;
+            h = i.imageData.actualSize.Height * zoom;
+
+            double texMin = 0, texMax = 1.0;
+
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, OverrayColor);
+
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Replace);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Source0Rgb, (int)TextureEnvModeSource.Constant);
+
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineAlpha, (int)TextureEnvModeCombine.Modulate);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src0Alpha, (int)TextureEnvModeSource.Constant);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src1Alpha, (int)TextureEnvModeSource.Texture);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand1Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
 
             IBFramework.OpenGL.Texture.BindTexture(i.imageData.textureNumber);
             {
@@ -82,10 +114,7 @@ namespace IBFramework.OpenGL
             }
             //IBFramework.OpenGL.Texture.BindTexture(0);
 
-            if (!i.IsNotSelectersLayer)
-            {
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
-            }
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
         }
 
         public static void RenderCellSource(CellSource c, double zoomPerCent, ref double layer)
@@ -97,6 +126,9 @@ namespace IBFramework.OpenGL
                 IBImage i = c.Layers[index];
                 DrawOneImage(i, zoomPerCent, ref layer);
             }
+
+            if (c.PixcelSelectedArea != null) DrawPixcelSelectedLayer(c.PixcelSelectedArea, zoomPerCent, ref layer);
+            if (c.TempLayer != null) DrawOneImage(c.TempLayer, zoomPerCent, ref layer);
         }
 
         public static void RenderCell(Cell c, double zoomPerCent, ref double layer, int x, int y, int offsetX, int offsetY)
