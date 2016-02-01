@@ -5,8 +5,35 @@
 
     <system:String x:Key="IB_MainWindowTitle">Image Builder 2016 InDevelopment (淫夢語録)</system:String>
 
-    <system:String x:Key="Menu_File_Exit">堕ちろ！</system:String>
+    <system:String x:Key="Menu_File">ｵｫﾝ！ｱｫﾝ！</system:String>
+    <system:String x:Key="Menu_File_New">New</system:String>
+    <system:String x:Key="Menu_File_New_NewProject">New Project</system:String>
+    <system:String x:Key="Menu_File_Open">Open</system:String>
+    <system:String x:Key="Menu_File_Add">Add</system:String>
+    <system:String x:Key="Menu_File_Exit">閉廷！解散！</system:String>
+    <system:String x:Key="Menu_Edit">芸術品にしてやんだよ</system:String>
+    <system:String x:Key="Menu_Edit_Undo">ｾﾝｾﾝｼｬﾙ</system:String>
+    <system:String x:Key="Menu_Edit_Redo">あーもう一回言ってくれ</system:String>
+    <system:String x:Key="Menu_Edit_Language">言語</system:String>
+    <system:String x:Key="Menu_Edit_Language_English">申レN(en-US)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Japanese">お前ノンケかよ(日本語)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Inmu">お前ホモか！(淫夢語録)</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme">白いの・黒いの</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_lightpink">すげえ白くなってる / はっきりわかんだね</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_darkpink">野獣 / くさい</system:String>
+    <system:String x:Key="Menu_Panel">シュバルゴ</system:String>
+    <system:String x:Key="Menu_Workspace">１１４５１４</system:String>
+    <system:String x:Key="Menu_Workspace_SaveAs">ポイテーロ</system:String>
+    <system:String x:Key="Menu_Workspace_Load">(≧Д≦)</system:String>
 
     <system:String x:Key="ControlPanel_DrawingTools_Name">描画のための右手</system:String>
+    <system:String x:Key="ControlPanel_Properties_Name">24歳、学生です</system:String>
+    <system:String x:Key="ControlPanel_CanvasView_Name">364364</system:String>
+    <system:String x:Key="ControlPanel_IBProjectView_Name">KBTIT</system:String>
+    <system:String x:Key="ControlPanel_LayarsView_Name">ま、多少はね？</system:String>
+    <system:String x:Key="ControlPanel_Color_Name">ｸｫｸｫｱ</system:String>
+    <system:String x:Key="ControlPanel_Brush_Name">見けりゃ見せてやるよ</system:String>
+    <system:String x:Key="ControlPanel_AppCommand_Name">お手だよお手</system:String>
+
 
 </ResourceDictionary>

@@ -5,6 +5,34 @@
 
     <system:String x:Key="IB_MainWindowTitle">Image Builder 2016 InDevelopment (日本語)</system:String>
 
+    <system:String x:Key="Menu_File">ファイル</system:String>
+    <system:String x:Key="Menu_File_New">新規作成</system:String>
+    <system:String x:Key="Menu_File_New_NewProject">New Project</system:String>
+    <system:String x:Key="Menu_File_Open">Open</system:String>
+    <system:String x:Key="Menu_File_Add">Add</system:String>
+    <system:String x:Key="Menu_File_Exit">アプリを終了</system:String>
+    <system:String x:Key="Menu_Edit">編集</system:String>
+    <system:String x:Key="Menu_Edit_Undo">元に戻す</system:String>
+    <system:String x:Key="Menu_Edit_Redo">やり直す</system:String>
+    <system:String x:Key="Menu_Edit_Language">言語</system:String>
+    <system:String x:Key="Menu_Edit_Language_English">English(US)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Japanese">Japanese(日本語)</system:String>
+    <system:String x:Key="Menu_Edit_Language_Inmu">Inmu(淫夢語録)</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme">GUIカラーテーマ</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_lightpink">白 / ピンク</system:String>
+    <system:String x:Key="Menu_Edit_ColorTheme_darkpink">黒 / ピンク</system:String>
+    <system:String x:Key="Menu_Panel">パネル</system:String>
+    <system:String x:Key="Menu_Workspace">ワークスペース</system:String>
+    <system:String x:Key="Menu_Workspace_SaveAs">名前を付けて保存</system:String>
+    <system:String x:Key="Menu_Workspace_Load">読み込み</system:String>
+
     <system:String x:Key="ControlPanel_DrawingTools_Name">描画ツール</system:String>
+    <system:String x:Key="ControlPanel_Properties_Name">プロパティ</system:String>
+    <system:String x:Key="ControlPanel_CanvasView_Name">キャンバス</system:String>
+    <system:String x:Key="ControlPanel_IBProjectView_Name">プロジェクト</system:String>
+    <system:String x:Key="ControlPanel_LayarsView_Name">レイヤー</system:String>
+    <system:String x:Key="ControlPanel_Color_Name">描画色</system:String>
+    <system:String x:Key="ControlPanel_Brush_Name">ブラシ</system:String>
+    <system:String x:Key="ControlPanel_AppCommand_Name">コマンド</system:String>
 
 </ResourceDictionary>

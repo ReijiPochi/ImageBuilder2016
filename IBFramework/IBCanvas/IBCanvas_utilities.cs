@@ -145,6 +145,7 @@ namespace IBFramework.IBCanvas
 
         public void RefreshOverlay()
         {
+            if (overlayCanvas == null) return;
             double zoom = ZoomPerCent / 100.0;
 
             foreach (UIElement c in overlayCanvas.Children)
