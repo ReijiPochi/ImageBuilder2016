@@ -19,13 +19,13 @@
                             <ibgui:IBButton x:Name="Undo" Width="30" Height="30" Margin="2" ToolTip="Undo One Step"
 								Command="{Binding UndoCommand,Mode=OneWay}">
                                 <ibgui:IBButton.Content>
-                                    <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
+                                    <Image Source="{DynamicResource UndoIcon}" Width="30" Height="30" />
                                 </ibgui:IBButton.Content>
                             </ibgui:IBButton>
                             <ibgui:IBButton x:Name="Redo" Width="30" Height="30" Margin="2" ToolTip="Redo One Step"
 								Command="{Binding RedoCommand,Mode=OneWay}">
                                 <ibgui:IBButton.Content>
-                                    <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
+                                    <Image Source="{DynamicResource RedoIcon}" Width="30" Height="30" />
                                 </ibgui:IBButton.Content>
                             </ibgui:IBButton>
                         </WrapPanel>

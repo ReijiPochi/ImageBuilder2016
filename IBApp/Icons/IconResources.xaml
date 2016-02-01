@@ -5,5 +5,9 @@
     <BitmapImage x:Key="EraserIcon" UriSource="EraserTool.png"/>
     <BitmapImage x:Key="PencilIcon" UriSource="PencilTool.png"/>
     <BitmapImage x:Key="PenlIcon" UriSource="PenTool.png"/>
-    
+    <BitmapImage x:Key="SelectionToolIcon" UriSource="SelectionTool.png"/>
+    <BitmapImage x:Key="DeformerlIcon" UriSource="Deformer.png"/>
+    <BitmapImage x:Key="UndoIcon" UriSource="Undo.png"/>
+    <BitmapImage x:Key="RedoIcon" UriSource="Redo.png"/>
+
 </ResourceDictionary>

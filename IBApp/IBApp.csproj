@@ -218,6 +218,10 @@
     <Resource Include="Icons\EraserTool.png" />
     <Resource Include="Icons\PenTool.png" />
     <Resource Include="Icons\PencilTool.png" />
+    <Resource Include="Icons\Redo.png" />
+    <Resource Include="Icons\Undo.png" />
+    <Resource Include="Icons\SelectionTool.png" />
+    <Resource Include="Icons\Deformer.png" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
     <Content Include="InfrastructureAssemblies\Livet.XML" />

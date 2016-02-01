@@ -13,17 +13,17 @@
                 <ControlTemplate TargetType="{x:Type local:DrawingToolsCP}">
                     <Grid DataContext="{StaticResource DrawingToolsVM}" Background="{DynamicResource IBBackGroundBrush}">
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ibgui:IBToggleButton x:Name="Deformer" Width="30" Height="30" Margin="2" Content="D"
+                            <ibgui:IBToggleButton x:Name="Deformer" Width="30" Height="30" Margin="2" ToolTip="Deformer"
 								ButtonON="{Binding DeformerON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <!--<ibgui:IBToggleButton.Content>
-                                    
-                                </ibgui:IBToggleButton.Content>-->
+                                <ibgui:IBToggleButton.Content>
+                                    <Image Source="{DynamicResource DeformerlIcon}" Width="30" Height="30" />
+                                </ibgui:IBToggleButton.Content>
                             </ibgui:IBToggleButton>
-                            <ibgui:IBToggleButton x:Name="SelectionTool" Width="30" Height="30" Margin="2" Content="S"
+                            <ibgui:IBToggleButton x:Name="SelectionTool" Width="30" Height="30" Margin="2" ToolTip="Selection Tool"
 								ButtonON="{Binding SelectionToolON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <!--<ibgui:IBToggleButton.Content>
-                                    
-                                </ibgui:IBToggleButton.Content>-->
+                                <ibgui:IBToggleButton.Content>
+                                    <Image Source="{DynamicResource SelectionToolIcon}" Width="30" Height="30" />
+                                </ibgui:IBToggleButton.Content>
                             </ibgui:IBToggleButton>
                             <ibgui:IBToggleButton x:Name="Pencil" Width="30" Height="30" Margin="2" ToolTip="Pencil"
 								ButtonON="{Binding PencilON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
