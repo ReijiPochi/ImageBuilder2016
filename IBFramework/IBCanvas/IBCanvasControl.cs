@@ -59,11 +59,6 @@ namespace IBFramework.IBCanvas
                 glControl.LostFocus += GlControl_LostFocus;
                 Application.Current.Exit += Current_Exit;
 
-                System.Drawing.Bitmap cur = new System.Drawing.Bitmap("cursorTest.png");
-                IntPtr h = cur.GetHicon();
-                var icon = System.Drawing.Icon.FromHandle(h);
-                glControl.Cursor = new System.Windows.Forms.Cursor(icon.Handle);
-
                 all.Add(this);
             }
         }
@@ -103,7 +98,8 @@ namespace IBFramework.IBCanvas
             root.Children.Add(overlayCanvas);
             Overlay.Content = root;
 
-            Overlay.Activated += Overlay_Activated;
+            Overlay.MouseEnter += Canvas_MouseEnter;
+            canvas.MouseEnter += Canvas_MouseEnter;
             canvas.PreviewMouseDown += Overlay_MouseDown;
             canvas.MouseWheel += Overlay_MouseWheel;
             canvas.PreviewStylusMove += Overlay_StylusMove;
@@ -325,11 +321,6 @@ namespace IBFramework.IBCanvas
             Overlay.Height = glControlHost.ActualHeight;
         }
 
-        private void Overlay_Activated(object sender, EventArgs e)
-        {
-            //owner.Activate();
-        }
-
         private void Overlay_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (WintabUtility.PenUsing) return;
@@ -349,6 +340,11 @@ namespace IBFramework.IBCanvas
             SetCam();
             RefreshOverlay();
             glControl.Refresh();
+        }
+
+        private void Canvas_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (Brush != null) Brush.Activate(this, ShowingElement);
         }
 
         private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
