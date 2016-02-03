@@ -29,7 +29,7 @@ namespace IBFramework.Image.Pixel
 
             if (penCursor == null)
             {
-                penCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PenCursor") as BitmapImage, 0, 0);
+                penCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PenCursor") as BitmapImage, 2, 1);
             }
 
             if (currentCanvas != null && currentCanvas.canvas.Cursor != penCursor)

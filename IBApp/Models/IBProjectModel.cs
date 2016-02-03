@@ -255,7 +255,7 @@ namespace IBApp.Models
         {
             CellSource newCellSource = new CellSource()
             {
-                Name = "Cell",
+                Name = "CS1",
                 IsSelected = true,
                 Width = 1920,
                 Height = 1080

@@ -31,13 +31,13 @@
                                     <Image Source="{DynamicResource PencilIcon}" Width="30" Height="30" />
                                 </ibgui:IBToggleButton.Content>
                             </ibgui:IBToggleButton>
-                            <ibgui:IBToggleButton x:Name="Pen" Width="30" Height="30" Margin="2"
+                            <ibgui:IBToggleButton x:Name="Pen" Width="30" Height="30" Margin="2" ToolTip="Pen"
 								ButtonON="{Binding PenON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ibgui:IBToggleButton.Content>
                                     <Image Source="{DynamicResource PenlIcon}" Width="30" Height="30" />
                                 </ibgui:IBToggleButton.Content>
                             </ibgui:IBToggleButton>
-                            <ibgui:IBToggleButton x:Name="Eraser" Width="30" Height="30" Margin="2"
+                            <ibgui:IBToggleButton x:Name="Eraser" Width="30" Height="30" Margin="2" ToolTip="Eraser"
 								ButtonON="{Binding EraserON, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ibgui:IBToggleButton.Content>
                                     <Image Source="{DynamicResource EraserIcon}" Width="30" Height="30" />

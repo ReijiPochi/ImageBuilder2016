@@ -31,10 +31,18 @@
                                         Command="{Binding ShowPropertiesCommand, Mode=OneWay}" ToolTip="Show Properties"/>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" Grid.Row="1">
-                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" Content="F"
-                                        Command="{Binding AddNewFolderCommand, Mode=OneWay}"/>
-                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" Content="C"
-                                        Command="{Binding AddNewCellSourceCommand, Mode=OneWay}"/>
+                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" MonoColorIcon="False" Margin="2" ToolTip="Add New Folder"
+                                        Command="{Binding AddNewFolderCommand, Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource FolderAddIcon}" Width="18" Height="18" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
+                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" MonoColorIcon="False" Margin="2" ToolTip="Add New CellSource"
+                                        Command="{Binding AddNewCellSourceCommand, Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource CellSourceAddIcon}" Width="18" Height="18" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
                         </StackPanel>
 
                         <ibgui:IBTreeView x:Name="TreeView" Grid.Row="1" Margin="0,30,0,0" ItemsSource="{Binding CurrentIBProject.ElementsRoot.Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
