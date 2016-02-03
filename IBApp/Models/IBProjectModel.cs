@@ -271,6 +271,7 @@ namespace IBApp.Models
             BG.LayerName = "BG";
             newCellSource.Layers.Add(BG);
             newCellSource.AddNewLayer();
+            newCellSource.AddNewLayer();
 
             if (ActiveTargetElement != null)
             {

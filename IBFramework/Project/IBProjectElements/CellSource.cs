@@ -55,6 +55,10 @@ namespace IBFramework.Project.IBProjectElements
             pi.imageData.ClearData(new PixelData() { r = 255, g = 255, b = 255, a = 0 });
             pi.LayerName = "Layer";
             pi.LayerType = ImageTypes.LineDrawing;
+            foreach(IBImage i in Layers)
+            {
+                i.IsSelectedLayer = false;
+            }
             pi.IsSelectedLayer = true;
             pi.imageData.TextureUpdate();
 
