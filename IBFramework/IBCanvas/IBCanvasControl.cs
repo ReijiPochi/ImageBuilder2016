@@ -277,11 +277,26 @@ namespace IBFramework.IBCanvas
             owner.LocationChanged += Owner_LocationChanged;
             owner.Activated += Owner_Activated;
             owner.Deactivated += Owner_Deactivated;
+            owner.StateChanged += Owner_StateChanged;
             owner.Closing += Owner_Closing;
 
             if (Overlay != null)
             {
                 Overlay.InputBindings.AddRange(Application.Current.MainWindow.InputBindings);
+            }
+        }
+
+        private void Owner_StateChanged(object sender, EventArgs e)
+        {
+            if(owner.WindowState == System.Windows.WindowState.Minimized)
+            {
+                if (Overlay != null)
+                    Overlay.WindowState = System.Windows.WindowState.Minimized;
+            }
+            else if(owner.WindowState== System.Windows.WindowState.Normal)
+            {
+                if (Overlay != null)
+                    Overlay.WindowState = System.Windows.WindowState.Normal;
             }
         }
 

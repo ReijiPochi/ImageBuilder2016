@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:IBApp"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="IB_MainWindowTitle">Image Builder 2016 InDevelopment (日本語)</system:String>
+    <system:String x:Key="IB_MainWindowTitle">Image Builder 2016 InDevelopment1 (日本語)</system:String>
 
     <system:String x:Key="Menu_File">ファイル</system:String>
     <system:String x:Key="Menu_File_New">新規作成</system:String>

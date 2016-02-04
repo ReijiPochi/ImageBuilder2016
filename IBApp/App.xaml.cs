@@ -18,13 +18,26 @@ namespace IBApp
         {
             DispatcherHelper.UIDispatcher = Dispatcher;
 
+#if !DEBUG
+            if(MessageBox.Show("このアプリケーションは開発途中です。" +
+                "使用することによって起きたいかなる損害について、開発者ReijiPochiは一切責任を負いません。\n\n" +
+                "Yesをクリックすると、自己責任でアプリケーションを使用することに同意し、直ちにアプリケーションを起動します。\n" +
+                "Noをクリックすると、アプリケーションを終了します。",
+                "免責",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                Current.Shutdown();
+            }
+#endif
+
             Models.IBAppModel.Current = new Models.IBAppModel();
             Models.IBProjectModel.Current = new Models.IBProjectModel();
             Models.RedoUndoModel.Current = new Models.RedoUndoModel();
 
-            #if !DEBUG
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            #endif
+#endif
         }
 
         //集約エラーハンドラ
