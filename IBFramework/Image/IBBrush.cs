@@ -159,6 +159,11 @@ namespace IBFramework.Image
             trgLayer = GetSelectedLayer();
         }
 
+        public virtual void Refresh()
+        {
+
+        }
+
         public virtual bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {
             currentCanvas = canvas;

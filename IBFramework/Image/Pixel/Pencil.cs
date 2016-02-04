@@ -6,16 +6,33 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using IBFramework.Project;
 using IBFramework.IBCanvas;
+using System.Windows.Input;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace IBFramework.Image.Pixel
 {
     public class Pencil : IBBrush
     {
         private double last_t = 0;
+        private Cursor pencilCursor;
 
         public override Control GetBP()
         {
             return null;
+        }
+
+        public override void Activate(IBCanvasControl canvas, IBProjectElement trg)
+        {
+            base.Activate(canvas, trg);
+
+            if (pencilCursor == null)
+            {
+                pencilCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PencilCursor") as BitmapImage, 0, 0);
+            }
+
+            if (currentCanvas != null && currentCanvas.canvas.Cursor != pencilCursor)
+                currentCanvas.canvas.Cursor = pencilCursor;
         }
 
         public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)

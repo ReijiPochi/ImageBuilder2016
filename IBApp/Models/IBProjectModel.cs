@@ -270,8 +270,8 @@ namespace IBApp.Models
             BG.Rect = new IBRectangle(1920 + 300, 1080 + 300, -150, -150);
             BG.LayerName = "BG";
             newCellSource.Layers.Add(BG);
-            newCellSource.AddNewLayer();
-            newCellSource.AddNewLayer();
+            newCellSource.AddNewLayer("下書き");
+            newCellSource.AddNewLayer("線画");
 
             if (ActiveTargetElement != null)
             {

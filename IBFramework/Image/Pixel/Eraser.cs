@@ -8,16 +8,53 @@ using IBFramework.IBCanvas;
 using IBFramework.Project;
 using Wintab;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace IBFramework.Image.Pixel
 {
     public class Eraser : IBBrush
     {
         private double last_t = 0;
+        private Cursor eraserCursor;
+
+        public Eraser()
+        {
+            PropertyChanged += Eraser_PropertyChanged;
+        }
+
+        private void Eraser_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (currentCanvas != null && e.PropertyName == "Size")
+                eraserCursor = IBCursor.GenCircleCursor(Size * 0.75 * currentCanvas.ZoomPerCent / 100.0);
+        }
 
         public override Control GetBP()
         {
             return new EraserBP() { DataContext = this };
+        }
+
+        public override void Activate(IBCanvasControl canvas, IBProjectElement trg)
+        {
+            base.Activate(canvas, trg);
+
+            if (currentCanvas != null)
+            {
+                eraserCursor = IBCursor.GenCircleCursor(Size * 0.75 * currentCanvas.ZoomPerCent / 100.0);
+                currentCanvas.canvas.Cursor = eraserCursor;
+            }
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            if (currentCanvas != null)
+            {
+                eraserCursor = IBCursor.GenCircleCursor(Size * 0.75 * currentCanvas.ZoomPerCent / 100.0);
+                currentCanvas.canvas.Cursor = eraserCursor;
+            }
         }
 
         public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)

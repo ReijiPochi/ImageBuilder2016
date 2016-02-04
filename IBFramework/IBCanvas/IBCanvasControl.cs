@@ -354,6 +354,7 @@ namespace IBFramework.IBCanvas
             ZoomPerCent = zoomList[zoomListIndex];
             SetCam();
             RefreshOverlay();
+            if (Brush != null) Brush.Refresh();
             glControl.Refresh();
         }
 

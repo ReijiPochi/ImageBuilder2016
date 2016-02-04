@@ -9,7 +9,7 @@ using IBFramework.Timeline;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.OpenGL;
 using IBFramework.IBCanvas;
-using System.Windows.Media;
+using System.Windows.Input;
 
 namespace IBFramework.Image.Pixel
 {
@@ -22,6 +22,14 @@ namespace IBFramework.Image.Pixel
 
         CellSource trgCell;
         private IBCoord start = new IBCoord();
+
+        public override void Activate(IBCanvasControl canvas, IBProjectElement trg)
+        {
+            base.Activate(canvas, trg);
+
+            if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
+                currentCanvas.canvas.Cursor = Cursors.Arrow;
+        }
 
         public override bool Set(IBCanvasControl canvas, IBProjectElement trg, IBCoord coord)
         {

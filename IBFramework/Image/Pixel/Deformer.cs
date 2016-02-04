@@ -44,7 +44,12 @@ namespace IBFramework.Image.Pixel
 
         public override void Activate(IBCanvasControl canvas, IBProjectElement trg)
         {
+            if (isActive) return;
+
             base.Activate(canvas, trg);
+
+            if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
+                currentCanvas.canvas.Cursor = Cursors.Arrow;
 
             trgCell = trgImage as CellSource;
             if (trgCell == null || currentCanvas == null || !trgCell.IsPixcelSelecting || trgCell.PixcelSelectedArea == null || !trgLayer.imageData.CanDraw)
@@ -190,7 +195,6 @@ namespace IBFramework.Image.Pixel
 
             if (!isActive)
             {
-                isActive = false;
                 return;
             }
 
@@ -240,6 +244,7 @@ namespace IBFramework.Image.Pixel
                 trgCell.PixcelSelectedArea = null;
                 trgCell.IsPixcelSelecting = false;
 
+                isActive = false;
                 IBCanvasControl.RefreshAll();
             }
         }

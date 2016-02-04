@@ -49,11 +49,11 @@ namespace IBFramework.Project.IBProjectElements
             return new CellSourcePP() { DataContext = this };
         }
 
-        public void AddNewLayer()
+        public void AddNewLayer(string name)
         {
             PixcelImage pi = new PixcelImage(Width + 300, Height + 300, -150, -150);
             pi.imageData.ClearData(new PixelData() { r = 255, g = 255, b = 255, a = 0 });
-            pi.LayerName = "Layer";
+            pi.LayerName = name;
             pi.LayerType = ImageTypes.LineDrawing;
             foreach(IBImage i in Layers)
             {
