@@ -22,6 +22,8 @@ namespace IBFramework.Project.IBProjectElements
                 PropertyHeaderName = "Folder \"" + Name + "\"";
         }
 
+        public string PropertyHeaderName { get; set; }
+
         public Control GetPP()
         {
             return new FolderPP() { DataContext = this };

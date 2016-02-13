@@ -15,5 +15,7 @@
 
     <BitmapImage x:Key="FolderAddIcon" UriSource="FolderAdd.png"/>
     <BitmapImage x:Key="CellSourceAddIcon" UriSource="CellSourceAdd.png"/>
+    <BitmapImage x:Key="AddLineDrawingLayerIcon" UriSource="AddLineDrawingLayer.png"/>
+    <BitmapImage x:Key="AddSingleColorLayerIcon" UriSource="AddSingleColorLayer.png"/>
 
 </ResourceDictionary>

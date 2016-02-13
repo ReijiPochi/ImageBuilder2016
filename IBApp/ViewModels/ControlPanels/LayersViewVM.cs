@@ -52,6 +52,8 @@ namespace IBApp.ViewModels.ControlPanels
                     return;
                 _CurrentCell = value;
                 RaisePropertyChanged();
+                AddSingleColorImageCommand.RaiseCanExecuteChanged();
+                AddLineDrawingImageCommand.RaiseCanExecuteChanged();
             }
         }
         #endregion
@@ -82,6 +84,60 @@ namespace IBApp.ViewModels.ControlPanels
                     IBProjectModel.Current.ActiveTargetLayer = i;
                 }
             }
+        }
+        #endregion
+
+        #region AddSingleColorImageCommand
+        private ViewModelCommand _AddSingleColorImageCommand;
+
+        public ViewModelCommand AddSingleColorImageCommand
+        {
+            get
+            {
+                if (_AddSingleColorImageCommand == null)
+                {
+                    _AddSingleColorImageCommand = new ViewModelCommand(AddSingleColorImage, CanAddSingleColorImage);
+                }
+                return _AddSingleColorImageCommand;
+            }
+        }
+
+        public bool CanAddSingleColorImage()
+        {
+            if (CurrentCell != null) return true;
+            else return false;
+        }
+
+        public void AddSingleColorImage()
+        {
+            CurrentCell.AddNewLayer("SingleColor", true, ImageTypes.SingleColor);
+        }
+        #endregion
+
+        #region AddLineDrawingImageCommand
+        private ViewModelCommand _AddLineDrawingImageCommand;
+
+        public ViewModelCommand AddLineDrawingImageCommand
+        {
+            get
+            {
+                if (_AddLineDrawingImageCommand == null)
+                {
+                    _AddLineDrawingImageCommand = new ViewModelCommand(AddLineDrawingImage, CanAddLineDrawingImage);
+                }
+                return _AddLineDrawingImageCommand;
+            }
+        }
+
+        public bool CanAddLineDrawingImage()
+        {
+            if (CurrentCell != null) return true;
+            else return false;
+        }
+
+        public void AddLineDrawingImage()
+        {
+            CurrentCell.AddNewLayer("Layer", true, ImageTypes.LineDrawing);
         }
         #endregion
 

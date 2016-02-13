@@ -44,6 +44,8 @@ namespace IBFramework.Timeline.TimelineElements
             }
         }
 
+        public string PropertyHeaderName { get; set; }
+
         public Control GetPP()
         {
             return new CellPP() { DataContext = this };

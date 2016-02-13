@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="Icons/IconResources.xaml"/>
 
                 <ResourceDictionary Source="Views/ControlPanels/ControlPanelResources.xaml"/>
+                <ResourceDictionary Source="Views/ControlPanels/LayersViewCP_Resource.xaml"/>
                 <ResourceDictionary Source="ViewModels/VMResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             

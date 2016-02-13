@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 using IBFramework.Image.Blend;
 using System.ComponentModel;
+using IBFramework.IBCanvas;
+using IBFramework.Project;
 
 namespace IBFramework.Image
 {
-    public abstract class IBImage : INotifyPropertyChanged
+    public class IBImage : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string propertyName)
@@ -18,6 +20,7 @@ namespace IBFramework.Image
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public IBProjectElement owner;
         public BGRA32FormattedImage imageData;
 
         private string _LayerName;
@@ -31,6 +34,21 @@ namespace IBFramework.Image
                     return;
                 _LayerName = value;
                 RaisePropertyChanged("LayerName");
+            }
+        }
+
+        private bool _IsVisible = true;
+        public bool IsVisible
+        {
+            get
+            { return _IsVisible; }
+            set
+            {
+                if (_IsVisible == value)
+                    return;
+                _IsVisible = value;
+                RaisePropertyChanged("IsVisible");
+                IBCanvasControl.RefreshAll();
             }
         }
 

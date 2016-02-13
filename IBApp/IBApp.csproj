@@ -145,6 +145,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ControlPanels\LayersViewCP_Resource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ControlPanels\PropertiesCP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -226,6 +230,8 @@
     <Resource Include="Icons\CellSourceAdd.png" />
     <Resource Include="Icons\PinLock.png" />
     <Resource Include="Icons\Lock.png" />
+    <Resource Include="Icons\AddLineDrawingLayer.png" />
+    <Resource Include="Icons\AddSingleColorLayer.png" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
     <Content Include="InfrastructureAssemblies\Livet.XML" />

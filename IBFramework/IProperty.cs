@@ -13,5 +13,9 @@ namespace IBFramework
         /// PropertiesPanel
         /// </summary>
         Control GetPP();
+
+        string PropertyHeaderName { get; set; }
+
+        bool IsLocked { get; set; }
     }
 }

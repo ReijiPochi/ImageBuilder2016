@@ -52,6 +52,8 @@ namespace IBFramework
 
         public static Cursor GenCircleCursor(double r)
         {
+            if (r < 2.0) r = 2.0;
+
             RenderTargetBitmap bmp = new RenderTargetBitmap((int)r * 2 + 2, (int)r * 2 + 2, 96, 96, PixelFormats.Pbgra32);
 
             Grid visual = new Grid();

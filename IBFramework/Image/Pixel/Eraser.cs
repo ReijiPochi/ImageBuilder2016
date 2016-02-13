@@ -39,7 +39,9 @@ namespace IBFramework.Image.Pixel
         {
             base.Activate(canvas, trg);
 
-            if (currentCanvas != null)
+            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+                currentCanvas.canvas.Cursor = Cursors.No;
+            else if (currentCanvas != null)
             {
                 eraserCursor = IBCursor.GenCircleCursor(Size * 0.75 * currentCanvas.ZoomPerCent / 100.0);
                 currentCanvas.canvas.Cursor = eraserCursor;

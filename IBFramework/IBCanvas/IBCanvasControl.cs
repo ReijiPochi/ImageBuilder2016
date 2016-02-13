@@ -368,7 +368,14 @@ namespace IBFramework.IBCanvas
             preX = (int)e.GetPosition(null).X;
             preY = (int)e.GetPosition(null).Y;
             if (Brush != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (ShowingElement != null && ShowingElement.Type == IBProjectElementTypes.CellSource)
+                {
+                    ((CellSource)ShowingElement).SetDrawingModeLayers();
+                }
+
                 Brush.Set(this, ShowingElement, GetImageCoord(this, e.GetPosition(null), ZoomPerCent / 100.0));
+            }
         }
 
         private void Overlay_MouseUp(object sender, MouseButtonEventArgs e)
@@ -524,11 +531,11 @@ namespace IBFramework.IBCanvas
             switch (ShowingElement.Type)
             {
                 case IBProjectElementTypes.CellSource:
-                    Render.RenderCellSource(ShowingElement as CellSource, ZoomPerCent, ref layer);
+                    DynamicRender.RenderCellSource(ShowingElement as CellSource, ZoomPerCent, ref layer);
                     break;
 
                 case IBProjectElementTypes.Cell:
-                    Render.RenderCell(ShowingElement as Cell, ZoomPerCent, ref layer, glControl.Width / 2, glControl.Height / 2, offsetX, offsetY);
+                    DynamicRender.RenderCell(ShowingElement as Cell, ZoomPerCent, ref layer, glControl.Width / 2, glControl.Height / 2, offsetX, offsetY);
                     SetCam();
                     break;
 

@@ -119,6 +119,9 @@ namespace IBApp.Models
                     return;
                 _ActiveTargetLayer = value;
                 RaisePropertyChanged();
+
+                if (value as IProperty != null)
+                    SelectedPropertyItem = (IProperty)value;
             }
         }
         #endregion
@@ -266,12 +269,13 @@ namespace IBApp.Models
             //i2.Rect.OffsetY = 0;
             //i2.LayerName = "layer2";
             //newCellSource.Layers.Add(i2);
-            SingleColorImage BG = new SingleColorImage(255, 255, 255, 255);
-            BG.Rect = new IBRectangle(1920 + 300, 1080 + 300, -150, -150);
-            BG.LayerName = "BG";
-            newCellSource.Layers.Add(BG);
-            newCellSource.AddNewLayer("下書き");
-            newCellSource.AddNewLayer("線画");
+            //SingleColorImage BG = new SingleColorImage(255, 255, 255, 255);
+            //BG.Rect = new IBRectangle(1920 + 300, 1080 + 300, -150, -150);
+            //BG.LayerName = "BG";
+            //newCellSource.Layers.Add(BG);
+            newCellSource.AddNewLayer("BG", false, ImageTypes.SingleColor);
+            newCellSource.AddNewLayer("下書き", false);
+            newCellSource.AddNewLayer("線画", false);
 
             if (ActiveTargetElement != null)
             {

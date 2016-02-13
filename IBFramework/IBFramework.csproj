@@ -82,9 +82,10 @@
     <Compile Include="Image\Pixel\PenBP.cs" />
     <Compile Include="Image\Pixel\Pencil.cs" />
     <Compile Include="Image\Pixel\SelectionTool.cs" />
+    <Compile Include="Image\SingleColorImagePP.cs" />
     <Compile Include="OpenCL\CLImageProcessing.cs" />
     <Compile Include="OpenCL\CLUtilities.cs" />
-    <Compile Include="OpenGL\Render.cs" />
+    <Compile Include="OpenGL\DynamicRender.cs" />
     <Compile Include="OpenGL\Texture.cs" />
     <Compile Include="Project\FlagButton.cs" />
     <Compile Include="Project\IBProject.cs" />
@@ -165,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Image\Pixel\PenBP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Image\SingleColorImagePP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

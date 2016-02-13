@@ -7,7 +7,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/IBApp;component/ViewModels/VMResources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
+    
     <Style TargetType="{x:Type local:LayersViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="DataContext" Value="{StaticResource LayarsViewVM}"/>
@@ -16,13 +16,39 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LayersViewCP}">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                        <ListView x:Name="View" ItemsSource="{Binding CurrentCell.Layers}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyleForLayer}">
+                        <ibgui:IBFocusableBG Grid.RowSpan="2"/>
+
+                        <ibgui:IBFocusableBG Height="Auto" Margin="0" Background="{DynamicResource IBBorderBrush}" HorizontalAlignment="Stretch"/>
+                        <ibgui:IBLabel Content="{Binding CurrentCell.Name}" Foreground="{DynamicResource IBForeGroundBrush}"
+                               Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" Grid.Row="1">
+                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" MonoColorIcon="False" Margin="2" ToolTip="Single Color Layer"
+                                        Command="{Binding AddSingleColorImageCommand, Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource AddSingleColorLayerIcon}" Width="18" Height="18" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
+                            <ibgui:IBButton Grid.Row="1" Height="22" Width="22" MonoColorIcon="False" Margin="2" ToolTip="Line Drawing Layer"
+                                        Command="{Binding AddLineDrawingImageCommand, Mode=OneWay}">
+                                <ibgui:IBButton.Content>
+                                    <Image Source="{DynamicResource AddLineDrawingLayerIcon}" Width="18" Height="18" />
+                                </ibgui:IBButton.Content>
+                            </ibgui:IBButton>
+                        </StackPanel>
+
+                        <ListView x:Name="View" Margin="0,30,0,0" Grid.Row="1"
+                                  ItemsSource="{Binding CurrentCell.Layers}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyleForLayer}">
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{DynamicResource GridViewColumnHeaderStyle}">
-                                    <GridViewColumn Header="" Width="30"/>
-                                    <GridViewColumn Header="Type" Width="50" DisplayMemberBinding="{Binding LayerType}"/>
-                                    <GridViewColumn Header="Name" Width="50" DisplayMemberBinding="{Binding LayerName}"/>
+                                    <GridViewColumn Header="" Width="30" CellTemplate="{DynamicResource VisibilityCell}"/>
+                                    <GridViewColumn Header="Type" Width="35" DisplayMemberBinding="{Binding LayerType}"/>
+                                    <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding LayerName}"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>

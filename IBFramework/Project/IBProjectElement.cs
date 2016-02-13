@@ -103,19 +103,6 @@ namespace IBFramework.Project
             }
         }
 
-        private string _PropertyHeaderName;
-        public string PropertyHeaderName
-        {
-            get { return _PropertyHeaderName; }
-            set
-            {
-                if (_PropertyHeaderName == value)
-                    return;
-                _PropertyHeaderName = value;
-                RaisePropertyChanged("PropertyHeaderName");
-            }
-        }
-
         private int _Width;
         public int Width
         {

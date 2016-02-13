@@ -14,12 +14,14 @@ using OpenTK.Graphics.OpenGL;
 
 namespace IBFramework.OpenGL
 {
-    public class Render
+    public class DynamicRender
     {
         public static float[] OverrayColor { get; set; } = new float[] { 0.0f, 0.0f, 0.0f, 0.5f };
 
         public static void DrawOneImage(IBImage i, double zoomPerCent, ref double layer)
         {
+            if (!i.IsVisible) return;
+
             double zoom = zoomPerCent / 100.0;
 
             double offsetX;

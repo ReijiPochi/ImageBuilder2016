@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.ComponentModel;
+using System.Windows.Input;
 
 using IBFramework.IBCanvas;
 using IBFramework.Project;
@@ -130,10 +131,10 @@ namespace IBFramework.Image
                     if (colorBalance <= 0.0) colorState = true;
                 }
 
-                Render.OverrayColor[0] = (float)(color1.r * colorBalance + color2.r * (1.0 - colorBalance)) / 255.0f;
-                Render.OverrayColor[1] = (float)(color1.g * colorBalance + color2.g * (1.0 - colorBalance)) / 255.0f;
-                Render.OverrayColor[2] = (float)(color1.b * colorBalance + color2.b * (1.0 - colorBalance)) / 255.0f;
-                Render.OverrayColor[3] = 0.6f;
+                DynamicRender.OverrayColor[0] = (float)(color1.r * colorBalance + color2.r * (1.0 - colorBalance)) / 255.0f;
+                DynamicRender.OverrayColor[1] = (float)(color1.g * colorBalance + color2.g * (1.0 - colorBalance)) / 255.0f;
+                DynamicRender.OverrayColor[2] = (float)(color1.b * colorBalance + color2.b * (1.0 - colorBalance)) / 255.0f;
+                DynamicRender.OverrayColor[3] = 0.6f;
 
                 if (currentCanvas != null)
                     currentCanvas.glControl.Refresh();

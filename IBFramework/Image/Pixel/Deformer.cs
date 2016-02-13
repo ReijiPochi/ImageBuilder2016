@@ -48,7 +48,9 @@ namespace IBFramework.Image.Pixel
 
             base.Activate(canvas, trg);
 
-            if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
+            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+                currentCanvas.canvas.Cursor = Cursors.No;
+            else if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
                 currentCanvas.canvas.Cursor = Cursors.Arrow;
 
             trgCell = trgImage as CellSource;

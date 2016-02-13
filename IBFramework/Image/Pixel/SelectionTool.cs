@@ -27,7 +27,9 @@ namespace IBFramework.Image.Pixel
         {
             base.Activate(canvas, trg);
 
-            if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
+            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+                currentCanvas.canvas.Cursor = Cursors.No;
+            else if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
                 currentCanvas.canvas.Cursor = Cursors.Arrow;
         }
 
@@ -40,9 +42,9 @@ namespace IBFramework.Image.Pixel
             if (trgLayer == null) return false;
 
             actionSummary = "Selection Tool / " + trg.Name;
-            Render.OverrayColor[0] = 0;
-            Render.OverrayColor[1] = 0;
-            Render.OverrayColor[2] = 0;
+            DynamicRender.OverrayColor[0] = 0;
+            DynamicRender.OverrayColor[1] = 0;
+            DynamicRender.OverrayColor[2] = 0;
 
             if (trgCell.PixcelSelectedArea != null)
             {

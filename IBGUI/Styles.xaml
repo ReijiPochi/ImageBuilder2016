@@ -245,6 +245,7 @@
 
     <Style x:Key="GridViewScrollViewerStyle" TargetType="ScrollViewer">
         <Setter Property="Background" Value="{DynamicResource IBEditableAreaBruah}"/>
+        <Setter Property="CanContentScroll" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollViewer">
@@ -259,7 +260,7 @@
                         </Grid.RowDefinitions>
 
                         <DockPanel Margin="{TemplateBinding Padding}">
-                            <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Focusable="false">
+                            <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Focusable="false" CanContentScroll="{TemplateBinding CanContentScroll}">
                                 <GridViewHeaderRowPresenter Margin="2,0,2,0" Columns="{Binding Path=TemplatedParent.View.Columns,RelativeSource={RelativeSource TemplatedParent}}"
                                           ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle,RelativeSource={RelativeSource TemplatedParent}}"
                                           ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}"
@@ -316,31 +317,6 @@
                             <ItemsPresenter />
                         </ScrollViewer>
                     </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="ListViewItemStyleForLayer" TargetType="ListViewItem">
-        <Setter Property="SnapsToDevicePixels" Value="true" />
-        <Setter Property="Foreground" Value="{DynamicResource IBForeGroundBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="IsSelected" Value="{Binding IsSelectedLayer}"/>
-        <Setter Property="Visibility" Value="{Binding IsNotSelectersLayer,Converter={StaticResource Bool_VisibilityConverter}}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ListBoxItem">
-                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" BorderThickness="1"
-                            Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                        <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource IBBorderBrush}"/>
-                            <Setter Property="BorderBrush" Value="{DynamicResource IBFocusBorderBrush}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

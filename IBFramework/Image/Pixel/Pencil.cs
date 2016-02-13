@@ -31,7 +31,9 @@ namespace IBFramework.Image.Pixel
                 pencilCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PencilCursor") as BitmapImage, 0, 0);
             }
 
-            if (currentCanvas != null && currentCanvas.canvas.Cursor != pencilCursor)
+            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+                currentCanvas.canvas.Cursor = Cursors.No;
+            else if (currentCanvas != null && currentCanvas.canvas.Cursor != pencilCursor)
                 currentCanvas.canvas.Cursor = pencilCursor;
         }
 
