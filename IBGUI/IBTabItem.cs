@@ -55,6 +55,10 @@ namespace IBGUI
             DependencyProperty.Register("IsActivePanel", typeof(bool), typeof(IBTabItem), new PropertyMetadata(false));
 
 
+        public bool LockWidth { get; set; }
+
+
+
         public delegate void PanelActivatedEventHandler(object sender, PanelActivatedEventArgs e);
         public static RoutedEvent PanelActivatedEvent = EventManager.RegisterRoutedEvent(
             "PanelActivated", RoutingStrategy.Bubble, typeof(PanelActivatedEventHandler), typeof(IBTabItem));

@@ -158,7 +158,7 @@ namespace IBFramework
             parent.Items.Remove(this);
 
             if (parent.Items.Count == 0)
-                parent.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems **" });
+                parent.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***" });
         }
     }
 }

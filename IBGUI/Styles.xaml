@@ -46,29 +46,22 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IBThumbStyle" TargetType="{x:Type Thumb}" BasedOn="{x:Null}">
+    <Style x:Key="IBGridSplitter" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Grid Margin="0,0,0,0" x:Name="Grid">
-                        <Rectangle HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
-                                   Fill="{DynamicResource IBBorderBrush}"/>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
-                        </Trigger>
-                        <Trigger Property="IsDragging" Value="True">
-                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="IBRepeatButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{x:Null}"/>
+    <Style x:Key="ScrollBarButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
@@ -89,98 +82,125 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IBScrollRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
-        <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{x:Null}"/>
-        <Setter Property="IsTabStop" Value="false"/>
+    <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Focusable" Value="false"/>
+        <Setter Property="IsTabStop" Value="false"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid>
-                        <Rectangle Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"/>
+                    <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid Margin="0,0,0,0" x:Name="Grid">
+                        <Rectangle HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
+                                   Fill="{DynamicResource IBBorderBrush}"/>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter Property="Fill" TargetName="Rectangle" Value="{DynamicResource IBFocusBrush_T}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style x:Key="IBScrollBarStyle" TargetType="{x:Type ScrollBar}">
-        <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
         <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
-        <Setter Property="ContextMenu" Value="{x:Null}"/>
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Width" Value="15"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="GridRoot" Width="15" Background="{TemplateBinding Background}">
+                    <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
                         <Grid.RowDefinitions>
                             <RowDefinition MaxHeight="23"/>
                             <RowDefinition Height="0.00001*"/>
                             <RowDefinition MaxHeight="23"/>
                         </Grid.RowDefinitions>
-
-                        <RepeatButton x:Name="DecreaseRepeat" Style="{StaticResource IBRepeatButtonStyle}" Command="ScrollBar.LineUpCommand" BorderBrush="{x:Null}" Background="{TemplateBinding Background}">
-                            <Path x:Name="path" Data="M-6,3 L-3,-4 0,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                        <RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" Style="{StaticResource ScrollBarButton}">
+                            <RepeatButton.Content>
+                                <Path Data="M-6,3 L-3,-3 0,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                            </RepeatButton.Content>
                         </RepeatButton>
-
-                        <!-- Track は両端をジャンプしてスクロールする Thumb と Repeat Button のサイズを変更する特殊なレイアウト コンテナーです -->
-                        <Track Grid.Row="1" x:Name="PART_Track" Orientation="Vertical" IsDirectionReversed="true">
-                            <Track.Thumb>
-                                <Thumb Style="{StaticResource IBThumbStyle}" Foreground="{x:Null}"/>
-                            </Track.Thumb>
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton x:Name="PageUp" Style="{StaticResource IBScrollRepeatButtonStyle}" Command="ScrollBar.PageDownCommand"/>
-                            </Track.IncreaseRepeatButton>
+                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
                             <Track.DecreaseRepeatButton>
-                                <RepeatButton x:Name="PageDown" Style="{StaticResource IBScrollRepeatButtonStyle}" Command="ScrollBar.PageUpCommand"/>
+                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource ScrollBarPageButton}"/>
                             </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource ScrollBarThumb}"/>
+                            </Track.Thumb>
                         </Track>
-
-                        <RepeatButton Grid.Row="2" x:Name="IncreaseRepeat" Style="{StaticResource IBRepeatButtonStyle}" Command="ScrollBar.LineDownCommand" BorderBrush="{x:Null}" Background="{TemplateBinding Background}">
-                            <Path x:Name="path1" Data="M-6,3 L-3,-4 0,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleY="-1"/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
-                                    </TransformGroup>
-                                </Path.RenderTransform>
-                            </Path>
+                        <RepeatButton Command="{x:Static ScrollBar.LineDownCommand}" Grid.Row="2" Style="{StaticResource ScrollBarButton}">
+                            <RepeatButton.Content>
+                                <Path Data="M-6,-3 L-3,3 0,-3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                            </RepeatButton.Content>
                         </RepeatButton>
                     </Grid>
-
-                    <!-- これは ScrollBar の単一のテンプレートを使用し、これを水平方向に回転します
-					上下のコマンドの代わりに左右のコマンドを実行するように、コマンドの変更も行います -->
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True" SourceName="DecreaseRepeat">
-                            <Setter Property="Fill" TargetName="path" Value="{DynamicResource IBFocusBrush_T}"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True" SourceName="IncreaseRepeat">
-                            <Setter Property="Fill" TargetName="path1" Value="{DynamicResource IBFocusBrush_T}"/>
-                        </Trigger>
-                        <Trigger Property="Orientation" Value="Horizontal">
-
-                            <!-- ScrollBar を垂直から水平に回転します -->
-                            <Setter Property="LayoutTransform" TargetName="GridRoot">
-                                <Setter.Value>
-                                    <RotateTransform Angle="-90"/>
-                                </Setter.Value>
-                            </Setter>
-
-                            <!-- Track は内部で Orientation にバインドされているため、回転して垂直に戻す必要があります -->
-                            <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical"/>
-
-                            <!-- 水平のコマンドを実行するようにコマンドを変更します -->
-                            <Setter Property="Command" Value="ScrollBar.LineLeftCommand" TargetName="DecreaseRepeat"/>
-                            <Setter Property="Command" Value="ScrollBar.LineRightCommand" TargetName="IncreaseRepeat"/>
-                            <Setter Property="Command" Value="ScrollBar.PageLeftCommand" TargetName="PageDown"/>
-                            <Setter Property="Command" Value="ScrollBar.PageRightCommand" TargetName="PageUp"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto"/>
+                <Setter Property="MinWidth" Value="0"/>
+                <Setter Property="Height" Value="15"/>
+                <Setter Property="Background" Value="{DynamicResource IBBackGroundBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="23"/>
+                                    <ColumnDefinition Width="0.00001*"/>
+                                    <ColumnDefinition MaxWidth="23"/>
+                                </Grid.ColumnDefinitions>
+                                <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" Style="{StaticResource ScrollBarButton}">
+                                    <RepeatButton.Content>
+                                        <Path Data="M-3,0 L3,-3 3,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                                    </RepeatButton.Content>
+                                </RepeatButton>
+                                <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource ScrollBarThumb}"/>
+                                    </Track.Thumb>
+                                </Track>
+                                <RepeatButton Grid.Column="2" Command="{x:Static ScrollBar.LineRightCommand}" Style="{StaticResource ScrollBarButton}">
+                                    <RepeatButton.Content>
+                                        <Path Data="M3,0 L-3,-3 -3,3 z" Fill="{DynamicResource IBInactiveForeGroundBrush}" Height="8" Stretch="Fill" StrokeThickness="0" Width="8"/>
+                                    </RepeatButton.Content>
+                                </RepeatButton>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="IBTreeViewItemToggleButtonStyle" TargetType="{x:Type ToggleButton}">

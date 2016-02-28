@@ -32,7 +32,7 @@ namespace IBFramework.Image.Pixel
                 penCursor = IBCursor.BitmapImageToCursor(Application.Current.FindResource("PenCursor") as BitmapImage, 2, 1);
             }
 
-            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+            if (currentCanvas != null && trgLayer!=null && trgLayer.LayerType == ImageTypes.SingleColor)
                 currentCanvas.canvas.Cursor = Cursors.No;
             else if (currentCanvas != null && currentCanvas.canvas.Cursor != penCursor)
                 currentCanvas.canvas.Cursor = penCursor;

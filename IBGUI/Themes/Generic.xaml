@@ -630,7 +630,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ScrollContentPresenter x:Name="view" Grid.Column="0" Grid.Row="0" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}"
-                                                Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" CanVerticallyScroll="True" CanHorizontallyScroll="True"/>
+                                                Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="{TemplateBinding Padding}" CanVerticallyScroll="True" CanHorizontallyScroll="True"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         <ScrollBar Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="1" x:Name="PART_HorizontalScrollBar" Orientation="Horizontal"
                                    Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Minimum="0" Maximum="{TemplateBinding ScrollableWidth}"
                                    Style="{StaticResource IBScrollBarStyle}" Height="15" MinHeight="15"/>
@@ -671,7 +672,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
 
                         <local:IBScrollViewer Focusable="False" Background="{TemplateBinding Background}" CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}" Padding="{TemplateBinding Padding}"
-                                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
                             <ItemsPresenter/>
                         </local:IBScrollViewer>
                     </Border>

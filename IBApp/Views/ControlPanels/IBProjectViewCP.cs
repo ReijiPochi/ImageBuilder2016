@@ -18,6 +18,7 @@ using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.RedoUndo;
 using System.Windows.Interactivity;
+using System.Globalization;
 
 namespace IBApp.Views.ControlPanels
 {
@@ -64,9 +65,10 @@ namespace IBApp.Views.ControlPanels
 
         private void Tv_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (tv.SelectedItem == null) return;
+            IBProject.Current.ElementsRoot.ClearAllSelections();
 
-            ((IBProjectElement)tv.SelectedItem).IsSelected = false;
+            if (tv.SelectedItem != null)
+                ((IBProjectElement)tv.SelectedItem).IsSelected = false;
         }
 
         private void Tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -76,22 +78,40 @@ namespace IBApp.Views.ControlPanels
 
         private void Tv_Drop(object sender, DragEventArgs e)
         {
-            string[] formats = e.Data.GetFormats();
-            if (formats.Length == 0) return;
+            if (IBProjectElement.MultiSelectingList.Count == 0)
+            {
+                string[] formats = e.Data.GetFormats();
+                if (formats.Length == 0) return;
 
-            IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
-            if (from == null) return;
+                IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
+                if (from == null) return;
 
+                RedoUndoManager.Current.Record(DoMove(from));
+            }
+            else
+            {
+                RUMoveMultiProjectElements hists = new RUMoveMultiProjectElements();
+
+                foreach (IBProjectElement from in IBProjectElement.MultiSelectingList)
+                {
+                    hists.RecordToThis(DoMove(from));
+                }
+
+                RedoUndoManager.Current.Record(hists);
+            }
+        }
+
+        private static RUMoveProjectElement DoMove(IBProjectElement from)
+        {
             IBProjectElement preParent = from.Parent;
             int preIndex;
 
             preIndex = preParent.Children.IndexOf(from);
 
             from.Parent.RemoveChild(from);
-
             IBProject.Current.ElementsRoot.AddChild(from);
 
-            RedoUndoManager.Current.Record(new RUMoveProjectElement(from, preParent, preIndex));
+            return new RUMoveProjectElement(from, preParent, preIndex);
         }
 
         /// <summary>
@@ -119,6 +139,19 @@ namespace IBApp.Views.ControlPanels
         {
             return grobalSelectedElement;
         }
+
+
+        public static bool GetAttachmentIsMultiSelecting(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(AttachmentIsMultiSelectingProperty);
+        }
+
+        public static void SetAttachmentIsMultiSelecting(DependencyObject obj, bool value)
+        {
+            obj.SetValue(AttachmentIsMultiSelectingProperty, value);
+        }
+        public static readonly DependencyProperty AttachmentIsMultiSelectingProperty =
+            DependencyProperty.RegisterAttached("AttachmentIsMultiSelecting", typeof(bool), typeof(IBProjectViewCP), new PropertyMetadata(false));
     }
 
     public class RUMoveProjectElement : RedoUndoAction
@@ -162,6 +195,41 @@ namespace IBApp.Views.ControlPanels
         }
     }
 
+    public class RUMoveMultiProjectElements : RedoUndoAction
+    {
+        public RUMoveMultiProjectElements()
+        {
+
+        }
+        
+        public void RecordToThis(RUMoveProjectElement hist)
+        {
+            currentHistory.Add(hist);
+        }
+
+        private List<RUMoveProjectElement> currentHistory = new List<RUMoveProjectElement>();
+
+        public override void Redo()
+        {
+            base.Redo();
+
+            foreach (RUMoveProjectElement hist in currentHistory)
+            {
+                hist.Redo();
+            }
+        }
+
+        public override void Undo()
+        {
+            base.Undo();
+
+            foreach(RUMoveProjectElement hist in currentHistory.Reverse<RUMoveProjectElement>())
+            {
+                hist.Undo();
+            }
+        }
+    }
+
     public class IBProjectViewItemsBehavier : Behavior<StackPanel>
     {
         protected override void OnAttached()
@@ -169,11 +237,15 @@ namespace IBApp.Views.ControlPanels
             base.OnAttached();
 
             trg = IBProjectViewCP.FindTreeViewItem(AssociatedObject as FrameworkElement);
+            trgElement = AssociatedObject.DataContext as IBProjectElement;
 
             if (trg != null)
             {
+                AssociatedObject.PreviewMouseLeftButtonDown += AssociatedObject_PreviewMouseLeftButtonDown;
+                AssociatedObject.PreviewMouseUp += AssociatedObject_PreviewMouseUp;
                 trg.MouseRightButtonDown += AssociatedObject_MouseRightButtonDown;
                 trg.AllowDrop = true;
+                AssociatedObject.MouseEnter += AssociatedObject_MouseEnter;
                 trg.MouseLeave += Trg_MouseLeave;
                 trg.DragLeave += Trg_DragLeave;
                 trg.DragEnter += Trg_DragEnter;
@@ -188,7 +260,10 @@ namespace IBApp.Views.ControlPanels
 
             if (trg != null)
             {
+                AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObject_PreviewMouseLeftButtonDown;
+                AssociatedObject.PreviewMouseUp -= AssociatedObject_PreviewMouseUp;
                 trg.MouseRightButtonDown -= AssociatedObject_MouseRightButtonDown;
+                AssociatedObject.MouseEnter -= AssociatedObject_MouseEnter;
                 trg.MouseLeave -= Trg_MouseLeave;
                 trg.DragLeave -= Trg_DragLeave;
                 trg.DragEnter -= Trg_DragEnter;
@@ -205,29 +280,57 @@ namespace IBApp.Views.ControlPanels
             Bottom
         }
 
+        bool isMousePressed;
         TreeViewItem trg;
         const double HEIGHT = 22;
         IBProjectElement trgElement;
         IBProjectElement from_temp;
         DropTo fromDropTo;
 
+        private void AssociatedObject_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isMousePressed = true;
+
+            if (trgElement != null && !trgElement.IsMultiSelecting)
+            {
+                IBProject.Current.ElementsRoot.ClearAllSelections();
+            }
+        }
+
+        private void AssociatedObject_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            isMousePressed = false;
+        }
+
         private void AssociatedObject_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (trg != null)
+            {
+                IBProject.Current.ElementsRoot.ClearAllSelections();
                 trg.IsSelected = true;
+            }
 
             e.Handled = true;
         }
 
+        private void AssociatedObject_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (!isMousePressed && e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (trgElement != null)
+                    trgElement.IsMultiSelecting = true;
+            }
+        }
+
         private void Trg_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton== MouseButtonState.Pressed)
+            if(isMousePressed)
             {
-                IBProjectElement selectedItem = IBProjectViewCP.GetSelectedElement();
-                if (selectedItem == null) return;
-                DragDrop.DoDragDrop(trg, selectedItem, DragDropEffects.Move);
+                if (trgElement == null) return;
+                DragDrop.DoDragDrop(trg, trgElement, DragDropEffects.Move);
             }
 
+            isMousePressed = false;
             EndDrag();
         }
 
@@ -240,14 +343,46 @@ namespace IBApp.Views.ControlPanels
                 return;
             }
 
-            string[] formats = e.Data.GetFormats();
-            if (formats.Length == 0) return;
+            if (IBProjectElement.MultiSelectingList.Count == 0)
+            {
+                string[] formats = e.Data.GetFormats();
+                if (formats.Length == 0) return;
 
-            IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
-            if (from == null) return;
+                IBProjectElement from = e.Data.GetData(formats[0]) as IBProjectElement;
+                if (from == null) return;
 
-            if (trgElement == null || from == trgElement) return;
+                if (trgElement == null || from == trgElement) return;
 
+                RUMoveProjectElement hist = DoMove(from);
+                RedoUndoManager.Current.Record(hist);
+            }
+            else
+            {
+                RUMoveMultiProjectElements hists = new RUMoveMultiProjectElements();
+
+                if(fromDropTo == DropTo.Bottom)
+                {
+                    foreach (IBProjectElement from in IBProjectElement.MultiSelectingList.Reverse())
+                    {
+                        hists.RecordToThis(DoMove(from));
+                    }
+                }
+                else
+                {
+                    foreach (IBProjectElement from in IBProjectElement.MultiSelectingList)
+                    {
+                        hists.RecordToThis(DoMove(from));
+                    }
+                }
+
+                RedoUndoManager.Current.Record(hists);
+            }
+
+            EndDrag();
+        }
+
+        private RUMoveProjectElement DoMove(IBProjectElement from)
+        {
             int trgIndex, fromIndex;
             IBProjectElement preParent = from.Parent;
 
@@ -277,9 +412,8 @@ namespace IBApp.Views.ControlPanels
             }
 
             from.IsSelected = true;
-            EndDrag();
 
-            RedoUndoManager.Current.Record(new RUMoveProjectElement(from, preParent, fromIndex));
+            return new RUMoveProjectElement(from, preParent, fromIndex);
         }
 
         private void Trg_DragLeave(object sender, DragEventArgs e)
@@ -296,7 +430,6 @@ namespace IBApp.Views.ControlPanels
             if (from_temp != null)
             {
                 trg.IsSelected = true;
-                trgElement = IBProjectViewCP.GetSelectedElement();
                 if (trgElement == null) return;
 
                 trg.BorderBrush = Application.Current.FindResource("IBFocusBorderBrush") as SolidColorBrush;
@@ -349,5 +482,28 @@ namespace IBApp.Views.ControlPanels
             fromDropTo = DropTo.None;
         }
 
+    }
+
+    public class TypeToIcon : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((IBProjectElementTypes)value)
+            {
+                case IBProjectElementTypes.Folder:
+                    return "/IBFramework;component/ImageResources/Folder.png";
+
+                case IBProjectElementTypes.CellSource:
+                    return "/IBFramework;component/ImageResources/CellSource.png";
+
+                default:
+                    return "/IBFramework;component/ImageResources/Folder.png";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

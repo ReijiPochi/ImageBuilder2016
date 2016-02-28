@@ -27,7 +27,7 @@ namespace IBFramework.Image.Pixel
         {
             base.Activate(canvas, trg);
 
-            if (currentCanvas != null && trgLayer.LayerType == ImageTypes.SingleColor)
+            if (currentCanvas != null && trgLayer != null && trgLayer.LayerType == ImageTypes.SingleColor)
                 currentCanvas.canvas.Cursor = Cursors.No;
             else if (currentCanvas != null && currentCanvas.canvas.Cursor != Cursors.Arrow)
                 currentCanvas.canvas.Cursor = Cursors.Arrow;

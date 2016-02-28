@@ -16,6 +16,7 @@
         <ResourceDictionary Source="/IBFramework;component/IBCanvas/OverlayThumb_Design.xaml" />
         <ResourceDictionary Source="/IBFramework;component/Image/Pixel/EraserBP_Design.xaml"/>
         <ResourceDictionary Source="/IBFramework;component/Image/SingleColorImagePP_Design.xaml"/>
+        <ResourceDictionary Source="/IBFramework;component/Timeline/TimelineControl_Design.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

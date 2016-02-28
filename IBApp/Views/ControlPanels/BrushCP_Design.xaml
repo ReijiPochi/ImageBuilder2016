@@ -24,7 +24,7 @@
                         <Label HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25,0,27,0" Padding="0" Foreground="{DynamicResource IBForeGroundBrush}"
                                 Content="{Binding CurrentBrushName}"/>
 
-                        <ibgui:IBScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False">
+                        <ibgui:IBScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Focusable="False" HorizontalContentAlignment="Stretch">
                             <ContentPresenter Content="{Binding CurrentBP}"/>
                         </ibgui:IBScrollViewer>
                     </Grid>

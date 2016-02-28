@@ -107,7 +107,7 @@ namespace IBGUI
             if (Items.Count == 1)
             {
                 IBTabItem i = Items[0] as IBTabItem;
-                if (i != null || i as IBTabItem != null)
+                if (i != null && !i.LockWidth)
                 {
                     i.Width = ActualWidth;
                 }

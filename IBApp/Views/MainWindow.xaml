@@ -130,6 +130,7 @@
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Color_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Color}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Brush_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Brush}"/>
                 <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_AppCommand_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource AppCommand}"/>
+                <ibgui:IBMenuItem Header="{DynamicResource ControlPanel_Timeline_Name}" Command="{Binding ShowControlPanelCommand, Mode=OneWay}" CommandParameter="{DynamicResource Timeline}"/>
             </ibgui:IBMenuItem>
             <ibgui:IBMenuItem Header="{DynamicResource Menu_Workspace}">
                 <ibgui:IBMenuItem.DataContext>

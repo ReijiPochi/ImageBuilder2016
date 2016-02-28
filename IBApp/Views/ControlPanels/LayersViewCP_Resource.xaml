@@ -33,7 +33,7 @@
     </Style>
 
     <DataTemplate x:Key="VisibilityCell">
-        <ibgui:IBToggleButton ButtonON="{Binding IsVisible,Mode=TwoWay}" Width="16" Height="16"/>
+        <ibgui:IBToggleButton ButtonON="{Binding IsVisible,Mode=TwoWay}" Width="14" Height="14" BorderBrush="{DynamicResource IBBackGroundBrush_T}" BorderThickness="1"/>
     </DataTemplate>
 
 

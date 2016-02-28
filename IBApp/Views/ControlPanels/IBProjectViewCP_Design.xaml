@@ -9,6 +9,8 @@
         <ResourceDictionary Source="IBProjectViewCP_Resource.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <local:TypeToIcon x:Key="TypeToIcon"/>
+
     <Style TargetType="{x:Type local:IBProjectViewCP}">
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="DataContext" Value="{StaticResource IBProjectViewVM}"/>
@@ -55,11 +57,15 @@
                             <ibgui:IBTreeView.ItemTemplate>
                                 
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Background="#01000000">
                                         <i:Interaction.Behaviors>
                                             <local:IBProjectViewItemsBehavier/>
                                         </i:Interaction.Behaviors>
+
+                                        <!--<Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="10" Fill="{Binding Type,Mode=OneWay,Converter={StaticResource ElementToBrushConverter}}"/>-->
+                                        <Image Source="{Binding Type,Mode=OneWay,Converter={StaticResource TypeToIcon}}" Height="18" Width="18" Margin="0,0,5,0"/>
                                         <TextBlock Text="{Binding Name}"/>
+                                        
                                     </StackPanel>
                                 </HierarchicalDataTemplate>
                                 

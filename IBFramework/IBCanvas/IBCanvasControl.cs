@@ -1,36 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Forms.Integration;
-using System.Windows.Threading;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using IBFramework.Image;
-using IBFramework.Image.Blend;
 using IBFramework.Timeline.TimelineElements;
-using IBGUI;
 using IBFramework.Project;
 using IBFramework.Project.IBProjectElements;
 using IBFramework.OpenGL;
+
 using Wintab;
+using IBGUI;
 
 namespace IBFramework.IBCanvas
 {
@@ -85,7 +74,7 @@ namespace IBFramework.IBCanvas
             Tabs = GetTemplateChild("Tabs") as IBTabControl;
             Tabs.ItemsChanged += Tabs_ItemsChanged;
             Tabs.SelectionChanged += Tabs_SelectionChanged;
-            Tabs.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***" });
+            Tabs.Items.Add(new SubTabItem() { isDummyItem = true, Header = "*** NoItems ***"});
 
             Overlay = new Window() { WindowStyle = WindowStyle.None, AllowsTransparency = true, Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)) };
             canvas = new InkCanvas();
@@ -500,11 +489,11 @@ namespace IBFramework.IBCanvas
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach(IBProjectElement ele in OpenedElements)
-            {
-                if (ele.Type == IBProjectElementTypes.CellSource)
-                    ((CellSource)ele).EndDrawingModeLayers();
-            }
+            //foreach(IBProjectElement ele in OpenedElements)
+            //{
+            //    if (ele.Type == IBProjectElementTypes.CellSource)
+            //        ((CellSource)ele).EndDrawingModeLayers();
+            //}
 
             if (Tabs.SelectedItem != null)
             {
@@ -565,6 +554,7 @@ namespace IBFramework.IBCanvas
                 SubTabItem s = new SubTabItem();
                 s.Element = trgC;
                 s.Header = trgC.Name;
+                s.LockWidth = true;
                 Tabs.Items.Add(s);
             }
 

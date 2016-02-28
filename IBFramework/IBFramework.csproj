@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -69,6 +70,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\AnimationValueBase.cs" />
+    <Compile Include="Animation\IBAnimationClock.cs" />
+    <Compile Include="Animation\IBDouble.cs" />
+    <Compile Include="Animation\IBTime.cs" />
+    <Compile Include="Animation\KeyFrame.cs" />
     <Compile Include="IBCanvas\IOverlayItems.cs" />
     <Compile Include="ElementToBrushConverter.cs" />
     <Compile Include="IBCanvas\OverlaySizeGrip.cs" />
@@ -106,6 +112,7 @@
     <Compile Include="RedoUndo\RedoUndoAction.cs" />
     <Compile Include="IBCanvas\IBCanvas_utilities.cs" />
     <Compile Include="IBCanvas\OverlayBorder.cs" />
+    <Compile Include="Timeline\TimelineControl.cs" />
     <Compile Include="Timeline\TimelineElements\Cell.cs" />
     <Compile Include="IBCanvas\IBCanvasControl.cs" />
     <Compile Include="Image\IBImage.cs" />
@@ -130,6 +137,7 @@
     <Compile Include="Timeline\TimelineElements\CellPP.cs" />
     <Compile Include="SubTabItem.cs" />
     <Compile Include="Timeline\TimelineElement.cs" />
+    <Compile Include="Timeline\TimelineElements\Cut.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -201,6 +209,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Timeline\TimelineControl_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Timeline\TimelineElements\CellPP_Design.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -211,7 +223,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Animation\" />
     <Folder Include="Audio\" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +235,51 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ImageResources\PencilCursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\AddLineDrawingLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\AddSingleColorLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\CellSource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\CellSourceAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\Deformer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\EraserTool.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\FolderAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\Lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\PencilTool.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\PenTool.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\PinLock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\Redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\SelectionTool.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ImageResources\Undo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

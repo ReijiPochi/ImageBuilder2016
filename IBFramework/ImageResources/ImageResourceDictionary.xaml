@@ -4,4 +4,23 @@
     <BitmapImage x:Key="PenCursor" UriSource="PenCursor.png"/>
     <BitmapImage x:Key="PencilCursor" UriSource="PencilCursor.png"/>
 
+    <BitmapImage x:Key="EraserIcon" UriSource="EraserTool.png"/>
+    <BitmapImage x:Key="PencilIcon" UriSource="PencilTool.png"/>
+    <BitmapImage x:Key="PenlIcon" UriSource="PenTool.png"/>
+    <BitmapImage x:Key="SelectionToolIcon" UriSource="SelectionTool.png"/>
+    <BitmapImage x:Key="DeformerlIcon" UriSource="Deformer.png"/>
+
+    <BitmapImage x:Key="UndoIcon" UriSource="Undo.png"/>
+    <BitmapImage x:Key="RedoIcon" UriSource="Redo.png"/>
+    <BitmapImage x:Key="PinLockIcon" UriSource="PinLock.png"/>
+    <BitmapImage x:Key="LockIcon" UriSource="Lock.png"/>
+
+    <BitmapImage x:Key="Folder" UriSource="Folder.png"/>
+    <BitmapImage x:Key="CellSource" UriSource="CellSource.png"/>
+
+    <BitmapImage x:Key="FolderAddIcon" UriSource="FolderAdd.png"/>
+    <BitmapImage x:Key="CellSourceAddIcon" UriSource="CellSourceAdd.png"/>
+    <BitmapImage x:Key="AddLineDrawingLayerIcon" UriSource="AddLineDrawingLayer.png"/>
+    <BitmapImage x:Key="AddSingleColorLayerIcon" UriSource="AddSingleColorLayer.png"/>
+
 </ResourceDictionary>

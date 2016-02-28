@@ -1,21 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:IBApp">
-    
-    <BitmapImage x:Key="EraserIcon" UriSource="EraserTool.png"/>
-    <BitmapImage x:Key="PencilIcon" UriSource="PencilTool.png"/>
-    <BitmapImage x:Key="PenlIcon" UriSource="PenTool.png"/>
-    <BitmapImage x:Key="SelectionToolIcon" UriSource="SelectionTool.png"/>
-    <BitmapImage x:Key="DeformerlIcon" UriSource="Deformer.png"/>
-    
-    <BitmapImage x:Key="UndoIcon" UriSource="Undo.png"/>
-    <BitmapImage x:Key="RedoIcon" UriSource="Redo.png"/>
-    <BitmapImage x:Key="PinLockIcon" UriSource="PinLock.png"/>
-    <BitmapImage x:Key="LockIcon" UriSource="Lock.png"/>
-
-    <BitmapImage x:Key="FolderAddIcon" UriSource="FolderAdd.png"/>
-    <BitmapImage x:Key="CellSourceAddIcon" UriSource="CellSourceAdd.png"/>
-    <BitmapImage x:Key="AddLineDrawingLayerIcon" UriSource="AddLineDrawingLayer.png"/>
-    <BitmapImage x:Key="AddSingleColorLayerIcon" UriSource="AddSingleColorLayer.png"/>
 
 </ResourceDictionary>

@@ -42,4 +42,8 @@
         <cp:AppCommandCP/>
     </ibgui:IBTabItem>
 
+    <ibgui:IBTabItem x:Key="Timeline" Header="{DynamicResource ControlPanel_Timeline_Name}">
+        <cp:TimelineCP/>
+    </ibgui:IBTabItem>
+
 </ResourceDictionary>

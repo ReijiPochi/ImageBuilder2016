@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using IBFramework.IBCanvas;
+using System.Windows;
 
 namespace IBFramework.Project
 {
@@ -27,7 +28,7 @@ namespace IBFramework.Project
         Advice
     }
 
-    public abstract class IBProjectElement : INotifyPropertyChanged
+    public abstract class IBProjectElement : DependencyObject, INotifyPropertyChanged
     {
         public IBProjectElement()
         {
@@ -50,6 +51,8 @@ namespace IBFramework.Project
 
         public ObservableCollection<IBProjectElement> Children { get; set; } = new ObservableCollection<IBProjectElement>();
 
+        public static ObservableCollection<IBProjectElement> MultiSelectingList = new ObservableCollection<IBProjectElement>();
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string propertyName)
@@ -63,7 +66,7 @@ namespace IBFramework.Project
         {
             get
             { return _ID; }
-            set
+            protected set
             { 
                 if (_ID == value)
                     return;
@@ -154,12 +157,35 @@ namespace IBFramework.Project
         public bool IsSelected
         {
             get
-            { return _IsSelected; }
+            {
+                return _IsSelected | IsMultiSelecting;
+            }
             set
             {
                 if (_IsSelected == value)
                     return;
                 _IsSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
+
+        private bool _IsMultiSelecting;
+        public bool IsMultiSelecting
+        {
+            get
+            { return _IsMultiSelecting; }
+            set
+            {
+                if (_IsMultiSelecting == value)
+                    return;
+                _IsMultiSelecting = value;
+
+                if (value)
+                    MultiSelectingList.Add(this);
+                else
+                    MultiSelectingList.Remove(this);
+
+                RaisePropertyChanged("IsMultiSelecting");
                 RaisePropertyChanged("IsSelected");
             }
         }
@@ -248,6 +274,17 @@ namespace IBFramework.Project
             child.Parent = this;
 
             DELETE = false;
+        }
+
+        public void ClearAllSelections()
+        {
+            IsSelected = false;
+            IsMultiSelecting = false;
+
+            foreach(IBProjectElement pe in Children)
+            {
+                pe.ClearAllSelections();
+            }
         }
 
         public virtual void Remove()

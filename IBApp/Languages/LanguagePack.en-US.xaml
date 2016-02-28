@@ -34,5 +34,6 @@
     <system:String x:Key="ControlPanel_Color_Name">Color</system:String>
     <system:String x:Key="ControlPanel_Brush_Name">Brush</system:String>
     <system:String x:Key="ControlPanel_AppCommand_Name">Commands</system:String>
+    <system:String x:Key="ControlPanel_Timeline_Name">Timeline</system:String>
 
 </ResourceDictionary>

@@ -153,6 +153,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ControlPanels\TimelineCP_Design.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -188,6 +192,7 @@
     <Compile Include="Views\ControlPanels\IBProjectViewCP.cs" />
     <Compile Include="Views\ControlPanels\LayersViewCP.cs" />
     <Compile Include="Views\ControlPanels\PropertiesCP.cs" />
+    <Compile Include="Views\ControlPanels\TimelineCP.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -219,19 +224,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Design\IBicon.ico" />
-    <Resource Include="Icons\EraserTool.png" />
-    <Resource Include="Icons\PenTool.png" />
-    <Resource Include="Icons\PencilTool.png" />
-    <Resource Include="Icons\Redo.png" />
-    <Resource Include="Icons\Undo.png" />
-    <Resource Include="Icons\SelectionTool.png" />
-    <Resource Include="Icons\Deformer.png" />
-    <Resource Include="Icons\FolderAdd.png" />
-    <Resource Include="Icons\CellSourceAdd.png" />
-    <Resource Include="Icons\PinLock.png" />
-    <Resource Include="Icons\Lock.png" />
-    <Resource Include="Icons\AddLineDrawingLayer.png" />
-    <Resource Include="Icons\AddSingleColorLayer.png" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
     <Content Include="InfrastructureAssemblies\Livet.XML" />
